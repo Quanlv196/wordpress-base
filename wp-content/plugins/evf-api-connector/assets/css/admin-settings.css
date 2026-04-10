@@ -1,0 +1,119 @@
+/**
+ * EVF API Connector – Admin Settings Styles
+ */
+
+/* ── Page wrapper ─────────────────────────────────────────────────────────── */
+
+.evf-api-connector-wrap h1 {
+  margin-bottom: 1.5em;
+}
+
+.evf-api-section {
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  border-radius: 3px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  max-width: 960px;
+}
+
+.evf-api-section h2 {
+  margin-top: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e4e7;
+}
+
+/* ── Form selector ────────────────────────────────────────────────────────── */
+
+.evf-api-form-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.evf-api-form-selector select {
+  min-width: 260px;
+}
+
+/* ── Repeatable tables ────────────────────────────────────────────────────── */
+
+.evf-repeatable-table {
+  margin-bottom: 8px;
+  border-collapse: collapse;
+}
+
+.evf-repeatable-table th {
+  background: #f6f7f7;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 12px;
+}
+
+.evf-repeatable-table td {
+  padding: 6px 8px;
+  vertical-align: middle;
+}
+
+.evf-repeatable-table td:last-child {
+  width: 80px;
+  text-align: right;
+}
+
+.evf-repeatable-table input[type="text"],
+.evf-repeatable-table input[type="url"],
+.evf-repeatable-table select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.evf-header-row,
+.evf-mapping-row {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* ── Enable toggle label ─────────────────────────────────────────────────── */
+
+.evf-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* ── Remove button ───────────────────────────────────────────────────────── */
+
+.evf-remove-row {
+  color: #b32d2e !important;
+  border-color: #b32d2e !important;
+}
+
+.evf-remove-row:hover {
+  background: #b32d2e !important;
+  color: #fff !important;
+}
+
+/* ── Add buttons ─────────────────────────────────────────────────────────── */
+
+.evf-add-header,
+.evf-add-mapping {
+  margin-top: 6px;
+}
+
+/* ── Form table overrides ────────────────────────────────────────────────── */
+
+.evf-api-form-settings .form-table th {
+  width: 220px;
+}
+
+.evf-api-form-settings textarea.large-text {
+  min-height: 70px;
+}
+
+/* ── Transition for custom message rows ──────────────────────────────────── */
+
+.evf-custom-msg-row {
+  transition: opacity 0.2s;
+}

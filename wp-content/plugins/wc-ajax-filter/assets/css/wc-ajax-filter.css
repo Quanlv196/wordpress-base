@@ -1,0 +1,773 @@
+/**
+ * WC AJAX Filter — Stylesheet
+ *
+ * Sections:
+ *  1. Custom properties (design tokens)
+ *  2. Filter widget  (.wcaf-filter)
+ *     a. Header + toggle
+ *     b. Checkbox / radio list
+ *     c. Dropdown
+ *     d. Tab UI
+ *     e. Price range slider
+ *     f. Price dropdown
+ *  3. Product list  (.wcaf-product-list)
+ *     a. Toolbar
+ *     b. Loading overlay + spinner
+ *     c. Grid layout
+ *     d. WC native item overrides (float reset for older themes)
+ *     e. Pagination
+ *  4. Utility / accessibility
+ *
+ * @package WC_Ajax_Filter
+ */
+
+/* =============================================================================
+   1. Custom Properties
+   ============================================================================= */
+
+:root {
+  --wcaf-primary: #7952b3;
+  --wcaf-primary-dark: #6741a5;
+  --wcaf-text: #1d1f23;
+  --wcaf-muted: #6b7280;
+  --wcaf-border: #e2e8f0;
+  --wcaf-bg: #f8fafc;
+  --wcaf-white: #ffffff;
+  --wcaf-error: #dc2626;
+  --wcaf-sale-color: #ef4444;
+
+  --wcaf-radius: 0.375rem; /* 6px  */
+  --wcaf-radius-lg: 0.625rem; /* 10px */
+  --wcaf-radius-pill: 999px;
+
+  --wcaf-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --wcaf-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --wcaf-shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);
+
+  --wcaf-transition: 0.18s ease;
+  --wcaf-gap: 1rem;
+}
+
+/* =============================================================================
+   2. Filter Widget
+   ============================================================================= */
+
+/* ---- Container ---- */
+
+.wcaf-filter {
+  background: var(--wcaf-white);
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius-lg);
+  margin-bottom: var(--wcaf-gap);
+  /* Do NOT use overflow:hidden — it clips native <select multiple> listboxes
+     in some browsers. The border-radius is preserved by the border itself. */
+}
+
+/* ---- 2a. Header ---- */
+
+.wcaf-filter__header {
+  padding: 0.875rem 1.25rem 0;
+}
+
+.wcaf-filter__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--wcaf-text);
+  line-height: 1.3;
+}
+
+/* ---- Body ---- */
+
+.wcaf-filter__body {
+  padding: 0.75rem 1.25rem 1rem;
+}
+
+.wcaf-notice {
+  margin: 0;
+  color: var(--wcaf-muted);
+  font-size: 0.875rem;
+}
+
+/* ---- 2b. Checkbox / Radio list ---- */
+
+.wcaf-filter__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.wcaf-filter__item {
+  margin-bottom: 0.5rem;
+}
+
+.wcaf-filter__item:last-child {
+  margin-bottom: 0;
+}
+
+.wcaf-filter__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--wcaf-text);
+  transition: color var(--wcaf-transition);
+}
+
+.wcaf-filter__label:hover {
+  color: var(--wcaf-primary);
+}
+
+.wcaf-filter__input[type="checkbox"],
+.wcaf-filter__input[type="radio"] {
+  accent-color: var(--wcaf-primary);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.wcaf-filter__label-text {
+  flex: 1;
+}
+
+.wcaf-filter__count {
+  color: var(--wcaf-muted);
+  font-size: 0.8125rem;
+}
+
+/* ---- 2c. Dropdown ---- */
+
+.wcaf-filter__dropdown-wrap {
+  position: relative;
+}
+
+/*
+ * Base styles shared by both single-select and multi-select.
+ */
+.wcaf-filter__select {
+  width: 100%;
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius);
+  background: var(--wcaf-white);
+  color: var(--wcaf-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    border-color var(--wcaf-transition),
+    box-shadow var(--wcaf-transition);
+}
+
+.wcaf-filter__select:focus {
+  outline: none;
+  border-color: var(--wcaf-primary);
+  box-shadow: 0 0 0 3px rgba(121, 82, 179, 0.15);
+}
+
+/*
+ * Single-select — styled as a compact dropdown with a custom arrow.
+ */
+.wcaf-filter__select:not([multiple]) {
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+/*
+ * Multi-select — rendered as a scrollable listbox.
+ * Do NOT apply appearance:none — it breaks native listbox rendering in most
+ * browsers and causes options to overflow the element boundaries.
+ */
+.wcaf-filter__select[multiple] {
+  padding: 0.25rem 0;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  background-image: none; /* no dropdown arrow */
+}
+
+.wcaf-filter__select[multiple] option {
+  padding: 0.375rem 0.875rem;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.wcaf-filter__select[multiple] option:checked {
+  background: linear-gradient(
+    0deg,
+    var(--wcaf-primary) 0%,
+    var(--wcaf-primary) 100%
+  );
+  color: var(--wcaf-white);
+}
+
+/* ---- 2d. Tab UI ---- */
+
+.wcaf-filter__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.wcaf-filter__tab {
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius-pill);
+  background: var(--wcaf-white);
+  color: var(--wcaf-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--wcaf-transition);
+  line-height: 1.4;
+}
+
+.wcaf-filter__tab:hover {
+  border-color: var(--wcaf-primary);
+  color: var(--wcaf-primary);
+}
+
+.wcaf-filter__tab.is-active {
+  background: var(--wcaf-primary);
+  border-color: var(--wcaf-primary);
+  color: var(--wcaf-white);
+}
+
+/* ---- 2e. Price Range Slider ---- */
+
+.wcaf-filter__price-range {
+  padding-top: 0.25rem;
+}
+
+/* Slider track + thumbs */
+.wcaf-filter__price-slider {
+  position: relative;
+  height: 2.75rem;
+  margin-bottom: 1rem;
+}
+
+.wcaf-filter__price-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--wcaf-border);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.wcaf-filter__price-fill {
+  position: absolute;
+  inset-block: 0;
+  background: var(--wcaf-primary);
+  border-radius: 2px;
+}
+
+.wcaf-filter__range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.wcaf-filter__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--wcaf-white);
+  border: 2px solid var(--wcaf-primary);
+  box-shadow: var(--wcaf-shadow-sm);
+  cursor: pointer;
+  pointer-events: all;
+  transition:
+    transform var(--wcaf-transition),
+    box-shadow var(--wcaf-transition);
+}
+
+.wcaf-filter__range::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: var(--wcaf-shadow-md);
+}
+
+.wcaf-filter__range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--wcaf-white);
+  border: 2px solid var(--wcaf-primary);
+  box-shadow: var(--wcaf-shadow-sm);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+/* Min / max text inputs */
+.wcaf-filter__price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wcaf-filter__price-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.wcaf-filter__price-label {
+  font-size: 0.8125rem;
+  color: var(--wcaf-muted);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.wcaf-filter__currency {
+  font-size: 0.875rem;
+  color: var(--wcaf-muted);
+}
+
+.wcaf-filter__price-min,
+.wcaf-filter__price-max {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius);
+  font-size: 0.875rem;
+  text-align: center;
+  transition:
+    border-color var(--wcaf-transition),
+    box-shadow var(--wcaf-transition);
+}
+
+.wcaf-filter__price-min:focus,
+.wcaf-filter__price-max:focus {
+  outline: none;
+  border-color: var(--wcaf-primary);
+  box-shadow: 0 0 0 3px rgba(121, 82, 179, 0.15);
+}
+
+.wcaf-filter__price-separator {
+  color: var(--wcaf-muted);
+  flex-shrink: 0;
+}
+
+/* ---- 2f. Price dropdown ---- */
+
+.wcaf-filter__price-dropdown {
+  position: relative;
+}
+
+/* =============================================================================
+   3. Product List
+   ============================================================================= */
+
+.wcaf-product-list {
+  position: relative;
+}
+
+/* ---- 3a. Toolbar ---- */
+
+.wcaf-product-list__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--wcaf-border);
+}
+
+.wcaf-product-list__results-count {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--wcaf-muted);
+}
+
+.wcaf-product-list__toolbar-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.wcaf-product-list__per-page,
+.wcaf-product-list__orderby {
+  padding: 0.4rem 2.25rem 0.4rem 0.75rem;
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius);
+  background: var(--wcaf-white);
+  color: var(--wcaf-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.4rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25em 1.25em;
+  transition: border-color var(--wcaf-transition);
+}
+
+.wcaf-product-list__per-page:focus,
+.wcaf-product-list__orderby:focus {
+  outline: none;
+  border-color: var(--wcaf-primary);
+}
+
+/* ---- 3b. Loading overlay + spinner ---- */
+
+.wcaf-product-list__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(2px);
+  border-radius: var(--wcaf-radius-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--wcaf-transition);
+  z-index: 10;
+}
+
+.wcaf-product-list.is-loading .wcaf-product-list__loading {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.wcaf-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--wcaf-border);
+  border-top-color: var(--wcaf-primary);
+  border-radius: 50%;
+  animation: wcaf-spin 0.7s linear infinite;
+}
+
+@keyframes wcaf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- 3c. Grid layout ---- */
+
+.wcaf-product-list__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--wcaf-cols, 4), 1fr);
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tablet breakpoint */
+@media (max-width: 1024px) {
+  .wcaf-product-list__grid {
+    grid-template-columns: repeat(var(--wcaf-cols-tablet, 2), 1fr);
+  }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 600px) {
+  .wcaf-product-list__grid {
+    grid-template-columns: repeat(var(--wcaf-cols-mobile, 1), 1fr);
+    gap: 1rem;
+  }
+}
+
+/* No-results message */
+.wcaf-no-products {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3.5rem 1rem;
+  color: var(--wcaf-muted);
+  font-size: 0.9375rem;
+}
+
+/* ---- 3d. WooCommerce native product item overrides ---- */
+/*
+ * Item layout is handled by the active WooCommerce theme/child-theme via
+ * content-product.php.  The rules below only ensure that <li class="product">
+ * elements inside our grid fill their grid cell correctly and do not carry
+ * float/width styles that some older WC themes apply to ul.products > li.
+ */
+
+.wcaf-product-list__grid.products > li.product {
+  /* Reset any float-based column width the theme may apply. */
+  float: none !important;
+  width: auto !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ---- 3e. Pagination ---- */
+
+.wcaf-product-list__pagination {
+  margin-top: 2rem;
+}
+
+.wcaf-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--wcaf-border);
+}
+
+.wcaf-pagination__btn {
+  padding: 0.5rem 1.25rem;
+  background: var(--wcaf-white);
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius);
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--wcaf-text);
+  transition: all var(--wcaf-transition);
+  line-height: 1.5;
+}
+
+.wcaf-pagination__btn:hover {
+  background: var(--wcaf-primary);
+  border-color: var(--wcaf-primary);
+  color: var(--wcaf-white);
+}
+
+.wcaf-pagination__info {
+  font-size: 0.875rem;
+  color: var(--wcaf-muted);
+}
+
+/* =============================================================================
+   4. Error state
+   ============================================================================= */
+
+.wcaf-error {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--wcaf-error);
+  font-size: 0.9375rem;
+}
+
+/* =============================================================================
+   5. Accessibility — Screen-reader only text
+   ============================================================================= */
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+  background: var(--wcaf-bg);
+  clip: auto !important;
+  clip-path: none;
+  color: var(--wcaf-text);
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  height: auto;
+  left: 0.5rem;
+  line-height: normal;
+  padding: 0.875rem 1.25rem;
+  top: 0.5rem;
+  width: auto;
+  z-index: 100000;
+}
+
+/* =============================================================================
+   6. Filter status — [wc_filter_count] & [wc_clear_filter]
+   ============================================================================= */
+
+/* ── Filter count badge ─────────────────────────────────────────────────────── */
+
+.wcaf-filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.4rem;
+  border-radius: var(--wcaf-radius-pill);
+  background-color: var(--wcaf-primary);
+  color: var(--wcaf-white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  transition:
+    background-color var(--wcaf-transition),
+    opacity var(--wcaf-transition);
+}
+
+/* Fade the badge when there are no active filters */
+.wcaf-filter-count.is-empty {
+  background-color: var(--wcaf-muted);
+  opacity: 0.45;
+}
+
+/* ── Clear-filter button ────────────────────────────────────────────────────── */
+
+.wcaf-clear-filter {
+  display: none; /* hidden until JS adds .is-active when filters are active */
+}
+
+.wcaf-clear-filter.is-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius);
+  background-color: var(--wcaf-white);
+  color: var(--wcaf-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color var(--wcaf-transition),
+    border-color var(--wcaf-transition),
+    color var(--wcaf-transition),
+    box-shadow var(--wcaf-transition);
+}
+
+.wcaf-clear-filter.is-active:hover,
+.wcaf-clear-filter.is-active:focus-visible {
+  background-color: var(--wcaf-bg);
+  border-color: var(--wcaf-primary);
+  color: var(--wcaf-primary);
+  box-shadow: var(--wcaf-shadow-sm);
+  outline: none;
+}
+
+.wcaf-clear-filter.is-active:active {
+  background-color: var(--wcaf-primary);
+  border-color: var(--wcaf-primary-dark);
+  color: var(--wcaf-white);
+}
+
+/* =============================================================================
+   7. Active filter chips  [wc_active_filters]
+   ============================================================================= */
+
+.wcaf-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Hide the outer wrapper when empty if you prefer — add the class yourself */
+.wcaf-active-filters.is-empty .wcaf-active-filters__tags {
+  display: none;
+}
+
+/* Optional empty-state text */
+.wcaf-active-filters__empty {
+  font-size: 0.875rem;
+  color: var(--wcaf-muted);
+}
+
+/* Tag chips row */
+.wcaf-active-filters__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+/* Individual chip */
+.wcaf-active-filters__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--wcaf-radius-pill);
+  background-color: var(--wcaf-primary);
+  color: var(--wcaf-white);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.wcaf-active-filters__tag-text {
+  pointer-events: none;
+}
+
+/* × remove button inside chip */
+.wcaf-active-filters__tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: inherit;
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--wcaf-transition);
+}
+
+.wcaf-active-filters__tag-remove:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* "Clear all" button inside the widget */
+.wcaf-active-filters__clear-all {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--wcaf-border);
+  border-radius: var(--wcaf-radius-pill);
+  background: transparent;
+  color: var(--wcaf-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    border-color var(--wcaf-transition),
+    color var(--wcaf-transition),
+    background-color var(--wcaf-transition);
+}
+
+.wcaf-active-filters__clear-all:hover,
+.wcaf-active-filters__clear-all:focus-visible {
+  border-color: var(--wcaf-error);
+  color: var(--wcaf-error);
+  background-color: rgba(220, 38, 38, 0.05);
+  outline: none;
+}

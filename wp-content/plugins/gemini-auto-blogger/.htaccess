@@ -1,0 +1,10 @@
+# Gemini Auto Blogger – allow long-running AJAX requests
+
+# Generation takes up to 5 minutes; raise Apache/PHP timeouts for this plugin's AJAX.
+
+<IfModule mod_php.c>
+    php_value max_execution_time 600
+</IfModule>
+<IfModule mod_php8.c>
+    php_value max_execution_time 600
+</IfModule>

@@ -1,0 +1,441 @@
+/* =============================================================================
+   VN Map Partner Plugin – vn-map-partner.css
+   Scope: .vn-map-wrapper
+   Phong cách clone từ file HTML gốc (ketoan.cloud/lien-he)
+   ============================================================================= */
+
+/* --------------------------------------------------------------------------
+   Reset & Base
+   -------------------------------------------------------------------------- */
+.vn-map-wrapper,
+.vn-map-wrapper *,
+.vn-map-wrapper *::before,
+.vn-map-wrapper *::after {
+  box-sizing: border-box;
+}
+
+.vn-map-wrapper {
+  width: 100%;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    sans-serif;
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Layout – Row & Columns
+   -------------------------------------------------------------------------- */
+.vn-map-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.vn-map-col {
+  min-width: 0; /* Ngăn overflow trong flexbox */
+}
+
+.vn-map-canvas-col {
+  flex: 0 0 42%;
+  max-width: 42%;
+}
+
+.vn-map-info-col {
+  flex: 1 1 0;
+  max-width: 54%;
+}
+
+/* --------------------------------------------------------------------------
+   Canvas bản đồ (#vn_map)
+   simplemaps sẽ tự inject canvas/svg vào đây
+   -------------------------------------------------------------------------- */
+#vn_map {
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+}
+
+/* Canvas bên trong do simplemaps tạo */
+#vn_map canvas,
+#vn_map svg {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Loading state */
+#vn_map.vnm-loading::after {
+  content: "Đang tải bản đồ...";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  color: #888;
+  font-size: 14px;
+  font-style: italic;
+  z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   Ghi chú hướng dẫn
+   -------------------------------------------------------------------------- */
+.vn-map-hint {
+  color: #555555;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 18px 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Legend (Chú giải)
+   -------------------------------------------------------------------------- */
+.vn-map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 14px 0;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.vn-map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 0;
+  min-width: 160px;
+}
+
+/* Ô màu vuông nhỏ */
+.vn-legend-color {
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.vn-legend-color.vn-legend-gold {
+  background-color: #f5c518;
+  box-shadow: 0 1px 3px rgba(245, 197, 24, 0.5);
+}
+
+.vn-legend-color.vn-legend-silver {
+  background-color: #aaaaaa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Wrapper icon + text */
+.vn-legend-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.vn-legend-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.vn-legend-icon svg {
+  display: block;
+}
+
+.vn-legend-info > div:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.vn-legend-info strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.vn-legend-info span {
+  font-size: 11px;
+  color: #777777;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   Dropdown tìm kiếm tỉnh thành
+   -------------------------------------------------------------------------- */
+.vn-map-search {
+  margin-bottom: 20px;
+}
+
+.vn-province-select {
+  width: 100%;
+}
+
+/* Select2 overrides – scoped để không ảnh hưởng toàn trang */
+.vn-map-wrapper .select2-container {
+  width: 100% !important;
+}
+
+.vn-map-wrapper .select2-container--default .select2-selection--single {
+  height: 42px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+
+.vn-map-wrapper .select2-container--default .select2-selection--single:hover,
+.vn-map-wrapper
+  .select2-container--default.select2-container--focus
+  .select2-selection--single {
+  border-color: #f5c518;
+  outline: none;
+}
+
+.vn-map-wrapper
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  line-height: 40px;
+  padding-left: 14px;
+  color: #333333;
+  font-size: 14px;
+}
+
+.vn-map-wrapper
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__placeholder {
+  color: #999999;
+}
+
+.vn-map-wrapper
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+  height: 40px;
+  right: 6px;
+}
+
+/* Dropdown panel */
+.select2-dropdown {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.select2-results__option--highlighted[aria-selected],
+.select2-results__option--highlighted[data-selected] {
+  background-color: #f5c518 !important;
+  color: #333333 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Khu vực hiển thị danh sách đối tác (#vn_map_description)
+   -------------------------------------------------------------------------- */
+.vn-map-description {
+  padding: 4px 0;
+  min-height: 60px;
+}
+
+/* Placeholder text */
+.vn-map-placeholder,
+.vnm-loading-text {
+  color: #aaaaaa;
+  font-style: italic;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+/* Thông báo không có đối tác */
+.vnm-no-partner {
+  color: #999999;
+  font-style: italic;
+  font-size: 13px;
+  padding: 10px 0;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Partner item card
+   -------------------------------------------------------------------------- */
+.vnm-partner-item {
+  border-left: 4px solid #dddddd;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background: #fafafa;
+  border-radius: 0 6px 6px 0;
+  transition:
+    box-shadow 0.2s,
+    transform 0.15s;
+}
+
+.vnm-partner-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateX(2px);
+}
+
+/* Đối tác vàng */
+.vnm-partner-item.vnm-type-gold {
+  border-left-color: #f5c518;
+  background: #fffdf0;
+}
+
+/* Đối tác bạc */
+.vnm-partner-item.vnm-type-silver {
+  border-left-color: #aaaaaa;
+  background: #f8f8f8;
+}
+
+/* Header card: icon + tên */
+.vnm-partner-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.vnm-star-icon {
+  flex-shrink: 0;
+  display: block;
+}
+
+.vnm-partner-index {
+  font-weight: 700;
+  color: inherit;
+}
+
+.vnm-partner-name {
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.vnm-type-gold .vnm-partner-name {
+  color: #c8a000;
+}
+
+.vnm-type-silver .vnm-partner-name {
+  color: #777777;
+}
+
+/* Nhãn loại đối tác */
+.vnm-partner-type-label {
+  font-size: 11px;
+  color: #999999;
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+/* Địa chỉ & số điện thoại */
+.vnm-partner-address,
+.vnm-partner-phone {
+  font-size: 13px;
+  color: #555555;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.vnm-label {
+  font-weight: 600;
+  color: #444444;
+}
+
+/* --------------------------------------------------------------------------
+   Tooltip (popup) của simplemaps – scoped nếu simplemaps allow injection
+   -------------------------------------------------------------------------- */
+
+/* Tiêu đề tỉnh trong tooltip */
+.vnm-tt-province {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #333333;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 4px;
+}
+
+/* Partner item trong tooltip */
+.vnm-tt-item {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 6px;
+  padding: 4px 0;
+}
+
+.vnm-tt-item.vnm-tt-gold .vnm-tt-num,
+.vnm-tt-item.vnm-tt-gold strong {
+  color: #c8a000;
+}
+
+.vnm-tt-item.vnm-tt-silver .vnm-tt-num,
+.vnm-tt-item.vnm-tt-silver strong {
+  color: #888888;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .vn-map-canvas-col,
+  .vn-map-info-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .vn-map-row {
+    gap: 20px;
+  }
+
+  .vn-map-canvas-col {
+    order: 2; /* Bản đồ xuống dưới trên mobile */
+  }
+
+  .vn-map-info-col {
+    order: 1;
+  }
+
+  #vn_map {
+    min-height: 350px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .vn-map-legend {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .vn-map-legend-item {
+    min-width: unset;
+  }
+
+  .vn-map-hint {
+    font-size: 12px;
+  }
+
+  .vnm-partner-item {
+    padding: 10px 12px;
+  }
+
+  .vnm-partner-name {
+    font-size: 12px;
+  }
+
+  #vn_map {
+    min-height: 280px;
+  }
+}

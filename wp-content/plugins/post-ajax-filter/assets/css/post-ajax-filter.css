@@ -1,0 +1,607 @@
+/**
+ * Post AJAX Filter — Stylesheet
+ *
+ * Phần:
+ *  1. Custom properties (design tokens)
+ *  2. Widget bộ lọc  (.paf-filter)
+ *     a. Header + tiêu đề
+ *     b. Danh sách Checkbox / Radio
+ *     c. Dropdown
+ *     d. Tab UI
+ *     e. Tìm kiếm
+ *  3. Danh sách bài viết  (.paf-post-list)
+ *     a. Toolbar
+ *     b. Loading overlay + spinner
+ *     c. Bố cục lưới
+ *     d. Card bài viết
+ *     e. Phân trang
+ *  4. Tiện ích / accessibility
+ *
+ * @package Post_Ajax_Filter
+ */
+
+/* =============================================================================
+   1. Custom Properties
+   ============================================================================= */
+
+:root {
+  --paf-primary: #2563eb;
+  --paf-primary-dark: #1d4ed8;
+  --paf-text: #1e293b;
+  --paf-muted: #64748b;
+  --paf-border: #e2e8f0;
+  --paf-bg: #f8fafc;
+  --paf-white: #ffffff;
+  --paf-error: #dc2626;
+
+  --paf-radius: 0.375rem;
+  --paf-radius-lg: 0.625rem;
+  --paf-radius-pill: 999px;
+
+  --paf-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --paf-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  --paf-transition: 0.18s ease;
+  --paf-gap: 1rem;
+}
+
+/* =============================================================================
+   2. Widget Bộ Lọc
+   ============================================================================= */
+
+/* ---- Container ---- */
+
+.paf-filter {
+  background: var(--paf-white);
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius-lg);
+  margin-bottom: var(--paf-gap);
+}
+
+/* ---- 2a. Header ---- */
+
+.paf-filter__header {
+  padding: 0.875rem 1.25rem 0;
+}
+
+.paf-filter__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--paf-text);
+  line-height: 1.3;
+}
+
+/* ---- Body ---- */
+
+.paf-filter__body {
+  padding: 0.75rem 1.25rem 1rem;
+}
+
+.paf-notice {
+  margin: 0;
+  color: var(--paf-muted);
+  font-size: 0.875rem;
+}
+
+/* ---- 2b. Checkbox / Radio list ---- */
+
+.paf-filter__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.paf-filter__item {
+  margin-bottom: 0.5rem;
+}
+
+.paf-filter__item:last-child {
+  margin-bottom: 0;
+}
+
+.paf-filter__label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--paf-text);
+  transition: color var(--paf-transition);
+}
+
+.paf-filter__label:hover {
+  color: var(--paf-primary);
+}
+
+.paf-filter__input[type="checkbox"],
+.paf-filter__input[type="radio"] {
+  accent-color: var(--paf-primary);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.paf-filter__label-text {
+  flex: 1;
+}
+
+.paf-filter__count {
+  color: var(--paf-muted);
+  font-size: 0.8125rem;
+}
+
+/* ---- 2c. Dropdown ---- */
+
+.paf-filter__dropdown-wrap {
+  position: relative;
+}
+
+.paf-filter__select {
+  width: 100%;
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius);
+  background: var(--paf-white);
+  color: var(--paf-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    border-color var(--paf-transition),
+    box-shadow var(--paf-transition);
+}
+
+.paf-filter__select:focus {
+  outline: none;
+  border-color: var(--paf-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.paf-filter__select:not([multiple]) {
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+.paf-filter__select[multiple] {
+  padding: 0.25rem 0;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  background-image: none;
+}
+
+.paf-filter__select[multiple] option {
+  padding: 0.375rem 0.875rem;
+  cursor: pointer;
+}
+
+.paf-filter__select[multiple] option:checked {
+  background: linear-gradient(
+    0deg,
+    var(--paf-primary) 0%,
+    var(--paf-primary) 100%
+  );
+  color: var(--paf-white);
+}
+
+/* ---- 2d. Tab UI ---- */
+
+.paf-filter__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.paf-filter__tab {
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius-pill);
+  background: var(--paf-white);
+  color: var(--paf-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--paf-transition);
+  line-height: 1.4;
+}
+
+.paf-filter__tab:hover {
+  border-color: var(--paf-primary);
+  color: var(--paf-primary);
+}
+
+.paf-filter__tab.is-active {
+  background: var(--paf-primary);
+  border-color: var(--paf-primary);
+  color: var(--paf-white);
+}
+
+/* ---- 2e. Tìm kiếm ---- */
+
+.paf-filter__search-wrap {
+  position: relative;
+}
+
+.paf-filter__search {
+  width: 100%;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius);
+  font-size: 0.9rem;
+  color: var(--paf-text);
+  background: var(--paf-white);
+  transition:
+    border-color var(--paf-transition),
+    box-shadow var(--paf-transition);
+  box-sizing: border-box;
+}
+
+.paf-filter__search:focus {
+  outline: none;
+  border-color: var(--paf-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.paf-filter__search::placeholder {
+  color: var(--paf-muted);
+}
+
+/* =============================================================================
+   3. Danh Sách Bài Viết
+   ============================================================================= */
+
+.paf-post-list {
+  position: relative;
+}
+
+/* ---- 3a. Toolbar ---- */
+
+.paf-post-list__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--paf-border);
+}
+
+.paf-post-list__results-count {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--paf-muted);
+}
+
+.paf-post-list__toolbar-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.paf-post-list__orderby {
+  padding: 0.4rem 2.25rem 0.4rem 0.75rem;
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius);
+  background: var(--paf-white);
+  color: var(--paf-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.4rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25em 1.25em;
+  transition: border-color var(--paf-transition);
+}
+
+.paf-post-list__orderby:focus {
+  outline: none;
+  border-color: var(--paf-primary);
+}
+
+/* ---- 3b. Loading overlay + spinner ---- */
+
+.paf-post-list__loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(2px);
+  border-radius: var(--paf-radius-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--paf-transition);
+  z-index: 10;
+}
+
+.paf-post-list.is-loading .paf-post-list__loading {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.paf-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--paf-border);
+  border-top-color: var(--paf-primary);
+  border-radius: 50%;
+  animation: paf-spin 0.7s linear infinite;
+}
+
+@keyframes paf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- 3c. Bố cục lưới ---- */
+
+.paf-post-list__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--paf-cols, 3), 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .paf-post-list__grid {
+    grid-template-columns: repeat(var(--paf-cols-tablet, 2), 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .paf-post-list__grid {
+    grid-template-columns: repeat(var(--paf-cols-mobile, 1), 1fr);
+    gap: 1rem;
+  }
+}
+
+.paf-no-posts {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3.5rem 1rem;
+  color: var(--paf-muted);
+  font-size: 0.9375rem;
+}
+
+/* ---- 3d. Card bài viết ---- */
+
+.paf-post-card {
+  background: var(--paf-white);
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    box-shadow var(--paf-transition),
+    transform var(--paf-transition);
+}
+
+.paf-post-card:hover {
+  box-shadow: var(--paf-shadow-md);
+  transform: translateY(-2px);
+}
+
+.paf-post-card__thumbnail {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--paf-bg);
+}
+
+.paf-post-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.paf-post-card:hover .paf-post-card__img {
+  transform: scale(1.04);
+}
+
+.paf-post-card__body {
+  padding: 1.125rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.625rem;
+}
+
+.paf-post-card__cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.paf-post-card__cat {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--paf-primary);
+  text-decoration: none;
+  transition: color var(--paf-transition);
+}
+
+.paf-post-card__cat:hover {
+  color: var(--paf-primary-dark);
+}
+
+.paf-post-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--paf-text);
+}
+
+.paf-post-card__title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--paf-transition);
+}
+
+.paf-post-card__title a:hover {
+  color: var(--paf-primary);
+}
+
+.paf-post-card__excerpt {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--paf-muted);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.paf-post-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--paf-muted);
+  margin-top: auto;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--paf-border);
+}
+
+.paf-post-card__author a {
+  color: var(--paf-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--paf-transition);
+}
+
+.paf-post-card__author a:hover {
+  color: var(--paf-primary);
+}
+
+.paf-post-card__sep {
+  color: var(--paf-border);
+}
+
+.paf-post-card__date {
+  color: var(--paf-muted);
+}
+
+/* ---- 3e. Phân trang ---- */
+
+.paf-post-list__pagination {
+  margin-top: 2rem;
+}
+
+.paf-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--paf-border);
+}
+
+.paf-pagination__btn {
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.625rem;
+  background: var(--paf-white);
+  border: 1px solid var(--paf-border);
+  border-radius: var(--paf-radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: var(--paf-text);
+  transition: all var(--paf-transition);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paf-pagination__btn:hover {
+  background: var(--paf-primary);
+  border-color: var(--paf-primary);
+  color: var(--paf-white);
+}
+
+.paf-pagination__btn--current {
+  background: var(--paf-primary);
+  border-color: var(--paf-primary);
+  color: var(--paf-white);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.paf-pagination__btn--prev,
+.paf-pagination__btn--next {
+  padding: 0 0.875rem;
+}
+
+.paf-pagination__ellipsis {
+  padding: 0 0.25rem;
+  color: var(--paf-muted);
+  line-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* =============================================================================
+   4. Lỗi
+   ============================================================================= */
+
+.paf-error {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--paf-error);
+  font-size: 0.9375rem;
+}
+
+/* =============================================================================
+   5. Accessibility — Screen-reader only
+   ============================================================================= */
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+  background: var(--paf-bg);
+  clip: auto !important;
+  clip-path: none;
+  color: var(--paf-text);
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  height: auto;
+  left: 0.5rem;
+  line-height: normal;
+  padding: 0.875rem 1.25rem;
+  top: 0.5rem;
+  width: auto;
+  z-index: 100000;
+}

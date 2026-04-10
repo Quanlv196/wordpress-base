@@ -1,0 +1,800 @@
+/* ==========================================================================
+   NTQ Custom Order – Stylesheet
+   Flatsome / UX Builder compatible (inherits theme typography & colours).
+   All selectors are namespaced with .nco- to avoid collisions.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Utility
+   -------------------------------------------------------------------------- */
+.nco-hidden {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   Base wrapper
+   -------------------------------------------------------------------------- */
+.nco-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Loading indicator
+   -------------------------------------------------------------------------- */
+.nco-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 0;
+  color: #777;
+  font-size: 15px;
+}
+
+.nco-spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 0, 0, 0.12);
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: nco-spin 0.7s linear infinite;
+}
+
+@keyframes nco-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Error / success alerts
+   -------------------------------------------------------------------------- */
+.nco-error {
+  background: #fff0f0;
+  border-left: 4px solid #e53935;
+  border-radius: 4px;
+  color: #c62828;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.nco-alert-success {
+  background: #f1faf1;
+  border-left: 4px solid #43a047;
+  border-radius: 4px;
+  color: #1b5e20;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nco-link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.nco-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.nco-btn-primary {
+  background: #1a1a2e;
+  color: #fff !important;
+  width: 100%;
+}
+
+.nco-btn-primary:hover,
+.nco-btn-primary:focus {
+  background: #2d2d50;
+  color: #fff !important;
+  box-shadow: 0 3px 10px rgba(26, 26, 46, 0.35);
+}
+
+.nco-btn-secondary {
+  background: #f4f4f4;
+  color: #333 !important;
+  border: 1px solid #ddd;
+}
+
+.nco-btn-secondary:hover,
+.nco-btn-secondary:focus {
+  background: #e8e8e8;
+  color: #333 !important;
+}
+
+.nco-btn-sm {
+  padding: 8px 16px;
+  font-size: 13px;
+  width: auto;
+}
+
+.nco-btn:disabled,
+.nco-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Products page layout: sidebar (col-xl-3 / col-md-4) + main
+   Uses margin-right instead of gap for maximum theme compatibility.
+   -------------------------------------------------------------------------- */
+.nco-products-layout {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex !important;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+/* col-md-4 base (768 px – 1199 px) */
+.nco-filter-sidebar {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 33.333%;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-right: 24px;
+  background: #fff;
+  border: 1px solid #dde1e7;
+  border-radius: 10px;
+  padding: 20px;
+  /* Deliberately NOT position:sticky – causes collapse inside Flatsome columns */
+}
+
+/* col-xl-3 (≥ 1200 px) */
+@media (min-width: 1200px) {
+  .nco-filter-sidebar {
+    width: 25%;
+  }
+}
+
+/* Full-width on mobile */
+@media (max-width: 767px) {
+  .nco-filter-sidebar {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
+
+/* Products main column fills whatever is left */
+.nco-products-main {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 0; /* prevents overflow when child is a grid */
+}
+
+/* Filter header */
+.nco-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.nco-filter-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+}
+
+.nco-filter-reset {
+  background: none;
+  border: none;
+  color: #e53935;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  padding: 0;
+  text-decoration: underline;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.nco-filter-reset:hover {
+  opacity: 1;
+}
+
+/* Filter group */
+.nco-filter-group {
+  margin-bottom: 22px;
+}
+
+.nco-filter-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+}
+
+/* Category checkboxes */
+.nco-cat-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.nco-cat-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  margin-right: 8px; /* replaces gap */
+  accent-color: #1a1a2e;
+  cursor: pointer;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.nco-cat-item span {
+  flex: 1;
+  text-transform: capitalize;
+}
+
+.nco-cat-count {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.nco-filter-loading {
+  font-size: 13px;
+  color: #bbb;
+}
+
+/* Price range inputs */
+.nco-price-inputs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.nco-price-input {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 13px;
+  font-family: inherit;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-appearance: textfield;
+}
+
+.nco-price-input::-webkit-outer-spin-button,
+.nco-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.nco-price-sep {
+  color: #bbb;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  font-size: 14px;
+  padding: 0 6px;
+}
+
+.nco-btn-block {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Products toolbar (count row) */
+.nco-products-toolbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex !important;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #888;
+}
+
+.nco-products-count strong {
+  color: #333;
+}
+
+/* --------------------------------------------------------------------------
+   Product list grid – always 3 columns inside the main area
+   -------------------------------------------------------------------------- */
+.nco-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 4px 0;
+}
+
+@media (max-width: 767px) {
+  .nco-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .nco-products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card */
+.nco-product-card {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+  overflow: hidden;
+  transition:
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.nco-product-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+.nco-product-card__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: #f9f9f9;
+  padding: 14px;
+  display: block;
+}
+
+.nco-product-card__body {
+  padding: 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.nco-product-card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nco-product-card__price {
+  font-size: 17px;
+  font-weight: 800;
+  color: #e53935;
+  margin: 0 0 14px;
+}
+
+.nco-product-card__actions {
+  margin-top: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Product detail page
+   -------------------------------------------------------------------------- */
+.nco-product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 680px) {
+  .nco-product-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nco-product-detail__image-wrap {
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+}
+
+.nco-product-detail__image {
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.nco-product-detail__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+.nco-product-detail__price {
+  font-size: 28px;
+  font-weight: 900;
+  color: #e53935;
+  margin: 0 0 16px;
+}
+
+.nco-product-detail__desc {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 0 0 26px;
+}
+
+/* Quantity row */
+.nco-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.nco-qty-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  white-space: nowrap;
+}
+
+.nco-qty-input {
+  width: 74px;
+  padding: 9px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+  font-family: inherit;
+  -moz-appearance: textfield;
+}
+
+.nco-qty-input::-webkit-outer-spin-button,
+.nco-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* --------------------------------------------------------------------------
+   Checkout page
+   -------------------------------------------------------------------------- */
+.nco-checkout-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .nco-checkout-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nco-section-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* Cart table */
+.nco-cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.nco-cart-table th {
+  background: #f7f7f7;
+  padding: 9px 10px;
+  text-align: left;
+  font-weight: 700;
+  color: #444;
+  border-bottom: 2px solid #eee;
+  white-space: nowrap;
+}
+
+.nco-cart-table td {
+  padding: 10px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f3f3f3;
+  color: #333;
+}
+
+.nco-cart-table td:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nco-cart-thumb {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+/* Qty controls inside cart */
+.nco-qty-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nco-qty-ctrl button {
+  width: 27px;
+  height: 27px;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  padding: 0;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.nco-qty-ctrl button:hover {
+  background: #e4e4e4;
+}
+
+.nco-qty-val {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nco-cart-remove {
+  background: none;
+  border: none;
+  color: #e53935;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.nco-cart-remove:hover {
+  opacity: 1;
+}
+
+/* Cart total row */
+.nco-cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 12px;
+  background: #f7f7f7;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.nco-cart-total-row strong {
+  font-size: 22px;
+  color: #e53935;
+}
+
+.nco-empty-cart {
+  text-align: center;
+  padding: 36px 0;
+  color: #999;
+}
+
+/* Checkout form fields */
+.nco-field {
+  margin-bottom: 18px;
+}
+
+.nco-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.nco-required {
+  color: #e53935;
+  margin-left: 2px;
+}
+
+.nco-field input[type="text"],
+.nco-field input[type="tel"],
+.nco-field input[type="email"],
+.nco-field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  background: #fff;
+  color: #333;
+}
+
+.nco-field input:focus,
+.nco-field textarea:focus {
+  outline: none;
+  border-color: #1a1a2e;
+  box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Order confirmation
+   -------------------------------------------------------------------------- */
+.nco-order-confirmation {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.nco-confirmation-icon {
+  width: 72px;
+  height: 72px;
+  background: #43a047;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 22px;
+}
+
+.nco-order-confirmation h2 {
+  font-size: 26px;
+  color: #111;
+  margin: 0 0 10px;
+  font-weight: 800;
+}
+
+.nco-order-confirmation p {
+  color: #555;
+  margin: 0 0 26px;
+  font-size: 15px;
+}
+
+/* --------------------------------------------------------------------------
+   Pagination
+   -------------------------------------------------------------------------- */
+.nco-pagination {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex !important; /* override any theme reset after nco-hidden is removed */
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.nco-page-btn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.nco-page-btn:hover {
+  background: #f4f4f4;
+  border-color: #bbb;
+}
+
+.nco-page-btn.is-active {
+  background: #1a1a2e;
+  border-color: #1a1a2e;
+  color: #fff;
+  cursor: default;
+  pointer-events: none;
+}
+
+.nco-page-btn:disabled,
+.nco-page-btn[disabled] {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nco-page-ellipsis {
+  color: #bbb;
+  font-size: 14px;
+  line-height: 38px;
+  padding: 0 2px;
+}
