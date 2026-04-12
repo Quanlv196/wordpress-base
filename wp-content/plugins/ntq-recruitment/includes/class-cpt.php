@@ -19,6 +19,10 @@ class NTQ_CPT {
 		// Admin filter dropdowns above job list table
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'add_filter_dropdowns' ) );
 		add_filter( 'parse_query',           array( __CLASS__, 'apply_admin_filters' ) );
+
+		// Meta boxes for salary & deadline
+		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
+		add_action( 'save_post_job',  array( __CLASS__, 'save_meta_boxes' ), 10, 2 );
 	}
 
 	// ─── Registration ─────────────────────────────────────────────────────────
@@ -112,6 +116,75 @@ class NTQ_CPT {
 		);
 	}
 
+	// ─── Meta boxes ───────────────────────────────────────────────────────────
+
+	public static function add_meta_boxes() {
+		add_meta_box(
+			'ntq_job_details',
+			__( 'Thông Tin Vị Trí', 'ntq-recruitment' ),
+			array( __CLASS__, 'render_meta_box' ),
+			'job',
+			'normal',
+			'high'
+		);
+	}
+
+	public static function render_meta_box( $post ) {
+		wp_nonce_field( 'ntq_job_meta_nonce', '_ntq_job_meta_nonce' );
+		$salary   = get_post_meta( $post->ID, '_job_salary', true );
+		$deadline = get_post_meta( $post->ID, '_job_deadline', true );
+		?>
+		<table class="form-table" style="margin-top:0">
+			<tr>
+				<th><label for="job_salary"><?php esc_html_e( 'Mức Lương', 'ntq-recruitment' ); ?></label></th>
+				<td>
+					<input type="text" id="job_salary" name="job_salary"
+						value="<?php echo esc_attr( $salary ); ?>"
+						placeholder="<?php esc_attr_e( 'Ví dụ: 10-15 triệu hoặc Thỏa thuận', 'ntq-recruitment' ); ?>"
+						class="regular-text">
+				</td>
+			</tr>
+			<tr>
+				<th><label for="job_deadline"><?php esc_html_e( 'Hạn Nộp Hồ Sơ', 'ntq-recruitment' ); ?></label></th>
+				<td>
+					<input type="date" id="job_deadline" name="job_deadline"
+						value="<?php echo esc_attr( $deadline ); ?>"
+						class="regular-text">
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+
+	public static function save_meta_boxes( $post_id, $post ) {
+		if ( ! isset( $_POST['_ntq_job_meta_nonce'] ) ||
+			! wp_verify_nonce( sanitize_key( $_POST['_ntq_job_meta_nonce'] ), 'ntq_job_meta_nonce' ) ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		// Salary
+		if ( isset( $_POST['job_salary'] ) ) {
+			update_post_meta( $post_id, '_job_salary', sanitize_text_field( wp_unslash( $_POST['job_salary'] ) ) );
+		}
+
+		// Deadline
+		if ( isset( $_POST['job_deadline'] ) ) {
+			$deadline = sanitize_text_field( wp_unslash( $_POST['job_deadline'] ) );
+			// Validate YYYY-MM-DD format
+			if ( '' === $deadline || preg_match( '/^\d{4}-\d{2}-\d{2}$/', $deadline ) ) {
+				update_post_meta( $post_id, '_job_deadline', $deadline );
+			}
+		}
+	}
+
 	// ─── Admin columns ────────────────────────────────────────────────────────
 
 	public static function job_columns( $columns ) {
@@ -121,6 +194,8 @@ class NTQ_CPT {
 			if ( 'title' === $key ) {
 					$new['job_department'] = __( 'Phòng Ban', 'ntq-recruitment' );
 					$new['job_location']   = __( 'Địa Điểm', 'ntq-recruitment' );
+					$new['job_salary']     = __( 'Mức Lương', 'ntq-recruitment' );
+					$new['job_deadline']   = __( 'Hạn Nộp', 'ntq-recruitment' );
 					$new['applications']   = __( 'Hồ Sơ', 'ntq-recruitment' );
 			}
 		}
@@ -134,6 +209,14 @@ class NTQ_CPT {
 				break;
 			case 'job_location':
 				echo esc_html( NTQ_Helpers::get_terms_string( $post_id, 'job_location' ) );
+				break;
+			case 'job_salary':
+				$salary = get_post_meta( $post_id, '_job_salary', true );
+				echo esc_html( $salary ?: '—' );
+				break;
+			case 'job_deadline':
+				$deadline = get_post_meta( $post_id, '_job_deadline', true );
+				echo $deadline ? esc_html( date_i18n( 'd/m/Y', strtotime( $deadline ) ) ) : '—';
 				break;
 			case 'applications':
 				$count = NTQ_Database::count_applications( array( 'job_id' => $post_id ) );

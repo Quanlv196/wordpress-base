@@ -24,6 +24,7 @@ class NTQ_Ajax {
 
 		$department = sanitize_text_field( wp_unslash( $_POST['department'] ?? '' ) );
 		$location   = sanitize_text_field( wp_unslash( $_POST['location'] ?? '' ) );
+		$job_id     = absint( $_POST['job_id'] ?? 0 );
 		$page       = max( 1, absint( $_POST['page'] ?? 1 ) );
 		$limit      = min( 50, max( 1, absint( $_POST['limit'] ?? 10 ) ) );
 
@@ -57,6 +58,11 @@ class NTQ_Ajax {
 			'orderby'        => 'date',
 			'order'          => 'DESC',
 		);
+
+		// Filter by specific job post ID
+		if ( $job_id > 0 ) {
+			$query_args['post__in'] = array( $job_id );
+		}
 
 		if ( ! empty( $tax_query ) ) {
 			$query_args['tax_query'] = $tax_query;
@@ -119,8 +125,8 @@ class NTQ_Ajax {
 			$errors[] = __( 'Vui lòng nhập địa chỉ email hợp lệ.', 'ntq-recruitment' );
 		}
 
-		if ( $job_id < 0 ) {
-			$errors[] = __( 'Vị trí tuyển dụng không hợp lệ.', 'ntq-recruitment' );
+		if ( $job_id <= 0 ) {
+			$errors[] = __( 'Vui lòng chọn vị trí ứng tuyển.', 'ntq-recruitment' );
 		}
 
 		// Verify the job exists and is published (only when a specific job is selected)

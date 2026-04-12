@@ -131,11 +131,14 @@ final class NTQ_Recruitment {
 	}
 
 	/**
-	 * Appends the application form below single-job content automatically.
+	 * Replaces single-job content with the two-column detail layout.
 	 */
 	public function append_apply_form( $content ) {
 		if ( is_singular( 'job' ) && in_the_loop() && is_main_query() ) {
-			$content .= NTQ_Shortcodes::get_apply_form( get_the_ID() );
+			$job_id = get_the_ID();
+			ob_start();
+			include NTQ_REC_PLUGIN_DIR . 'templates/single-job-detail.php';
+			return ob_get_clean();
 		}
 		return $content;
 	}

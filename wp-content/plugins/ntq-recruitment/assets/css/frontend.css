@@ -24,7 +24,7 @@
 .ntq-filter-form select {
   flex: 1 1 180px;
   height: 44px;
-  padding: 0 36px 0 14px;
+  padding: 0 38px 0 14px;
   border: 1px solid #d0d5dd;
   border-radius: 6px;
   font-size: 14px;
@@ -34,9 +34,8 @@
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23667085' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
+  -moz-appearance: none;
+  width: 100%;
 }
 
 .ntq-filter-form select:focus {
@@ -299,6 +298,60 @@
     box-shadow 0.2s;
 }
 
+/* ── Custom select wrapper ────────────────────────────────── */
+.ntq-select-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.ntq-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 6px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23667085' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.ntq-select-wrap select {
+  width: 100%;
+  height: 44px;
+  padding: 0 38px 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.ntq-select-wrap select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Filter form uses the same wrapper */
+.ntq-filter-form .ntq-select-wrap {
+  flex: 1 1 180px;
+}
+
+.ntq-filter-form .ntq-select-wrap select {
+  width: 100%;
+}
+
 .ntq-form-group input:focus,
 .ntq-form-group textarea:focus {
   outline: none;
@@ -341,25 +394,32 @@
   border: 1px solid #fecaca;
 }
 
+/* ── Form actions row (right-aligned submit) ──────────────── */
+.ntq-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
 .ntq-submit-btn {
-  width: 100%;
-  padding: 12px 24px;
-  background: #2563eb;
+  padding: 12px 32px;
+  background: #16a34a;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 
 .ntq-submit-btn:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #15803d;
 }
 
 .ntq-submit-btn:disabled {
-  background: #93c5fd;
+  background: #86efac;
   cursor: not-allowed;
 }
 
@@ -526,3 +586,166 @@
     max-width: unset;
   }
 }
+
+/* ============================================================
+   Single Job Detail – two-column layout
+   ============================================================ */
+
+/* ── Meta badges bar ──────────────────────────────────────── */
+.ntq-job-detail__badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ntq-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.ntq-badge--green {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.ntq-badge--green svg {
+  flex-shrink: 0;
+  color: #16a34a;
+}
+
+.ntq-badge strong {
+  font-weight: 700;
+}
+
+/* ── Two-column layout ────────────────────────────────────── */
+.ntq-job-detail__layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+  align-items: start;
+}
+
+.ntq-job-detail__content {
+  min-width: 0;
+}
+
+/* ── Apply card (sidebar) ─────────────────────────────────── */
+.ntq-job-detail__sidebar {
+  position: sticky;
+  top: 24px;
+}
+
+.ntq-apply-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.ntq-apply-card__title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Override section spacing when inside sidebar card */
+.ntq-apply-card .ntq-apply-section {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.ntq-apply-card .ntq-apply-form {
+  max-width: none;
+}
+
+/* ── Phone + Email two-column row ─────────────────────────── */
+.ntq-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── Custom file picker button ────────────────────────────── */
+.ntq-label-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b7280;
+  margin-left: 4px;
+}
+
+.ntq-file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.ntq-file-label:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.ntq-file-label input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.ntq-file-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ── Salary tag variant (gold tint) ──────────────────────── */
+.ntq-job-card__tag--salary {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .ntq-job-detail__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ntq-job-detail__sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .ntq-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+

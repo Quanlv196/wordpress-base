@@ -8,6 +8,8 @@ defined( 'ABSPATH' ) || exit;
 
 $departments_text = NTQ_Helpers::get_terms_string( get_the_ID(), 'job_department' );
 $locations_text   = NTQ_Helpers::get_terms_string( get_the_ID(), 'job_location' );
+$salary           = get_post_meta( get_the_ID(), '_job_salary', true );
+$deadline         = get_post_meta( get_the_ID(), '_job_deadline', true );
 ?>
 <div class="ntq-job-card">
 	<div class="ntq-job-card__body">
@@ -28,9 +30,21 @@ $locations_text   = NTQ_Helpers::get_terms_string( get_the_ID(), 'job_location' 
 				</span>
 			<?php endif; ?>
 
-			<span class="ntq-job-card__tag">
-				&#128197; <?php echo esc_html( get_the_date() ); ?>
-			</span>
+			<?php if ( $salary ) : ?>
+				<span class="ntq-job-card__tag ntq-job-card__tag--salary">
+					&#128176; <?php echo esc_html( $salary ); ?>
+				</span>
+			<?php endif; ?>
+
+			<?php if ( $deadline ) : ?>
+				<span class="ntq-job-card__tag">
+					&#128197; <?php esc_html_e( 'Hạn nộp:', 'ntq-recruitment' ); ?> <?php echo esc_html( date_i18n( 'd/m/Y', strtotime( $deadline ) ) ); ?>
+				</span>
+			<?php else : ?>
+				<span class="ntq-job-card__tag">
+					&#128197; <?php echo esc_html( get_the_date() ); ?>
+				</span>
+			<?php endif; ?>
 		</div>
 
 		<p class="ntq-job-card__excerpt">

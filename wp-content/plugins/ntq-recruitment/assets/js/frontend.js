@@ -99,6 +99,7 @@
         payload.department =
           $filterForm.find('[name="department"]').val() || "";
         payload.location = $filterForm.find('[name="location"]').val() || "";
+        payload.job_id   = parseInt($filterForm.find('[name="job_id"]').val()) || 0;
       }
 
       return payload;
@@ -201,7 +202,7 @@
     function clearErrors() {
       $form.find(".ntq-field-error").text("");
       $form
-        .find(".ntq-form-group input, .ntq-form-group textarea")
+        .find(".ntq-form-group input, .ntq-form-group select, .ntq-form-group textarea")
         .removeClass("ntq-input--error");
     }
 
@@ -210,13 +211,20 @@
       $form
         .find(selector)
         .closest(".ntq-form-group")
-        .find("input, textarea")
+        .find("input, select, textarea")
         .addClass("ntq-input--error");
     }
 
     function validate() {
       clearErrors();
       var ok = true;
+
+      // Job position (only when the select exists in the form)
+      var $jobSelect = $form.find('[name="job_id"]').filter('select');
+      if ( $jobSelect.length && !$jobSelect.val() ) {
+        setError(".error-job", i18n.required);
+        ok = false;
+      }
 
       // Name
       var name = $.trim($form.find('[name="applicant_name"]').val());
