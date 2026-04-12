@@ -53,16 +53,27 @@ class WCAF_Product_List_Shortcode {
 	public function render( $atts ): string {
 		$atts = shortcode_atts(
 			array(
-				'id'         => 'wcaf-list-' . wp_unique_id(),
-				'filter_ids' => '',    // Comma-separated IDs of connected [wc_filter] shortcodes.
-				'cat_ids'    => '',    // Comma-separated category IDs to restrict this list (and all AJAX refreshes) to.
-				'per_page'   => 12,
-				'columns'    => 4,
-				'tablet'     => 2,
-				'mobile'     => 1,
-				'orderby'    => 'date',
-				'order'      => 'DESC',
-				'class'      => '',
+				'id'                => 'wcaf-list-' . wp_unique_id(),
+				'filter_ids'        => '',    // Comma-separated IDs of connected [wc_filter] shortcodes.
+				'cat_ids'           => '',    // Comma-separated category IDs to restrict this list (and all AJAX refreshes) to.
+				'per_page'          => 12,
+				'columns'           => 4,
+				'tablet'            => 2,
+				'mobile'            => 1,
+				'orderby'           => 'date',
+				'order'             => 'DESC',
+				'class'             => '',
+				// --- Flatsome / product-card display options ---
+				'show_title'        => 'true',
+				'show_price'        => 'true',
+				'show_rating'       => 'true',
+				'show_add_to_cart'  => 'true',
+				'show_second_image' => 'true',
+				'show_view_detail'  => 'true',  // Show "Xem chi tiết" button below each product card.
+				'view_detail_label' => '',      // Override button label (default: 'Xem chi tiết').
+				'image_size'        => 'woocommerce_thumbnail', // any registered WP image size
+				'style'             => '',    // Flatsome card style: '' | 'overlay' | 'button-on-image' | ...
+				'text_align'        => '',    // '' | 'left' | 'center' | 'right'
 			),
 			$atts,
 			'wc_product_list'
@@ -85,6 +96,18 @@ class WCAF_Product_List_Shortcode {
 		$orderby    = sanitize_key( $atts['orderby'] );
 		$order      = 'ASC' === strtoupper( sanitize_key( $atts['order'] ) ) ? 'ASC' : 'DESC';
 		$extra_cls  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', trim( $atts['class'] ) ) ) );
+
+		// --- Flatsome / display options ---
+		$show_title        = filter_var( $atts['show_title'],        FILTER_VALIDATE_BOOLEAN );
+		$show_price        = filter_var( $atts['show_price'],        FILTER_VALIDATE_BOOLEAN );
+		$show_rating       = filter_var( $atts['show_rating'],       FILTER_VALIDATE_BOOLEAN );
+		$show_add_to_cart  = filter_var( $atts['show_add_to_cart'],  FILTER_VALIDATE_BOOLEAN );
+		$show_second_image = filter_var( $atts['show_second_image'], FILTER_VALIDATE_BOOLEAN );
+		$show_view_detail  = filter_var( $atts['show_view_detail'],  FILTER_VALIDATE_BOOLEAN );
+		$view_detail_label = sanitize_text_field( $atts['view_detail_label'] );
+		$image_size        = sanitize_key( $atts['image_size'] ) ?: 'woocommerce_thumbnail';
+		$style             = sanitize_key( $atts['style'] );
+		$text_align        = in_array( $atts['text_align'], array( 'left', 'center', 'right' ), true ) ? $atts['text_align'] : '';
 
 		// Run the initial query — pass cat_ids so the initial page load is
 		// already restricted to the same category subtree as the AJAX results.
@@ -111,6 +134,16 @@ class WCAF_Product_List_Shortcode {
 			data-orderby="<?php echo esc_attr( $orderby ); ?>"
 			data-order="<?php echo esc_attr( $order ); ?>"
 			data-page="1"
+			data-show-title="<?php echo $show_title ? '1' : '0'; ?>"
+			data-show-price="<?php echo $show_price ? '1' : '0'; ?>"
+			data-show-rating="<?php echo $show_rating ? '1' : '0'; ?>"
+			data-show-add-to-cart="<?php echo $show_add_to_cart ? '1' : '0'; ?>"
+			data-show-second-image="<?php echo $show_second_image ? '1' : '0'; ?>"
+			data-show-view-detail="<?php echo $show_view_detail ? '1' : '0'; ?>"
+			data-view-detail-label="<?php echo esc_attr( $view_detail_label ); ?>"
+			data-image-size="<?php echo esc_attr( $image_size ); ?>"
+			data-style="<?php echo esc_attr( $style ); ?>"
+			data-text-align="<?php echo esc_attr( $text_align ); ?>"
 		>
 
 			<!-- Toolbar: result count + per-page + sort -->
@@ -183,7 +216,7 @@ class WCAF_Product_List_Shortcode {
 
 			<!-- Products grid (replaced on each AJAX response) -->
 			<div class="wcaf-product-list__grid-wrap">
-				<?php self::render_products_grid( $products, $columns, $tablet, $mobile ); ?>
+				<?php self::render_products_grid( $products, $columns, $tablet, $mobile, compact( 'show_title', 'show_price', 'show_rating', 'show_add_to_cart', 'show_second_image', 'show_view_detail', 'view_detail_label', 'image_size', 'style', 'text_align' ) ); ?>
 			</div>
 
 			<!-- Pagination (replaced on each AJAX response) -->
@@ -214,8 +247,10 @@ class WCAF_Product_List_Shortcode {
 	 * @param int      $columns  Desktop column count.
 	 * @param int      $tablet   Tablet column count.
 	 * @param int      $mobile   Mobile column count.
+	 * @param array    $options  Display options (show_title, show_price, show_rating, show_add_to_cart,
+	 *                           show_second_image, show_view_detail, view_detail_label, image_size, style, text_align).
 	 */
-	public static function render_products_grid( WP_Query $products, int $columns = 4, int $tablet = 2, int $mobile = 1 ): void {
+	public static function render_products_grid( WP_Query $products, int $columns = 4, int $tablet = 2, int $mobile = 1, array $options = array() ): void {
 		if ( ! $products->have_posts() ) {
 			?>
 			<div class="wcaf-no-products">
@@ -234,16 +269,62 @@ class WCAF_Product_List_Shortcode {
 		wc_set_loop_prop( 'per_page',     $products->get( 'posts_per_page' ) );
 		wc_set_loop_prop( 'current_page', max( 1, (int) $products->get( 'paged' ) ) );
 
+		// --- Flatsome / theme-specific loop props -------------------------------- //
+		$opt_show_title        = isset( $options['show_title'] )        ? (bool) $options['show_title']        : true;
+		$opt_show_price        = isset( $options['show_price'] )        ? (bool) $options['show_price']        : true;
+		$opt_show_rating       = isset( $options['show_rating'] )       ? (bool) $options['show_rating']       : true;
+		$opt_show_add_to_cart  = isset( $options['show_add_to_cart'] )  ? (bool) $options['show_add_to_cart']  : true;
+		$opt_show_second_image = isset( $options['show_second_image'] ) ? (bool) $options['show_second_image'] : true;
+		$opt_image_size        = ( isset( $options['image_size'] ) && $options['image_size'] ) ? sanitize_key( $options['image_size'] ) : 'woocommerce_thumbnail';
+		$opt_style             = isset( $options['style'] ) ? sanitize_key( $options['style'] ) : '';
+		$opt_text_align        = ( isset( $options['text_align'] ) && in_array( $options['text_align'], array( 'left', 'center', 'right' ), true ) ) ? $options['text_align'] : '';
+
+		wc_set_loop_prop( 'show_title',        $opt_show_title );
+		wc_set_loop_prop( 'show_price',        $opt_show_price );
+		wc_set_loop_prop( 'show_rating',       $opt_show_rating );
+		$opt_show_view_detail  = isset( $options['show_view_detail'] )  ? (bool) $options['show_view_detail']  : true;
+		$opt_view_detail_label = ( isset( $options['view_detail_label'] ) && '' !== $options['view_detail_label'] )
+			? sanitize_text_field( $options['view_detail_label'] )
+			: __( 'Xem chi tiết', 'wc-ajax-filter' );
+
+		wc_set_loop_prop( 'show_add_to_cart',  $opt_show_add_to_cart );
+		wc_set_loop_prop( 'show_second_image', $opt_show_second_image );
+		wc_set_loop_prop( 'show_view_detail',  $opt_show_view_detail );
+		wc_set_loop_prop( 'image_size',        $opt_image_size );
+
+		// Build <ul> class list — base WooCommerce classes + optional Flatsome modifiers.
+		$ul_classes = sprintf( 'products columns-%d wcaf-product-list__grid', absint( $columns ) );
+		if ( $opt_style ) {
+			$ul_classes .= ' product-style-' . esc_attr( $opt_style );
+		}
+		if ( $opt_text_align ) {
+			$ul_classes .= ' text-' . esc_attr( $opt_text_align );
+		}
+
 		// Output the <ul> manually so we can attach the WooCommerce columns class
 		// AND our CSS custom properties for responsive breakpoint control, while
 		// still letting the active theme style .products.columns-N as usual.
 		printf(
-			'<ul class="products columns-%d wcaf-product-list__grid" style="--wcaf-cols:%d;--wcaf-cols-tablet:%d;--wcaf-cols-mobile:%d;">',
-			absint( $columns ),
+			'<ul class="%s" style="--wcaf-cols:%d;--wcaf-cols-tablet:%d;--wcaf-cols-mobile:%d;">',
+			esc_attr( $ul_classes ),
 			absint( $columns ),
 			absint( $tablet ),
 			absint( $mobile )
 		);
+
+		// Add "Xem chi tiết" button hook — scoped to this render only.
+		$view_detail_label_captured = $opt_view_detail_label;
+		$view_detail_cb = static function () use ( $view_detail_label_captured ) {
+			if ( ! wc_get_loop_prop( 'show_view_detail' ) ) {
+				return;
+			}
+			printf(
+				'<a href="%s" class="button wcaf-btn-view-detail">%s</a>',
+				esc_url( get_permalink() ),
+				esc_html( $view_detail_label_captured )
+			);
+		};
+		add_action( 'woocommerce_after_shop_loop_item', $view_detail_cb, 15 );
 
 		while ( $products->have_posts() ) {
 			$products->the_post();
@@ -251,6 +332,8 @@ class WCAF_Product_List_Shortcode {
 			// overrides and fires all standard WooCommerce action hooks.
 			wc_get_template_part( 'content', 'product' );
 		}
+
+		remove_action( 'woocommerce_after_shop_loop_item', $view_detail_cb, 15 );
 
 		echo '</ul>';
 		wp_reset_postdata();

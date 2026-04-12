@@ -349,6 +349,16 @@
       var columns = parseInt($list.data("columns"), 10) || 4;
       var tablet = parseInt($list.data("tablet"), 10) || 2;
       var mobile = parseInt($list.data("mobile"), 10) || 1;
+      var showTitle      = $list.data("show-title")       !== undefined ? parseInt($list.data("show-title"),       10) : 1;
+      var showPrice      = $list.data("show-price")       !== undefined ? parseInt($list.data("show-price"),       10) : 1;
+      var showRating     = $list.data("show-rating")      !== undefined ? parseInt($list.data("show-rating"),      10) : 1;
+      var showAddToCart  = $list.data("show-add-to-cart") !== undefined ? parseInt($list.data("show-add-to-cart"), 10) : 1;
+      var showSecondImg  = $list.data("show-second-image")!== undefined ? parseInt($list.data("show-second-image"),10) : 1;
+      var showViewDetail = $list.data("show-view-detail") !== undefined ? parseInt($list.data("show-view-detail"), 10) : 1;
+      var viewDetailLabel= $list.data("view-detail-label") || "";
+      var imageSize      = $list.data("image-size")  || "woocommerce_thumbnail";
+      var style          = $list.data("style")        || "";
+      var textAlign      = $list.data("text-align")   || "";
 
       // Abort any in-flight request for this list.
       if (this.activeXhr[listId]) {
@@ -371,6 +381,16 @@
           columns: columns,
           tablet: tablet,
           mobile: mobile,
+          show_title:        showTitle,
+          show_price:        showPrice,
+          show_rating:       showRating,
+          show_add_to_cart:  showAddToCart,
+          show_second_image: showSecondImg,
+          show_view_detail:  showViewDetail,
+          view_detail_label: viewDetailLabel,
+          image_size:        imageSize,
+          style:             style,
+          text_align:        textAlign,
         },
         success: function (response) {
           if (response.success) {
@@ -593,6 +613,10 @@
         var vals = WCAF.collectSingleFilter($filter);
 
         $.each(vals, function (key, val) {
+          // cat_ids is a configuration constraint, not a user-selected filter — exclude from URL.
+          if (key === "cat_ids") {
+            return;
+          }
           if (Array.isArray(val)) {
             val.forEach(function (v) {
               params.append(filterId + "[" + key + "][]", v);
@@ -635,8 +659,7 @@
             var key = multiMatch[2];
             $filter
               .find('[data-filter-key="' + key + '"][value="' + value + '"]')
-              .prop("checked", true)
-              .trigger("change");
+              .prop("checked", true);
             hasValues = true;
           } else if (singleMatch && singleMatch[1] === filterId) {
             var sKey = singleMatch[2];
@@ -651,6 +674,24 @@
                   '"][type="hidden"]',
               )
               .val(value);
+            // Select dropdowns.
+            $filter
+              .find('select[data-filter-key="' + sKey + '"]')
+              .val(value);
+            // Tabs — activate the matching tab button visually.
+            $filter
+              .find('.wcaf-filter__tabs[data-filter-key="' + sKey + '"], .wcaf-filter__tabs')
+              .each(function () {
+                var $tabs = $(this);
+                var $match = $tabs.find(
+                  '.wcaf-filter__tab[data-filter-key="' + sKey + '"][data-value="' + value + '"]',
+                );
+                if ($match.length) {
+                  $tabs.find('.wcaf-filter__tab').removeClass('is-active').attr('aria-selected', 'false');
+                  $match.addClass('is-active').attr('aria-selected', 'true');
+                  $tabs.find('.wcaf-filter__tab-value').val(value);
+                }
+              });
             hasValues = true;
           }
         });

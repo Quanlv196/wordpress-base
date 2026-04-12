@@ -183,7 +183,7 @@ class WCAF_Filter_Shortcode {
 
 		$get_terms_args = array(
 			'taxonomy'   => $taxonomy,
-			'hide_empty' => true,
+			'hide_empty' => false,
 			'orderby'    => 'name',
 			'order'      => 'ASC',
 		);

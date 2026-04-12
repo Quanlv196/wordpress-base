@@ -102,6 +102,20 @@ class WCAF_Ajax {
 		$tablet  = isset( $_POST['tablet'] )  ? max( 1, min( 4, absint( $_POST['tablet'] ) ) )  : 2;
 		$mobile  = isset( $_POST['mobile'] )  ? max( 1, min( 2, absint( $_POST['mobile'] ) ) )  : 1;
 
+		// --- Flatsome / display options ------------------------------------ //
+		$show_title        = ! isset( $_POST['show_title'] )        || (bool) absint( $_POST['show_title'] );
+		$show_price        = ! isset( $_POST['show_price'] )        || (bool) absint( $_POST['show_price'] );
+		$show_rating       = ! isset( $_POST['show_rating'] )       || (bool) absint( $_POST['show_rating'] );
+		$show_add_to_cart  = ! isset( $_POST['show_add_to_cart'] )  || (bool) absint( $_POST['show_add_to_cart'] );
+		$show_second_image = ! isset( $_POST['show_second_image'] ) || (bool) absint( $_POST['show_second_image'] );
+		$show_view_detail  = ! isset( $_POST['show_view_detail'] )  || (bool) absint( $_POST['show_view_detail'] );
+		$view_detail_label = isset( $_POST['view_detail_label'] ) ? sanitize_text_field( wp_unslash( $_POST['view_detail_label'] ) ) : '';
+		$image_size        = isset( $_POST['image_size'] ) ? sanitize_key( wp_unslash( $_POST['image_size'] ) ) : 'woocommerce_thumbnail';
+		$image_size        = $image_size ?: 'woocommerce_thumbnail';
+		$style             = isset( $_POST['style'] )      ? sanitize_key( wp_unslash( $_POST['style'] ) )      : '';
+		$text_align_raw    = isset( $_POST['text_align'] ) ? sanitize_key( wp_unslash( $_POST['text_align'] ) ) : '';
+		$text_align        = in_array( $text_align_raw, array( 'left', 'center', 'right' ), true ) ? $text_align_raw : '';
+
 		// --- Sanitise filter values --------------------------------------- //
 
 		$raw_filters = array();
@@ -116,7 +130,7 @@ class WCAF_Ajax {
 
 		$cache_key = 'wcaf_result_' . md5(
 			wp_json_encode(
-				compact( 'filters', 'per_page', 'page', 'raw_orderby', 'order', 'columns', 'tablet', 'mobile' )
+				compact( 'filters', 'per_page', 'page', 'raw_orderby', 'order', 'columns', 'tablet', 'mobile', 'show_title', 'show_price', 'show_rating', 'show_add_to_cart', 'show_second_image', 'show_view_detail', 'view_detail_label', 'image_size', 'style', 'text_align' )
 			)
 		);
 
@@ -141,7 +155,7 @@ class WCAF_Ajax {
 		// --- Build HTML fragments ----------------------------------------- //
 
 		ob_start();
-		WCAF_Product_List_Shortcode::render_products_grid( $products, $columns, $tablet, $mobile );
+		WCAF_Product_List_Shortcode::render_products_grid( $products, $columns, $tablet, $mobile, compact( 'show_title', 'show_price', 'show_rating', 'show_add_to_cart', 'show_second_image', 'show_view_detail', 'view_detail_label', 'image_size', 'style', 'text_align' ) );
 		$grid_html = ob_get_clean();
 
 		ob_start();
