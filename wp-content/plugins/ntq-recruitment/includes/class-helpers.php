@@ -118,9 +118,24 @@ class NTQ_Helpers {
 		if ( $total_pages <= 1 ) {
 			return;
 		}
+
+		$current = (int) $current;
+		$prev_disabled = ( $current <= 1 ) ? ' ntq-pagination__item--disabled' : '';
+		$next_disabled = ( $current >= $total_pages ) ? ' ntq-pagination__item--disabled' : '';
+
 		echo '<nav class="ntq-pagination">';
+
+		// Prev button
+		printf(
+			'<a href="#" class="ntq-pagination__item ntq-pagination__item--prev%s" data-page="%d" aria-label="%s">&#8249;</a>',
+			esc_attr( $prev_disabled ),
+			max( 1, $current - 1 ),
+			esc_attr__( 'Trang trước', 'ntq-recruitment' )
+		);
+
+		// Page numbers
 		for ( $i = 1; $i <= $total_pages; $i++ ) {
-			$active = ( $i === (int) $current ) ? ' ntq-pagination__item--active' : '';
+			$active = ( $i === $current ) ? ' ntq-pagination__item--active' : '';
 			printf(
 				'<a href="#" class="ntq-pagination__item%s" data-page="%d">%d</a>',
 				esc_attr( $active ),
@@ -128,6 +143,15 @@ class NTQ_Helpers {
 				$i
 			);
 		}
+
+		// Next button
+		printf(
+			'<a href="#" class="ntq-pagination__item ntq-pagination__item--next%s" data-page="%d" aria-label="%s">&#8250;</a>',
+			esc_attr( $next_disabled ),
+			min( $total_pages, $current + 1 ),
+			esc_attr__( 'Trang sau', 'ntq-recruitment' )
+		);
+
 		echo '</nav>';
 	}
 

@@ -154,12 +154,11 @@ if ( $is_general ) {
 				>
 			</label>
 			<span class="ntq-field-error error-cv" role="alert"></span>
-			<small class="ntq-file-hint"><?php esc_html_e( 'Định dạng chấp nhận: PDF, DOC, DOCX.', 'ntq-recruitment' ); ?></small>
 		</div>
 
 		<!-- Submit (right-aligned) -->
 		<div class="ntq-form-actions">
-			<button type="submit" class="ntq-submit-btn">
+			<button type="submit" class="button primary">
 				<?php esc_html_e( 'Gửi ứng tuyển', 'ntq-recruitment' ); ?>
 			</button>
 		</div>

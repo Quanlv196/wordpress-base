@@ -7,7 +7,6 @@
  * Requires PHP:      7.4
  * Author:            Quanlv
  * License:           GPL-2.0+
- * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wc-ajax-filter
  * Domain Path:       /languages
  * WC requires at least: 5.0

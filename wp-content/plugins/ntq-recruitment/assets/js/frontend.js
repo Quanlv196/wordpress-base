@@ -78,6 +78,10 @@
   // ===================================================================
   // Job filter + list (AJAX)
   // ===================================================================
+
+  // Exposed by initJobFilter so initTabFilter can call it directly.
+  var _reloadJobList = null;
+
   function initJobFilter() {
     var $filterForm = $("#ntq-rec-filter-form");
     var $jobList = $("#ntq-rec-job-list");
@@ -86,6 +90,7 @@
 
     /**
      * Build request payload from the current filter state and page number.
+     * Reads both the dropdown form (if present) and any active tab filters.
      */
     function buildPayload(page) {
       var payload = {
@@ -99,8 +104,20 @@
         payload.department =
           $filterForm.find('[name="department"]').val() || "";
         payload.location = $filterForm.find('[name="location"]').val() || "";
-        payload.job_id   = parseInt($filterForm.find('[name="job_id"]').val()) || 0;
+        payload.job_id =
+          parseInt($filterForm.find('[name="job_id"]').val()) || 0;
       }
+
+      // Tab filters override the form values for the same key.
+      // Use .attr() to read directly from DOM – avoids jQuery .data() caching quirks.
+      $(".ntq-tab-filter").each(function () {
+        var filterType = $(this).attr("data-filter-type");
+        if (!filterType) return;
+        var $active = $(this).find(".ntq-tab-filter__item--active");
+        payload[filterType] = $active.length
+          ? $active.attr("data-value") || ""
+          : "";
+      });
 
       return payload;
     }
@@ -131,6 +148,11 @@
         },
       });
     }
+
+    // Expose for initTabFilter – direct call, no event bridge needed.
+    _reloadJobList = function (page) {
+      loadJobs(page || 1);
+    };
 
     // Bind filter form events
     if ($filterForm.length) {
@@ -163,6 +185,27 @@
     }
 
     bindPagination();
+  }
+
+  // ===================================================================
+  // Tab filter (links .ntq-tab-filter clicks → job list reload)
+  // ===================================================================
+  function initTabFilter() {
+    $(document).on("click", ".ntq-tab-filter__item", function () {
+      var $item = $(this);
+      var $filter = $item.closest(".ntq-tab-filter");
+
+      // Update active state
+      $filter
+        .find(".ntq-tab-filter__item")
+        .removeClass("ntq-tab-filter__item--active");
+      $item.addClass("ntq-tab-filter__item--active");
+
+      // Call loadJobs directly via the reference set by initJobFilter.
+      if (_reloadJobList) {
+        _reloadJobList(1);
+      }
+    });
   }
 
   // ===================================================================
@@ -202,7 +245,9 @@
     function clearErrors() {
       $form.find(".ntq-field-error").text("");
       $form
-        .find(".ntq-form-group input, .ntq-form-group select, .ntq-form-group textarea")
+        .find(
+          ".ntq-form-group input, .ntq-form-group select, .ntq-form-group textarea",
+        )
         .removeClass("ntq-input--error");
     }
 
@@ -220,8 +265,8 @@
       var ok = true;
 
       // Job position (only when the select exists in the form)
-      var $jobSelect = $form.find('[name="job_id"]').filter('select');
-      if ( $jobSelect.length && !$jobSelect.val() ) {
+      var $jobSelect = $form.find('[name="job_id"]').filter("select");
+      if ($jobSelect.length && !$jobSelect.val()) {
         setError(".error-job", i18n.required);
         ok = false;
       }
@@ -386,6 +431,7 @@
   // ===================================================================
   $(document).ready(function () {
     initJobFilter();
+    initTabFilter();
     initApplyForm();
   });
 })(jQuery);

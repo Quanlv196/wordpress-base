@@ -33,11 +33,12 @@ class PAF_Query_Builder {
 		$page     = isset( $list_args['page'] )     ? absint( $list_args['page'] )     : 1;
 
 		$args = array(
-			'post_type'      => 'post',
-			'post_status'    => 'publish',
-			'posts_per_page' => $per_page,
-			'paged'          => $page,
-			'tax_query'      => array( 'relation' => 'AND' ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'post_type'           => 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => $per_page,
+			'paged'               => $page,
+			'ignore_sticky_posts' => true,
+			'tax_query'           => array( 'relation' => 'AND' ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
 
 		// ---- Bộ lọc theo danh mục ---------------------------------------- //

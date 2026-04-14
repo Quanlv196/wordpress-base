@@ -16,11 +16,22 @@ class NTQ_Shortcodes {
 	// ─── [job_filter] ─────────────────────────────────────────────────────────
 
 	/**
-	 * Renders a filter form with Department and Location dropdowns.
+	 * Renders a filter form with Department and Location dropdowns,
+	 * or a tabs-style filter when `type` is specified.
 	 *
 	 * Usage: [job_filter]
+	 *        [job_filter type="department"]
+	 *        [job_filter type="location"]
 	 */
 	public static function shortcode_filter( $atts ) {
+		$atts = shortcode_atts(
+			array( 'type' => '' ),
+			$atts,
+			'job_filter'
+		);
+
+		$filter_type = sanitize_key( $atts['type'] );
+
 		ob_start();
 		include NTQ_REC_PLUGIN_DIR . 'templates/job-filter.php';
 		return ob_get_clean();

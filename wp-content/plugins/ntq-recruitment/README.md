@@ -12,19 +12,47 @@ Hiển thị thanh lọc (filter) với dropdown **Vị Trí**, **Phòng Ban** v
 Kết hợp với `[job_list]` trên cùng trang để lọc danh sách việc làm bằng AJAX.
 
 **Cú pháp:**
+
 ```
 [job_filter]
 ```
 
-**Không có tham số.**
+**Không có tham số** – hiển thị dạng form với ba dropdown.
 
-Các dropdown hiển thị trong form:
+---
 
-| Dropdown       | Dữ liệu nguồn                          |
-|----------------|----------------------------------------|
-| Vị trí         | Tất cả job post đang **publish**       |
-| Phòng Ban      | Taxonomy `job_department`             |
-| Địa Điểm       | Taxonomy `job_location`               |
+#### Biến thể: Tab filter
+
+Thêm tham số `type` để hiển thị một bộ lọc riêng lẻ dưới dạng **danh sách tabs (pill buttons)**.  
+Mỗi tab hiển thị tên danh mục kèm số lượng công việc `(n)`.  
+Click tab sẽ lọc `[job_list]` ngay lập tức qua AJAX (không cần nút Submit).
+
+**Cú pháp:**
+
+```
+[job_filter type="department"]
+[job_filter type="location"]
+```
+
+| Tham số | Giá trị      | Mô tả                                     |
+| ------- | ------------ | ----------------------------------------- |
+| `type`  | `department` | Hiển thị các **Phòng Ban** dưới dạng tabs |
+| `type`  | `location`   | Hiển thị các **Địa Điểm** dưới dạng tabs  |
+
+**Ví dụ – Tab filter phòng ban + danh sách việc làm:**
+
+```
+[job_filter type="department"]
+[job_list limit="10"]
+```
+
+Các dropdown hiển thị trong form (khi không dùng `type`):
+
+| Dropdown  | Dữ liệu nguồn                    |
+| --------- | -------------------------------- |
+| Vị trí    | Tất cả job post đang **publish** |
+| Phòng Ban | Taxonomy `job_department`        |
+| Địa Điểm  | Taxonomy `job_location`          |
 
 ---
 
@@ -33,18 +61,20 @@ Các dropdown hiển thị trong form:
 Hiển thị danh sách các vị trí tuyển dụng đang mở, có phân trang và hỗ trợ lọc AJAX.
 
 **Cú pháp:**
+
 ```
 [job_list]
 [job_list limit="10"]
 [job_list limit="5" offset="0"]
 ```
 
-| Tham số  | Kiểu  | Mặc định | Mô tả |
-|----------|-------|----------|-------|
-| `limit`  | `int` | `10`     | Số việc làm hiển thị mỗi trang. Tối đa `50`. |
+| Tham số  | Kiểu  | Mặc định | Mô tả                                                                   |
+| -------- | ----- | -------- | ----------------------------------------------------------------------- |
+| `limit`  | `int` | `10`     | Số việc làm hiển thị mỗi trang. Tối đa `50`.                            |
 | `offset` | `int` | `0`      | Bỏ qua N việc làm đầu tiên (dùng khi muốn bắt đầu từ vị trí nhất định). |
 
 **Ví dụ – Hiển thị 6 việc làm mới nhất:**
+
 ```
 [job_list limit="6"]
 ```
@@ -58,21 +88,24 @@ Hiển thị form ứng tuyển. Có thể dùng độc lập hoặc nhúng vào
 > **Lưu ý:** Trên các trang **single job** (chi tiết việc làm), form ứng tuyển được tự động thêm vào. Bạn **không cần** dùng shortcode này trên trang đó.
 
 **Cú pháp:**
+
 ```
 [job_apply]
 [job_apply job_id="123"]
 ```
 
-| Tham số  | Kiểu  | Mặc định | Mô tả |
-|----------|-------|----------|-------|
+| Tham số  | Kiểu  | Mặc định | Mô tả                                                                                                   |
+| -------- | ----- | -------- | ------------------------------------------------------------------------------------------------------- |
 | `job_id` | `int` | `0`      | ID của bài đăng việc làm. Nếu để `0`, form sẽ là form ứng tuyển tổng hợp (không gắn với vị trí cụ thể). |
 
 **Ví dụ – Form ứng tuyển cho job ID 42:**
+
 ```
 [job_apply job_id="42"]
 ```
 
 **Ví dụ – Form ứng tuyển tổng hợp (có dropdown chọn vị trí):**
+
 ```
 [job_apply]
 ```
@@ -104,6 +137,7 @@ Khi dùng `[job_apply]` không truyền `job_id`, form sẽ hiển thị thêm d
 ### Bước 3 – Xem trang chi tiết việc làm
 
 Mỗi việc làm có trang riêng với:
+
 - Nội dung mô tả công việc (cột trái).
 - Sidebar phải hiển thị các thông tin **Hạn nộp / Phòng ban / Mức lương / Địa điểm** và form ứng tuyển trực tiếp.
 

@@ -63,6 +63,53 @@
   background: #1d4ed8;
 }
 
+/* ── Tab filter ───────────────────────────────────────────── */
+.ntq-tab-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.ntq-tab-filter__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 20px;
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.ntq-tab-filter__item:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.ntq-tab-filter__item--active {
+  background: #22c55e;
+  color: #fff;
+}
+
+.ntq-tab-filter__item--active:hover {
+  background: #16a34a;
+  color: #fff;
+}
+
+.ntq-tab-filter__count {
+  font-weight: 400;
+  opacity: 0.85;
+}
+
 /* ── Job list container ───────────────────────────────────── */
 .ntq-job-list {
   position: relative;
@@ -245,6 +292,17 @@
   border-color: #2563eb;
   color: #fff;
   pointer-events: none;
+}
+
+.ntq-pagination__item--disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
+
+.ntq-pagination__item--prev,
+.ntq-pagination__item--next {
+  font-size: 16px;
 }
 
 /* ── Application form ─────────────────────────────────────── */
@@ -593,12 +651,9 @@
 
 /* ── Meta badges bar ──────────────────────────────────────── */
 .ntq-job-detail__badges {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #f0f0f0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .ntq-badge {
@@ -610,12 +665,6 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
-}
-
-.ntq-badge--green {
-  background: #dcfce7;
-  color: #166534;
-  border: 1px solid #bbf7d0;
 }
 
 .ntq-badge--green svg {
@@ -700,7 +749,9 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   position: relative;
   overflow: hidden;
 }
@@ -748,4 +799,3 @@
     grid-template-columns: 1fr;
   }
 }
-

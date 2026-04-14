@@ -13,36 +13,34 @@ $deadline         = get_post_meta( get_the_ID(), '_job_deadline', true );
 ?>
 <div class="ntq-job-card">
 	<div class="ntq-job-card__body">
+		<div class="job-department">
+			<?php echo esc_html( $departments_text ); ?>
+		</div>
 		<h3 class="ntq-job-card__title">
 			<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 		</h3>
 
 		<div class="ntq-job-card__meta">
-			<?php if ( '—' !== $departments_text ) : ?>
-				<span class="ntq-job-card__tag">
-					&#127970; <?php echo esc_html( $departments_text ); ?>
-				</span>
-			<?php endif; ?>
 
 			<?php if ( '—' !== $locations_text ) : ?>
-				<span class="ntq-job-card__tag">
-					&#128205; <?php echo esc_html( $locations_text ); ?>
+				<span class="ntq-job-card__tag location">
+					<?php echo esc_html( $locations_text ); ?>
 				</span>
 			<?php endif; ?>
 
 			<?php if ( $salary ) : ?>
 				<span class="ntq-job-card__tag ntq-job-card__tag--salary">
-					&#128176; <?php echo esc_html( $salary ); ?>
+					<?php echo esc_html( $salary ); ?>
 				</span>
 			<?php endif; ?>
 
 			<?php if ( $deadline ) : ?>
-				<span class="ntq-job-card__tag">
-					&#128197; <?php esc_html_e( 'Hạn nộp:', 'ntq-recruitment' ); ?> <?php echo esc_html( date_i18n( 'd/m/Y', strtotime( $deadline ) ) ); ?>
+				<span class="ntq-job-card__tag deadline">
+					<?php esc_html_e( 'Hạn nộp:', 'ntq-recruitment' ); ?> <?php echo esc_html( date_i18n( 'd/m/Y', strtotime( $deadline ) ) ); ?>
 				</span>
 			<?php else : ?>
 				<span class="ntq-job-card__tag">
-					&#128197; <?php echo esc_html( get_the_date() ); ?>
+					<?php echo esc_html( get_the_date() ); ?>
 				</span>
 			<?php endif; ?>
 		</div>
@@ -50,11 +48,14 @@ $deadline         = get_post_meta( get_the_ID(), '_job_deadline', true );
 		<p class="ntq-job-card__excerpt">
 			<?php echo esc_html( wp_trim_words( get_the_excerpt(), 20, '…' ) ); ?>
 		</p>
+		<div class="ntq-job-card__action">
+			<a href="<?php the_permalink(); ?>" class="button is-outline primary">
+				<?php esc_html_e( 'Xem Chi Tiết', 'ntq-recruitment' ); ?>
+			</a>
+			<a href="#job_register" class="button primary">
+				<?php esc_html_e( 'Ứng tuyển ngay', 'ntq-recruitment' ); ?>
+			</a>
+	</div>
 	</div>
 
-	<div class="ntq-job-card__action">
-		<a href="<?php the_permalink(); ?>" class="ntq-btn">
-			<?php esc_html_e( 'Xem Chi Tiết', 'ntq-recruitment' ); ?>
-		</a>
-	</div>
 </div>
