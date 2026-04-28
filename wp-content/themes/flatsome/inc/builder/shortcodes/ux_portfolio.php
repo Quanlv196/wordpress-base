@@ -60,22 +60,17 @@ $options = array(
 	    'type'       => 'select',
 	    'heading'    => __( 'Lightbox Image Size' ),
 	    'conditions' => 'lightbox == "true"',
-	    'default'    => '',
-	    'options'    => array(
-		    ''          => 'Default',
-		    'large'     => 'Large',
-		    'medium'    => 'Medium',
-		    'thumbnail' => 'Thumbnail',
-		    'original'  => 'Original',
-	    )
+	    'default'    => 'original',
+	    'options'    => flatsome_ux_builder_image_sizes(),
     ),
 
     'ids' => array(
         'type' => 'select',
         'heading' => 'Ids',
+        'full_width' => true,
         'config' => array(
             'multiple' => true,
-            'placeholder' => 'Select..',
+            'placeholder' => 'Select...',
             'postSelect' => array(
                 'post_type' => array( 'featured_item' )
             ),
@@ -86,8 +81,9 @@ $options = array(
         'type' => 'select',
         'heading' => 'Category',
         'conditions' => 'ids == ""',
+        'full_width' => true,
         'config' => array(
-            'placeholder' => 'Select..',
+            'placeholder' => 'Select...',
             'termSelect' => array(
                 'post_type' => 'featured_item',
                 'taxonomies' => 'featured_item_category'
@@ -134,6 +130,7 @@ $options = array(
   ),
 ),
 'layout_options' => require( __DIR__ . '/commons/repeater-options.php' ),
+'layout_options_slider' => require( __DIR__ . '/commons/repeater-slider.php' ),
 );
 $box_styles = require( __DIR__ . '/commons/box-styles.php' );
 

@@ -30,8 +30,8 @@ function ux_navigation($atts) {
       if($align) $classes[] = 'text-'.$align.' nav-'.$align;
 
       echo '<div class="nav-wrapper">';
-      echo '<ul class="'.implode(' ',$classes).'">';
-     
+      echo '<ul class="'.esc_attr(implode(' ',$classes)).'">';
+
       if ( is_page() && $post->post_parent && !$parent ){
           $childpages = get_pages( array( 'child_of' => $post->post_parent, 'sort_column' => 'menu_order' ) );
       } else {
@@ -49,7 +49,7 @@ function ux_navigation($atts) {
       foreach (  $childpages as $page ) {
         $classes = '';
         if($page->ID == $current) $classes = 'active';
-        echo '<li class='.$classes.'><a href="'.get_the_permalink($page->ID).'">'.$page->post_title.'</a></li>';
+        echo '<li class='.esc_attr($classes).'><a href="'.esc_url(get_the_permalink($page->ID)).'">'.wp_kses_post($page->post_title).'</a></li>';
       }
       echo '</ul>';
       echo '</div>';

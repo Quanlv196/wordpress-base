@@ -10,9 +10,10 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.5.0
+ * @see              https://docs.woocommerce.com/document/template-structure/
+ * @package          WooCommerce\Templates
+ * @version          7.0.1
+ * @flatsome-version 3.16.2
  */
 
 defined( 'ABSPATH' ) || exit; ?>
@@ -25,7 +26,7 @@ defined( 'ABSPATH' ) || exit; ?>
 
 	if ( wc_get_page_id( 'shop' ) > 0 ) : ?>
 		<p class="return-to-shop">
-			<a class="button primary wc-backward" href="<?php echo esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ); ?>">
+			<a class="button primary wc-backward<?php if ( fl_woocommerce_version_check( '7.0.1' ) ) { echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); } ?>" href="<?php echo esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ); ?>">
 				<?php
 				/**
 				 * Filter "Return To Shop" text.

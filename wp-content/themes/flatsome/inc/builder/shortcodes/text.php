@@ -64,8 +64,9 @@ add_ux_builder_shortcode( 'text', array(
 
     'options' => array(
       '$content' => array(
-        'type' => 'text-editor',
+        'type'       => 'text-editor',
         'full_width' => true,
+        'height'     => 'calc(100vh - 691px)',
       ),
       'typography_options' => require( __DIR__ . '/commons/typography.php'),
       'advanced_options'   => require( __DIR__ . '/commons/advanced.php'),

@@ -2,7 +2,8 @@
 /**
  * The blog template file.
  *
- * @package flatsome
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 get_header();

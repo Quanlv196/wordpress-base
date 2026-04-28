@@ -1,4 +1,12 @@
-<?php if ( have_posts() ) : ?>
+<?php
+/**
+ * Posts archive inline.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+if ( have_posts() ) : ?>
 <div id="post-list">
 
 <?php /* Start the Loop */ ?>

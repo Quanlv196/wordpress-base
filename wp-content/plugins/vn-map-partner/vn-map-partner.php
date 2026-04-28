@@ -20,7 +20,7 @@ define( 'VNM_CACHE_KEY', 'vn_map_partners_data' );
 define( 'VNM_CACHE_TTL', 3600 ); // 1 giờ
 
 // Nạp các class
-foreach ( [ 'class-cpt', 'class-rest-api', 'class-shortcode', 'class-admin' ] as $file ) {
+foreach ( [ 'class-cpt', 'class-rest-api', 'class-shortcode', 'class-admin', 'class-settings' ] as $file ) {
     require_once VNM_PATH . "includes/{$file}.php";
 }
 
@@ -33,6 +33,9 @@ add_action( 'save_post_province_partner', [ 'VNM_Admin', 'save_meta' ] );
 add_action( 'wp_enqueue_scripts',    [ 'VNM_Shortcode', 'enqueue_scripts' ] );
 add_action( 'admin_enqueue_scripts', [ 'VNM_Admin',     'enqueue_scripts' ] );
 add_action( 'admin_notices',         [ 'VNM_Admin',     'outdated_code_notice' ] );
+add_action( 'admin_menu',            [ 'VNM_Settings',  'register'             ] );
+add_action( 'admin_init',            [ 'VNM_Settings',  'register_settings'    ] );
+add_filter( 'vnm_register_url',      [ 'VNM_Settings',  'get_register_url'     ] );
 
 // Xóa cache khi có thay đổi đối tác
 add_action( 'save_post_province_partner', 'vnm_clear_cache' );

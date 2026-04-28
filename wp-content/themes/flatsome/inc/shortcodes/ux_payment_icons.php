@@ -29,7 +29,7 @@ function ux_payment_icons( $atts ) {
 
 	// Get custom icons if set.
 	if ( ! empty( $custom ) ) {
-		return do_shortcode( '<div class="' . $classes . '">' . $link_start . flatsome_get_image( $custom ) . $link_end . '</div>' );
+		return do_shortcode( '<div class="' . esc_attr( $classes ) . '">' . $link_start . flatsome_get_image( $custom ) . $link_end . '</div>' );
 	} elseif ( empty( $icons ) ) {
 		return false;
 	}
@@ -38,13 +38,17 @@ function ux_payment_icons( $atts ) {
 		$icons = explode( ',', $icons );
 	}
 
+	$payment_icons = flatsome_get_payment_icons_list();
+
 	ob_start();
 
 	echo '<div class="' . esc_attr( $classes ) . '">';
 	echo $link_start; // phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
 	foreach ( $icons as $key => $value ) {
 		echo '<div class="payment-icon">';
-		get_template_part( 'assets/img/payment-icons/icon', $value . '.svg' );
+		if ( array_key_exists( $value, $payment_icons ) ) {
+			echo get_template_part( 'assets/img/payment-icons/icon', $value . '.svg' );
+		}
 		echo '</div>';
 	}
 	echo '</div>';

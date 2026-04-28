@@ -11,8 +11,27 @@ remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 3
 remove_action( 'woocommerce_before_shop_loop', 'wc_setup_loop' );
 add_action( 'flatsome_category_title_alt', 'wc_setup_loop' );
 
-add_action( 'flatsome_category_title_alt', 'woocommerce_result_count', 20 );
-add_action( 'flatsome_category_title_alt', 'woocommerce_catalog_ordering', 30 );
+/**
+ * Displays the WooCommerce result count.
+ */
+function flatsome_woocommerce_result_count() {
+	if ( get_theme_mod( 'category_show_result_count', 1 ) ) {
+		woocommerce_result_count();
+	}
+}
+
+add_action( 'flatsome_category_title_alt', 'flatsome_woocommerce_result_count', 20 );
+
+/**
+ * Displays the WooCommerce catalog ordering.
+ */
+function flatsome_woocommerce_catalog_ordering() {
+	if ( get_theme_mod( 'category_show_catalog_ordering', 1 ) ) {
+		woocommerce_catalog_ordering();
+	}
+}
+
+add_action( 'flatsome_category_title_alt', 'flatsome_woocommerce_catalog_ordering', 30 );
 
 if ( ! function_exists( 'flatsome_category_header' ) ) {
 	/**

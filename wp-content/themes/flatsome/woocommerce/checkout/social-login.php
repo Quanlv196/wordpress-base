@@ -1,3 +1,12 @@
+<?php
+/**
+ * Social login.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <div class="text-left social-login pb-half pt-half">
 	<?php if ( is_nextend_facebook_login() && get_option( 'woocommerce_enable_myaccount_registration' ) == 'yes' && ! is_user_logged_in() ) :
 		$facebook_url = add_query_arg( array( 'loginSocial' => 'facebook' ), wp_login_url() );

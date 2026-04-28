@@ -105,16 +105,16 @@ Flatsome_Option::add_field( 'option', array(
 	'settings'  => 'color_links',
 	'label'     => __( 'Link Colors', 'flatsome-admin' ),
 	'section'   => 'colors',
-	'default'   => '#4e657b',
+	'default'   => Flatsome_Default::LINK_COLOR,
 	'transport' => $transport,
 ) );
 
 Flatsome_Option::add_field( 'option', array(
 	'type'      => 'color',
 	'settings'  => 'color_links_hover',
-	'label'     => __( 'Link Colors:hover', 'flatsome-admin' ),
+	'label'     => __( 'Link Colors :hover', 'flatsome-admin' ),
 	'section'   => 'colors',
-	'default'   => '#111',
+	'default'   => Flatsome_Default::LINK_COLOR_HOVER,
 	'transport' => $transport,
 ) );
 
@@ -130,10 +130,36 @@ Flatsome_Option::add_field( 'option', array(
 Flatsome_Option::add_field( 'option', array(
 	'type'      => 'color',
 	'settings'  => 'color_widget_links_hover',
-	'label'     => __( 'Widget Link Colors:Hover', 'flatsome-admin' ),
+	'label'     => __( 'Widget Link Colors :hover', 'flatsome-admin' ),
 	'section'   => 'colors',
 	'default'   => '',
 	'transport' => $transport,
+) );
+
+Flatsome_Option::add_field( '', array(
+	'type'     => 'custom',
+	'settings' => 'custom_title_colors_tooltip',
+	'label'    => '',
+	'section'  => 'colors',
+	'default'  => '<div class="options-title-divider">' . esc_html__( 'Tooltip colors', 'flatsome' ) . '</div>',
+) );
+
+Flatsome_Option::add_field( 'option', array(
+	'type'      => 'color',
+	'settings'  => 'tooltip_color',
+	'label'     => esc_html__( 'Tooltip color', 'flatsome' ),
+	'section'   => 'colors',
+	'default'   => Flatsome_Default::TOOLTIP_COLOR,
+	'transport' => flatsome_customizer_transport(),
+) );
+
+Flatsome_Option::add_field( 'option', array(
+	'type'      => 'color',
+	'settings'  => 'tooltip_bg_color',
+	'label'     => esc_html__( 'Tooltip background color', 'flatsome' ),
+	'section'   => 'colors',
+	'default'   => Flatsome_Default::TOOLTIP_BG_COLOR,
+	'transport' => flatsome_customizer_transport(),
 ) );
 
 if ( is_woocommerce_activated() ) {
@@ -165,9 +191,18 @@ if ( is_woocommerce_activated() ) {
 
 	Flatsome_Option::add_field( 'option', array(
 		'type'        => 'color',
+		'settings'    => 'color_new_bubble_auto',
+		'label'       => __( 'New bubble (auto)', 'flatsome-admin' ),
+		'description' => __( 'Change color of the automatic "New" bubble.', 'flatsome-admin' ),
+		'section'     => 'colors',
+		'transport'   => $transport,
+	) );
+
+	Flatsome_Option::add_field( 'option', array(
+		'type'        => 'color',
 		'settings'    => 'color_new_bubble',
-		'label'       => __( 'New bubble', 'flatsome-admin' ),
-		'description' => __( 'Change color of the "New" bubble.', 'flatsome-admin' ),
+		'label'       => __( 'Custom bubble', 'flatsome-admin' ),
+		'description' => __( 'Change color of the custom bubble.', 'flatsome-admin' ),
 		'section'     => 'colors',
 		'transport'   => $transport,
 	) );

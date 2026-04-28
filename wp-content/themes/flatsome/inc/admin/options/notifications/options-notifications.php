@@ -20,6 +20,13 @@ Flatsome_Option::add_field( 'option', array(
 	'transport'   => $transport,
 	'label'       => esc_html__( 'Custom cookie text', 'flatsome-admin' ),
 	'description' => esc_html__( 'Add any HTML or shortcode here...', 'flatsome-admin' ),
+	'active_callback' => array(
+		array(
+			'setting'  => 'cookie_notice',
+			'operator' => '===',
+			'value'    => true,
+		),
+	),
 	'default'     => '',
 ) );
 
@@ -29,6 +36,13 @@ Flatsome_Option::add_field( 'option', array(
 	'section'     => 'notifications',
 	'label'       => esc_html__( 'Privacy policy page', 'flatsome-admin' ),
 	'description' => esc_html__( 'Show a button linked to the cookie policy page.', 'flatsome-admin' ),
+	'active_callback' => array(
+		array(
+			'setting'  => 'cookie_notice',
+			'operator' => '===',
+			'value'    => true,
+		),
+	),
 	'default'     => false,
 	'choices'     => $list_pages_by_id,
 ) );
@@ -40,6 +54,13 @@ Flatsome_Option::add_field( 'option', array(
 	'transport' => $transport,
 	'label'     => esc_html__( 'Button style', 'flatsome-admin' ),
 	'choices'   => $button_styles,
+	'active_callback' => array(
+		array(
+			'setting'  => 'cookie_notice',
+			'operator' => '===',
+			'value'    => true,
+		),
+	),
 ) );
 
 Flatsome_Option::add_field( 'option', array(
@@ -48,6 +69,13 @@ Flatsome_Option::add_field( 'option', array(
 	'section'   => 'notifications',
 	'transport' => $transport,
 	'label'     => esc_html__( 'Text color', 'flatsome-admin' ),
+	'active_callback' => array(
+		array(
+			'setting'  => 'cookie_notice',
+			'operator' => '===',
+			'value'    => true,
+		),
+	),
 	'default'   => 'light',
 	'choices'   => array(
 		'dark'  => $image_url . 'text-light.svg',
@@ -61,6 +89,13 @@ Flatsome_Option::add_field( 'option', array(
 	'settings'  => 'cookie_notice_bg_color',
 	'section'   => 'notifications',
 	'label'     => esc_html__( 'Background color', 'flatsome-admin' ),
+	'active_callback' => array(
+		array(
+			'setting'  => 'cookie_notice',
+			'operator' => '===',
+			'value'    => true,
+		),
+	),
 	'default'   => '',
 	'transport' => $transport,
 ) );
@@ -71,6 +106,13 @@ Flatsome_Option::add_field( 'option', array(
 	'section'     => 'notifications',
 	'label'       => esc_html__( 'Version', 'flatsome-admin' ),
 	'description' => esc_html__( 'Increase the version to reopen the notice to visitors that have accepted before, after making changes to it.', 'flatsome-admin' ),
+	'active_callback' => array(
+		array(
+			'setting'  => 'cookie_notice',
+			'operator' => '===',
+			'value'    => true,
+		),
+	),
 	'default'     => '1',
 ) );
 

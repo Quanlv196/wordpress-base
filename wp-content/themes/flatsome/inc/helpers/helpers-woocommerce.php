@@ -113,3 +113,34 @@ function flatsome_product_block( $product_id ) {
 
 	return $block_data;
 }
+
+/**
+ * Retrieve a list of attribute taxonomies.
+ *
+ * @param array|string $args Optional. Array or string of arguments.
+ *
+ * @return array|false List of attributes taxonomies matching defaults or `$args`.
+ */
+function flatsome_get_product_attribute_taxonomies_list_by_id( $args = '' ) {
+	$defaults = array(
+		'option_none' => '',
+	);
+
+	$parsed_args = wp_parse_args( $args, $defaults );
+
+	$attributes = array();
+
+	if ( $parsed_args['option_none'] ) {
+		$attributes = array( '' => $parsed_args['option_none'] );
+	}
+
+	$taxonomies = wc_get_attribute_taxonomies();
+
+	if ( $taxonomies ) {
+		foreach ( wc_get_attribute_taxonomies() as $attribute ) {
+			$attributes[ $attribute->attribute_id ] = $attribute->attribute_label;
+		}
+	}
+
+	return $attributes;
+}

@@ -4,9 +4,10 @@
  *
  * Override this template by copying it to yourtheme/woocommerce/content-product.php
  *
- * @author    WooThemes
- * @package   WooCommerce/Templates
- * @version     1.6.4
+ * @author           WooThemes
+ * @package          WooCommerce/Templates
+ * @version          1.6.4
+ * @flatsome-version 3.16.0
  */
 
 global $product, $woocommerce_loop, $flatsome_opt;

@@ -11,8 +11,9 @@ return array(
 
      'ids' => array(
         'type' => 'select',
-        'heading' => 'Custom Posts',
+        'heading' => 'Posts',
         'param_name' => 'ids',
+		'full_width' => true,
         'config' => array(
             'multiple' => true,
             'placeholder' => 'Select..',
@@ -26,7 +27,8 @@ return array(
         'type' => 'select',
         'heading' => 'Category',
         'param_name' => 'cat',
-        'conditions' => 'ids === ""',
+		'full_width' => true,
+        'conditions' => 'ids == ""',
         'default' => '',
         'config' => array(
             'multiple' => true,
@@ -41,21 +43,21 @@ return array(
     $repeater_posts => array(
         'type' => 'textfield',
         'heading' => 'Total Posts',
-        'conditions' => 'ids === ""',
+        'conditions' => 'ids == ""',
         'default' => '8',
     ),
 
     'offset' => array(
         'type' => 'textfield',
         'heading' => 'Offset',
-        'conditions' => 'ids === ""',
+        'conditions' => 'ids == ""',
         'default' => '',
     ),
 
      'orderby'       => array(
 	     'type'       => 'select',
 	     'heading'    => 'Order by',
-	     'conditions' => 'ids === ""',
+	     'conditions' => 'ids == ""',
 	     'default'    => 'date',
 	     'options'    => array(
 		     'ID'            => 'ID',
@@ -72,12 +74,29 @@ return array(
      'order'         => array(
 	     'type'       => 'select',
 	     'heading'    => 'Order',
-	     'conditions' => 'ids === ""',
+	     'conditions' => 'ids == ""',
 	     'default'    => 'DESC',
 	     'options'    => array(
 		     'ASC'  => 'ASC',
 		     'DESC' => 'DESC',
 	     ),
      ),
-  )
+
+    'tags' => array(
+	    'type'       => 'select',
+	    'heading'    => 'Tag',
+	    'conditions' => 'ids == ""',
+	    'full_width' => true,
+	    'default'    => '',
+	    'config'     => array(
+		    'multiple'    => true,
+		    'placeholder' => 'Select...',
+		    'termSelect'  => array(
+			    'post_type'  => $repeater_post_type,
+			    'taxonomies' => 'post_tag',
+		    ),
+	    ),
+    ),
+
+)
 );

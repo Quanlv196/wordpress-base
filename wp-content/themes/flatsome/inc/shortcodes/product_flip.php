@@ -1,7 +1,7 @@
 <?php
 
 // Flatsome Products
-function ux_product_flip($atts, $content = null, $tag) {
+function ux_product_flip($atts, $content = null, $tag = '' ) {
   $sliderrandomid = rand();
   extract(shortcode_atts(array(
     '_id' => 'product-flip-'.rand(),
@@ -76,7 +76,7 @@ function ux_product_flip($atts, $content = null, $tag) {
 
   if ( $products->have_posts() ) : ?>
           <div class="row"><div class="large-12 col">
-          <div style="background-color:#FFF;" class="slider flipContainer slider-nav-circle <?php echo implode(' ', $slider_classes);?>"
+          <div style="background-color:#FFF;" class="slider flipContainer slider-nav-circle <?php echo esc_attr( implode( ' ', $slider_classes ) );?>"
             data-flickity-options='{
               "cellAlign": "center",
               "wrapAround": true,
@@ -86,7 +86,7 @@ function ux_product_flip($atts, $content = null, $tag) {
               "contain": true
           }'>
           <?php while ( $products->have_posts() ) : $products->the_post(); ?>
-              <div class="<?php echo implode(' ', $slide_classes);?>" style="background-color:#FFF;"><?php wc_get_template_part( 'content', 'product-flipbook' ); ?></div>
+              <div class="<?php echo esc_attr( implode( ' ', $slide_classes ) );?>" style="background-color:#FFF;"><?php wc_get_template_part( 'content', 'product-flipbook' ); ?></div>
           <?php endwhile; // end of the loop. ?>
           </div>
           </div></div>

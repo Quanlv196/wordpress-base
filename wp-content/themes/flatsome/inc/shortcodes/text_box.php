@@ -81,7 +81,7 @@ function flatsome_text_box( $atts, $content = null ){
 
     if($text_align) {$classes_text[] = "text-".$text_align;}
 
-    if($parallax) $parallax = 'data-parallax="'.$parallax.'" data-parallax-fade="true"';
+    if($parallax) $parallax = 'data-parallax="' . esc_attr( $parallax ) . '" data-parallax-fade="true"';
 
     /* Responive text */
     if($res_text) $classes[] = 'res-text';
@@ -90,14 +90,14 @@ function flatsome_text_box( $atts, $content = null ){
     $classes_inner =  implode(" ", $classes_inner);
     $classes =  implode(" ", $classes);
  ?>
-   <div id="<?php echo $id; ?>" class="<?php echo $classes; ?>">
-       <?php if($hover) echo '<div class="hover-'.$hover.'">'; ?>
+   <div id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( $classes ); ?>">
+       <?php if($hover) echo '<div class="hover-' . esc_attr( $hover ).'">'; ?>
        <?php if($parallax) echo '<div '.$parallax.'>'; ?>
-       <?php if($animate) echo '<div data-animate="'.$animate.'">'; ?>
-           <div class="text <?php echo $classes_inner; ?>">
+       <?php if($animate) echo '<div data-animate="' . esc_attr( $animate ) . '">'; ?>
+           <div class="text-box-content text <?php echo esc_attr( $classes_inner ); ?>">
               <?php require( __DIR__ . '/commons/border.php' ) ;?>
-              <div class="<?php echo $classes_text; ?>">
-                  <?php echo flatsome_contentfix($content); ?>
+              <div class="<?php echo esc_attr( $classes_text ); ?>">
+                  <?php echo do_shortcode( $content ); ?>
               </div>
            </div>
        <?php if($animate) echo '</div>'; ?>
@@ -110,7 +110,7 @@ function flatsome_text_box( $atts, $content = null ){
               'property' => 'margin',
             ),
             'bg' => array(
-              'selector' => '.text',
+              'selector' => '.text-box-content',
               'property' => 'background-color',
             ),
             'padding' => array(
@@ -118,7 +118,7 @@ function flatsome_text_box( $atts, $content = null ){
               'property' => 'padding',
             ),
             'radius' => array(
-              'selector' => '.text',
+              'selector' => '.text-box-content',
               'property' => 'border-radius',
               'unit' => 'px',
             ),
@@ -133,12 +133,12 @@ function flatsome_text_box( $atts, $content = null ){
               'unit' => '%',
             ),
             'scale' => array(
-              'selector' => '.text',
+              'selector' => '.text-box-content',
               'property' => 'font-size',
               'unit' => '%',
             ),
             'rotate' => array(
-              'selector' => '.text',
+              'selector' => '.text-box-content',
               'property' => 'rotate',
               'unit' => 'deg',
             ),

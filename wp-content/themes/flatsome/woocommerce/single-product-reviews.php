@@ -10,9 +10,10 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	    https://docs.woocommerce.com/document/template-structure/
- * @package 	WooCommerce/Templates
- * @version 4.3.0
+ * @see              https://woocommerce.com/document/template-structure/
+ * @package          WooCommerce\Templates
+ * @version          9.7.0
+ * @flatsome-version 3.19.10
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,15 +24,14 @@ if ( ! comments_open() ) {
 	return;
 }
 
-$tab_style              = get_theme_mod( 'product_display' );
-$review_ratings_enabled = wc_review_ratings_enabled();
+$tab_style = get_theme_mod( 'product_display' );
 ?>
 <div id="reviews" class="woocommerce-Reviews row">
 	<div id="comments" class="col large-<?php if ( get_comment_pages_count() == 0 || $tab_style == 'sections' || $tab_style == 'tabs_vertical' ) { echo '12'; } else { echo '7'; } ?>">
 		<h3 class="woocommerce-Reviews-title normal">
 			<?php
 			$count = $product->get_review_count();
-			if ( $count && $review_ratings_enabled ) {
+			if ( $count && wc_review_ratings_enabled() ) {
 				/* translators: 1: reviews count 2: product name */
 				$reviews_title = sprintf( esc_html( _n( '%1$s review for %2$s', '%1$s reviews for %2$s', $count, 'woocommerce' ) ), esc_html( $count ), '<span>' . get_the_title() . '</span>' );
 				echo apply_filters( 'woocommerce_reviews_title', $reviews_title, $count, $product ); // WPCS: XSS ok.
@@ -53,8 +53,8 @@ $review_ratings_enabled = wc_review_ratings_enabled();
 					apply_filters(
 						'woocommerce_comment_pagination_args',
 						array(
-							'prev_text' => '&larr;',
-							'next_text' => '&rarr;',
+							'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
+							'next_text' => is_rtl() ? '&larr;' : '&rarr;',
 							'type'      => 'list',
 							'echo'      => false,
 						)
@@ -62,6 +62,8 @@ $review_ratings_enabled = wc_review_ratings_enabled();
 				);
 				$pagination = str_replace( 'page-numbers', 'page-number', $pagination );
 				$pagination = str_replace( "<ul class='page-number'>", '<ul class="page-numbers nav-pagination links text-center">', $pagination );
+				$pagination = str_replace( '<a class="next page-number', '<a aria-label="' . esc_attr__( 'Next', 'flatsome' ) . '" class="next page-number', $pagination );
+				$pagination = str_replace( '<a class="prev page-number', '<a aria-label="' . esc_attr__( 'Previous', 'flatsome' ) . '" class="prev page-number', $pagination );
 				echo $pagination;
 				echo '</nav>';
 			endif;
@@ -82,7 +84,7 @@ $review_ratings_enabled = wc_review_ratings_enabled();
 					'title_reply'          => have_comments() ? esc_html__( 'Add a review', 'woocommerce' ) : sprintf( esc_html__( 'Be the first to review &ldquo;%s&rdquo;', 'woocommerce' ), get_the_title() ),
 					/* translators: %s is product title */
 					'title_reply_to'       => esc_html__( 'Leave a Reply to %s', 'woocommerce' ),
-					'title_reply_before'   => '<h3 id="reply-title" class="comment-reply-title">',
+					'title_reply_before'   => '<h3 id="reply-title" class="comment-reply-title" role="heading" aria-level="3">',
 					'title_reply_after'    => '</h3>',
 					'comment_notes_before' => '',
 					'comment_notes_after'  => '',
@@ -94,16 +96,18 @@ $review_ratings_enabled = wc_review_ratings_enabled();
 				$name_email_required = (bool) get_option( 'require_name_email', 1 );
 				$fields              = array(
 					'author' => array(
-						'label'    => __( 'Name', 'woocommerce' ),
-						'type'     => 'text',
-						'value'    => $commenter['comment_author'],
-						'required' => $name_email_required,
+						'label'        => __( 'Name', 'woocommerce' ),
+						'type'         => 'text',
+						'value'        => $commenter['comment_author'],
+						'required'     => $name_email_required,
+						'autocomplete' => 'name',
 					),
 					'email'  => array(
-						'label'    => __( 'Email', 'woocommerce' ),
-						'type'     => 'email',
-						'value'    => $commenter['comment_author_email'],
-						'required' => $name_email_required,
+						'label'        => __( 'Email', 'woocommerce' ),
+						'type'         => 'email',
+						'value'        => $commenter['comment_author_email'],
+						'required'     => $name_email_required,
+						'autocomplete' => 'email',
 					),
 				);
 
@@ -117,7 +121,7 @@ $review_ratings_enabled = wc_review_ratings_enabled();
 						$field_html .= '&nbsp;<span class="required">*</span>';
 					}
 
-					$field_html .= '</label><input id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" type="' . esc_attr( $field['type'] ) . '" value="' . esc_attr( $field['value'] ) . '" size="30" ' . ( $field['required'] ? 'required' : '' ) . ' /></p>';
+					$field_html .= '</label><input id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" type="' . esc_attr( $field['type'] ) . '" autocomplete="' . esc_attr( $field['autocomplete'] ) . '" value="' . esc_attr( $field['value'] ) . '" size="30" ' . ( $field['required'] ? 'required' : '' ) . ' /></p>';
 
 					$comment_form['fields'][ $key ] = $field_html;
 				}
@@ -128,8 +132,8 @@ $review_ratings_enabled = wc_review_ratings_enabled();
 					$comment_form['must_log_in'] = '<p class="must-log-in">' . sprintf( esc_html__( 'You must be %1$slogged in%2$s to post a review.', 'woocommerce' ), '<a href="' . esc_url( $account_page_url ) . '">', '</a>' ) . '</p>';
 				}
 
-				if ( $review_ratings_enabled ) {
-					$comment_form['comment_field'] = '<div class="comment-form-rating"><label for="rating">' . esc_html__( 'Your rating', 'woocommerce' ) . ( wc_review_ratings_required() ? '&nbsp;<span class="required">*</span>' : '' ) . '</label><select name="rating" id="rating" required>
+				if ( wc_review_ratings_enabled() ) {
+					$comment_form['comment_field'] = '<div class="comment-form-rating"><label for="rating" id="comment-form-rating-label">' . esc_html__( 'Your rating', 'woocommerce' ) . ( wc_review_ratings_required() ? '&nbsp;<span class="required">*</span>' : '' ) . '</label><select name="rating" id="rating" required>
 						<option value="">' . esc_html__( 'Rate&hellip;', 'woocommerce' ) . '</option>
 						<option value="5">' . esc_html__( 'Perfect', 'woocommerce' ) . '</option>
 						<option value="4">' . esc_html__( 'Good', 'woocommerce' ) . '</option>

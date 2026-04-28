@@ -2,7 +2,8 @@
 /**
  * The template for displaying search forms in flatsome
  *
- * @package flatsome
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 $placeholder = __( 'Search', 'woocommerce' ).'&hellip;';

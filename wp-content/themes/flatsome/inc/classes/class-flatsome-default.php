@@ -29,4 +29,15 @@ class Flatsome_Default {
 	/** Alert Color */
 	const COLOR_ALERT = '#b20000';
 
+	/** Link Color */
+	const LINK_COLOR       = '#334862';
+	const LINK_COLOR_HOVER = '#111';
+
+	/** Tooltip color */
+	const TOOLTIP_COLOR    = '#fff';
+	const TOOLTIP_BG_COLOR = '#000';
+
+	/* Drawers */
+	const DRAWER_WIDTH      = '300px';
+	const CART_DRAWER_WIDTH = '360px';
 }

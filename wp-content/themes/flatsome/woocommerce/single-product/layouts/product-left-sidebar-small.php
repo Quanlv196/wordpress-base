@@ -1,3 +1,12 @@
+<?php
+/**
+ * Product with left small sidebar.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.19.9
+ */
+
+?>
 <div class="product-container">
 	<div class="product-main">
 		<div class="row content-row mb-0">
@@ -16,16 +25,18 @@
 				?>
 			</div>
 
-			<div class="product-gallery large-<?php echo flatsome_option('product_image_width'); ?> col">
-			<?php
-				/**
-				 * woocommerce_before_single_product_summary hook
-				 *
-				 * @hooked woocommerce_show_product_sale_flash - 10
-				 * @hooked woocommerce_show_product_images - 20
-				 */
-				do_action( 'woocommerce_before_single_product_summary' );
-			?>
+			<div class="product-gallery col large-<?php echo get_theme_mod( 'product_image_width', '6' ); ?>">
+				<?php flatsome_sticky_column_open( 'product_sticky_gallery' ); ?>
+				<?php
+					/**
+					 * woocommerce_before_single_product_summary hook
+					 *
+					 * @hooked woocommerce_show_product_sale_flash - 10
+					 * @hooked woocommerce_show_product_images - 20
+					 */
+					do_action( 'woocommerce_before_single_product_summary' );
+				?>
+				<?php flatsome_sticky_column_close( 'product_sticky_gallery' ); ?>
 			</div>
 
 			<div class="product-info summary  col col-fit entry-summary <?php flatsome_product_summary_classes();?>">

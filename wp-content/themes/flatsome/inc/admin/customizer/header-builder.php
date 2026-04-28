@@ -81,11 +81,12 @@ function flatsome_customizer_header_builder(){
                 </div>
             </div>
             <div class="hb hb-main">
-                <div class="hb-tooltip" data-section="header_mobile">Header Mobile<i class="dashicons dashicons-admin-generic"></i></div>
-                <div class="hb-logo"
-                data-tooltip="Logo"
-                data-section="title_tagline">
-                LOGO</div>
+                <div class="hb-tooltip" data-section="header_mobile">Header Mobile <i class="dashicons dashicons-admin-generic"></i></div>
+				<div class="hb-logo"
+					 data-tooltip="Logo"
+					 data-section="title_tagline">
+					<strong>LOGO</strong>
+				</div>
                 <div class="hb-left hb-drop-mobile"
                     data-id="header_mobile_elements_left">
                 </div>

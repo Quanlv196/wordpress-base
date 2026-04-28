@@ -4,18 +4,18 @@
  *
  * @author     UX Themes
  * @category   Gutenberg
- * @package    Flatsome/Gutenberg
+ * @package    Flatsome\Admin
  * @since      3.7.0
  */
 
-namespace Flatsome\Inc\Admin;
+namespace Flatsome\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Gutenberg
  *
- * @package Flatsome\Inc\Admin
+ * @package Flatsome\Admin
  */
 class Gutenberg {
 
@@ -50,9 +50,11 @@ class Gutenberg {
 	 */
 	private function init() {
 		if ( $this->is_block_editor_available() ) {
-			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+			add_action( 'enqueue_block_assets', [ $this, 'enqueue_block_assets' ] );
+			add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_styles' ] );
 			add_action( 'enqueue_block_editor_assets', [ $this, 'add_edit_button' ], 11 );
 			add_action( 'enqueue_block_editor_assets', [ $this, 'add_block_settings' ] );
+			add_action( 'enqueue_block_editor_assets', [ $this, 'add_page_layout' ] );
 		}
 	}
 
@@ -87,8 +89,16 @@ class Gutenberg {
 	 * Register and enqueue main styles.
 	 */
 	public function enqueue_styles() {
-		wp_register_style( 'flatsome-gutenberg', $this->assets . '/css/style.css', [], $this->version );
-		wp_enqueue_style( 'flatsome-gutenberg' );
+		wp_enqueue_style( 'flatsome-gutenberg', $this->assets . '/css/style.css', [], $this->version );
+	}
+
+	/**
+	 * Enqueues block assets for both frontend + backend.
+	 */
+	public function enqueue_block_assets() {
+		if ( is_admin() ) {
+			wp_enqueue_style( 'wp-editor-classic-layout-styles' );
+		}
 	}
 
 	/**
@@ -99,7 +109,7 @@ class Gutenberg {
 		if ( ! $this->is_post_type_gutenberg( $typenow ) ) {
 			return;
 		}
-		wp_enqueue_script( 'flatsome-gutenberg-edit-button', $this->assets . '/js/edit-button.js', array( 'wp-edit-post' ), $this->version, true );
+		wp_enqueue_script( 'flatsome-gutenberg-edit-button', $this->assets . '/js/edit-button.js', array( 'wp-edit-post', 'wp-dom-ready' ), $this->version, true );
 
 		$page_id = get_the_ID();
 
@@ -127,16 +137,24 @@ class Gutenberg {
 			'wp-components',
 			'wp-block-editor',
 		);
-		$block_settings = array_filter(
-			get_block_editor_server_block_settings(),
-			function( $block, $name ) {
-				return strpos( $name, 'flatsome/' ) === 0;
-			},
-			ARRAY_FILTER_USE_BOTH
-		);
+		wp_enqueue_script( 'flatsome-gutenberg-blocks', $blocks_js, $blocks_deps, $this->version, true );
+	}
 
-		wp_enqueue_script( 'flatsome-blocks', $blocks_js, $blocks_deps, $this->version, true );
-		wp_localize_script( 'flatsome-blocks', 'flatsomeBlockSettings', $block_settings );
+	public function add_page_layout() {
+		if ( ! flatsome_wp_version_check( '6.3' ) ) {
+			return; // We register meta boxes for WordPress 6.2 and below.
+		}
+		$script = $this->assets . '/js/page-layout.js';
+		$deps   = array(
+			'wp-data',
+			'wp-editor',
+			'wp-plugins',
+			'wp-element',
+			'wp-edit-post',
+			'wp-components',
+			'wp-dom-ready',
+		);
+		wp_enqueue_script( 'flatsome-gutenberg-post-layout', $script, $deps, $this->version, true );
 	}
 
 	/**

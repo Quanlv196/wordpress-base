@@ -11,7 +11,7 @@ return array(
 			'unit'       => 'rem',
 			'max'        => 4,
 			'min'        => 0.75,
-			'step'       => 0.25,
+			'step'       => 0.05,
 		),
 		'line_height' => array(
 			'type'       => 'slider',
@@ -19,7 +19,7 @@ return array(
 			'responsive' => true,
 			'max'        => 3,
 			'min'        => 0.75,
-			'step'       => 0.25,
+			'step'       => 0.05,
 		),
 		'text_align'  => array(
 			'type'       => 'radio-buttons',

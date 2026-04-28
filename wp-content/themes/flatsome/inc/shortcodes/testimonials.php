@@ -42,21 +42,21 @@ function flatsome_testimonial($atts, $content = null) {
   $classes = implode(" ", $classes);
   $classes_img = implode(" ", $classes_img);
   ?>
-  <div class="icon-box <?php echo $classes; ?>">
+  <div class="icon-box <?php echo esc_attr( $classes ); ?>">
         <?php if($image) { ?>
-        <div class="<?php echo $classes_img; ?>" style="<?php if($image_width) echo $image_width; ?>">
+        <div class="<?php echo esc_attr( $classes_img ); ?>" style="<?php if($image_width) echo $image_width; ?>">
               <?php echo flatsome_get_image($image, $size = 'thumbnail', $alt = $name) ;?>
         </div>
         <?php } ?>
         <div class="icon-box-text p-last-0">
           <?php if($stars > 0) echo $star_row; ?>
   				<div class="testimonial-text line-height-small italic test_text first-reset last-reset is-italic">
-            <?php echo $content; ?>
+            <?php echo do_shortcode( $content ); ?>
           </div>
           <div class="testimonial-meta pt-half">
-             <strong class="testimonial-name test_name"><?php echo $name; ?></strong>
+             <strong class="testimonial-name test_name"><?php echo wp_kses_post( $name ); ?></strong>
              <?php if($name && $company) echo '<span class="testimonial-name-divider"> / </span>'; ?>
-             <span class="testimonial-company test_company"><?php echo $company; ?></span>
+             <span class="testimonial-company test_company"><?php echo wp_kses_post( $company ); ?></span>
           </div>
         </div>
   </div>

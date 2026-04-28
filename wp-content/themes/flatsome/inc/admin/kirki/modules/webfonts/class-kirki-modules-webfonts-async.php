@@ -73,7 +73,7 @@ final class Kirki_Modules_Webfonts_Async {
 		add_action( 'admin_enqueue_scripts', array( $this, 'webfont_loader' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'webfont_loader_script' ), 30 );
 
-		add_filter( 'wp_resource_hints', array( $this, 'resource_hints' ), 10, 2 );
+		if ( get_theme_mod( 'google_fonts_cdn' ) ) add_filter( 'wp_resource_hints', array( $this, 'resource_hints' ), 10, 2 );
 	}
 
 	/**

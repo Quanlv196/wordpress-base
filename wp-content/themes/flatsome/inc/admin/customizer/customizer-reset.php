@@ -25,6 +25,7 @@ if ( ! class_exists( 'Flatsome_Customizer_Reset' ) ) {
     private function __construct() {
       add_action( 'customize_controls_print_scripts', array( $this, 'customize_controls_print_scripts' ) );
       add_action( 'wp_ajax_customizer_reset', array( $this, 'ajax_customizer_reset' ) );
+      add_action( 'wp_ajax_customizer_clear_typography_cache', array( $this, 'ajax_customizer_clear_typography_cache' ) );
       add_action( 'customize_register', array( $this, 'customize_register' ) );
     }
 
@@ -65,6 +66,45 @@ if ( ! class_exists( 'Flatsome_Customizer_Reset' ) ) {
 
       wp_send_json_success();
     }
+
+	  public function ajax_customizer_clear_typography_cache() {
+		  if ( ! $this->wp_customize->is_preview() ) {
+			  wp_send_json_error( 'not_preview' );
+		  }
+		  if ( ! check_ajax_referer( 'customizer-reset', 'nonce', false ) ) {
+		    wp_send_json_error( 'invalid_nonce' );
+		  }
+		  $this->clear_typography_cache();
+	  }
+
+	  public function clear_typography_cache() {
+		  try {
+			  $fonts_dir = flatsome_get_fonts_dir();
+
+			  delete_transient( 'kirki_remote_url_contents' );
+			  delete_option( 'kirki_downloaded_font_files' );
+
+			  global $wp_filesystem;
+			  if ( ! $wp_filesystem ) {
+				  if ( ! function_exists( 'WP_Filesystem' ) ) {
+					  require_once wp_normalize_path( ABSPATH . '/wp-admin/includes/file.php' );
+				  }
+				  WP_Filesystem();
+			  }
+
+			  if ( $wp_filesystem instanceof WP_Filesystem_Base && $wp_filesystem->exists( $fonts_dir ) ) {
+				  foreach ( $wp_filesystem->dirlist( $fonts_dir ) as $file ) {
+					  if ( $wp_filesystem->is_dir( $fonts_dir . '/' . $file['name'] ) ) {
+						  $wp_filesystem->rmdir( $fonts_dir . '/' . $file['name'], true );
+					  }
+				  }
+			  }
+		  } catch ( Exception $e ) {
+			  wp_send_json_error( $e->getMessage() );
+		  }
+
+		  wp_send_json_success();
+	  }
 
     public function reset_customizer() {
       $settings = $this->wp_customize->settings();

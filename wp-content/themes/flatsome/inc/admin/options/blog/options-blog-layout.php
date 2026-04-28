@@ -56,6 +56,25 @@ Flatsome_Option::add_field( 'option', array(
 	'default'  => 0,
 ) );
 
+Flatsome_Option::add_field( 'option', array(
+	'type'            => 'select',
+	'settings'        => 'blog_sticky_sidebar_mode',
+	'label'           => __( 'Sticky mode', 'flatsome-admin' ),
+	'section'         => 'blog-layout',
+	'default'         => '',
+	'choices'         => array(
+		''           => __( 'CSS (native)', 'flatsome-admin' ),
+		'javascript' => __( 'JavaScript (enhanced)', 'flatsome-admin' ),
+	),
+	'active_callback' => array(
+		array(
+			'setting'  => 'blog_sticky_sidebar',
+			'operator' => '==',
+			'value'    => true,
+		),
+	),
+) );
+
 Flatsome_Option::add_field( 'option',  array(
 	'type'        => 'radio-image',
 	'settings'     => 'blog_style',

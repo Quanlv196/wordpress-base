@@ -1,7 +1,11 @@
 <?php
-/*
-Template name: Page - Full Width - Transparent Header
-*/
+/**
+ * Template name: Page - Full Width - Transparent Header
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.18.0
+ */
+
 get_header(); ?>
 
 <?php do_action( 'flatsome_before_page' ); ?>
@@ -10,6 +14,12 @@ get_header(); ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 
 				<?php the_content(); ?>
+
+				<?php
+				if ( comments_open() || get_comments_number() ) {
+					comments_template();
+				}
+				?>
 
 			<?php endwhile; // end of the loop. ?>
 </div>

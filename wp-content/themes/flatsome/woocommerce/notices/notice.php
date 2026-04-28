@@ -10,48 +10,27 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.9.0
+ * @see              https://docs.woocommerce.com/document/template-structure/
+ * @package          WooCommerce/Templates
+ * @version          8.6.0
+ * @flatsome-version 3.18.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( fl_woocommerce_version_check( '3.9.0' ) ) :
+if ( ! $notices ) {
+	return;
+}
 
-	if ( ! $notices ) {
-		return;
-	}
+?>
 
-	?>
-
-	<?php foreach ( $notices as $notice ) : ?>
-		<div class="woocommerce-info message-wrapper"<?php echo wc_get_notice_data_attr( $notice ); ?>>
-			<div class="message-container container medium-text-center">
-				<?php echo wc_kses_notice( $notice['notice'] ); ?>
-			</div>
+<?php foreach ( $notices as $notice ) : ?>
+	<div class="woocommerce-info message-wrapper"<?php echo wc_get_notice_data_attr( $notice ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<div class="message-container container medium-text-center">
+			<?php echo wc_kses_notice( $notice['notice'] ); ?>
 		</div>
-	<?php endforeach; ?>
+	</div>
 	<?php
-
-else : // Below 3.9.0.
-
-	if ( ! $messages ) {
-		return;
-	}
-
-	?>
-
-	<?php foreach ( $messages as $message ) : ?>
-		<div class="woocommerce-info message-wrapper">
-			<div class="message-container container medium-text-center">
-				<?php
-				echo wc_kses_notice( $message );
-				?>
-			</div>
-		</div>
-	<?php endforeach; ?>
-	<?php
-endif;
+endforeach;

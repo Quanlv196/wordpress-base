@@ -31,8 +31,6 @@ function flatsome_render_ux_menu_shortcode( $atts, $content, $tag ) {
 	if ( ! empty( $atts['divider'] ) )    $classes[] = 'ux-menu--divider-' . $atts['divider'];
 	if ( ! empty( $atts['visibility'] ) ) $classes[] = $atts['visibility'];
 
-	wp_enqueue_script( 'css-vars-polyfill' );
-
 	ob_start();
 
 	?>

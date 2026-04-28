@@ -2,7 +2,8 @@
 /**
  * The template for displaying the footer.
  *
- * @package flatsome
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 global $flatsome_opt;

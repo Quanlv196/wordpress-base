@@ -29,7 +29,7 @@ function flatsome_cookie_notice_template() {
 		return;
 	}
 
-	$classes = array();
+	$classes = array( 'flatsome-cookies' );
 	if ( get_theme_mod( 'cookie_notice_text_color' ) === 'dark' ) {
 		$classes[] = 'dark';
 	}
@@ -38,7 +38,7 @@ function flatsome_cookie_notice_template() {
 	$page = $id ? get_post( $id ) : false;
 	$text = $text ? $text : __( 'This site uses cookies to offer you a better browsing experience. By browsing this website, you agree to our use of cookies.', 'flatsome' );
 	?>
-	<div class="flatsome-cookies <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+	<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 		<div class="flatsome-cookies__inner">
 			<div class="flatsome-cookies__text">
 				<?php echo do_shortcode( $text ); ?>

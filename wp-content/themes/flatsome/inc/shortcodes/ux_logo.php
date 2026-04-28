@@ -54,7 +54,7 @@ function ux_logo( $atts, $content = null ){
     // Set inner tag
     $inner_tag = $link ? 'a' : 'div';
 
-    $content = '<div class="'.implode(' ', $classes).'" style="max-width: 100%!important; width: '.$width.'!important"><'.$inner_tag.' class="ux-logo-link block image-'.$hover.'" title="'.$title.'"' . flatsome_parse_target_rel( $link_atts ) . 'href="'.$link.'" style="padding: '.$padding.';"><img src="'.$org_img.'" title="'.$title.'" alt="'.$title.'" class="ux-logo-image block" style="height:'.$height.'px;" /></'.$inner_tag.'></div>';
+    $content = '<div class="' . esc_attr( implode( ' ', $classes ) ) . '" style="max-width: 100%!important; width: ' . esc_attr( $width ) . '!important"><' . $inner_tag . ' class="ux-logo-link block image-' . esc_attr( $hover ) . '" title="' . esc_attr( $title ) . '"' . flatsome_parse_target_rel( $link_atts ) . 'href="' . esc_url( $link ) . '" style="padding: ' . esc_attr( $padding ) . ';"><img src="' . esc_url( $org_img ) . '" title="' . esc_attr( $title ) . '" alt="' . esc_attr( $title ) . '" class="ux-logo-image block" style="height:' . esc_attr( $height ) . 'px;" /></' . $inner_tag . '></div>';
 
     return $content;
 }

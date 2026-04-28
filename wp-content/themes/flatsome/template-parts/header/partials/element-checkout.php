@@ -1,4 +1,11 @@
 <?php
+/**
+ * Checkout element.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
 if ( ! is_woocommerce_activated() ) {
 	fl_header_element_error( 'woocommerce' );
 	return;

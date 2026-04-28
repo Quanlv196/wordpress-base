@@ -46,7 +46,8 @@ Flatsome_Option::add_field( 'option',  array(
 	'label'       => __( 'Logo image', 'flatsome-admin' ),
 	'section'     => 'title_tagline',
 	'transport' => $transport,
-	'default'     => get_template_directory_uri().'/assets/img/logo.png'
+	'default'     => get_template_directory_uri().'/assets/img/logo.png',
+	'choices'   => array( 'save_as' => 'id' ),
 ));
 
 Flatsome_Option::add_field( 'option',  array(
@@ -56,6 +57,7 @@ Flatsome_Option::add_field( 'option',  array(
 	'description' => __( 'Upload an alternative light logo that will be used on Dark and Transparent Header templates', 'flatsome-admin' ),
 	'section'     => 'title_tagline',
 	'transport' => $transport,
+	'choices'   => array( 'save_as' => 'id' ),
 ));
 
 
@@ -97,3 +99,12 @@ Flatsome_Option::add_field( 'option',  array(
 	),
 	'transport' => 'postMessage',
 ));
+
+Flatsome_Option::add_field( 'option', array(
+	'type'        => 'link',
+	'settings'    => 'logo_link',
+	'label'       => __( 'Logo link', 'flatsome' ),
+	'description' => __( 'Custom logo link (defaults to home page link if empty).', 'flatsome' ),
+	'section'     => 'title_tagline',
+	'default'     => '',
+) );

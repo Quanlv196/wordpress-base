@@ -1,3 +1,12 @@
+<?php
+/**
+ * Header main.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <div id="masthead" class="header-main <?php header_inner_class('main'); ?>">
       <div class="header-inner flex-row container <?php flatsome_logo_position(); ?>" role="navigation">
 
@@ -36,7 +45,7 @@
           </div>
 
       </div>
-     
+
       <?php if(get_theme_mod('header_divider', 1)) { ?>
       <div class="container"><div class="top-divider full-width"></div></div>
       <?php }?>

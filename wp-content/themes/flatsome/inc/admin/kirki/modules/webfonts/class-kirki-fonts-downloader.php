@@ -62,19 +62,20 @@ class Kirki_Fonts_Downloader {
 	 * @return array      Returns an array of remote URLs and their local counterparts.
 	 */
 	protected function get_local_files_from_css( $css ) {
+		$fonts_dir  = flatsome_get_fonts_dir();
 		$font_files = $this->get_files_from_css( $css );
 		$stored     = get_option( 'kirki_downloaded_font_files', array() );
 		$change     = false; // If in the end this is true, we need to update the cache option.
 
 		// If the fonts folder don't exist, create it.
-		if ( ! file_exists( WP_CONTENT_DIR . '/fonts' ) ) {
-			wp_mkdir_p( WP_CONTENT_DIR . '/fonts' );
+		if ( ! file_exists( $fonts_dir ) ) {
+			wp_mkdir_p( $fonts_dir );
 		}
 
 		foreach ( $font_files as $font_family => $files ) {
 
 			// The folder path for this font-family.
-			$folder_path = WP_CONTENT_DIR . '/fonts/' . $font_family;
+			$folder_path = $fonts_dir . '/' . $font_family;
 
 			// If the folder doesn't exist, create it.
 			if ( ! file_exists( $folder_path ) ) {
@@ -116,6 +117,10 @@ class Kirki_Fonts_Downloader {
 					$stored[ $url ] = $font_path;
 					$change         = true;
 				}
+
+				if ( is_string( $tmp_path ) && $tmp_path !== '' ) {
+					@unlink( $tmp_path );
+				}
 			}
 		}
 
@@ -138,7 +143,6 @@ class Kirki_Fonts_Downloader {
 	 * @return string            Returns the remote URL contents.
 	 */
 	public function get_cached_url_contents( $url = '', $user_agent = null ) {
-
 		// Try to retrieved cached response from the gfonts API.
 		$contents         = false;
 		$cached_responses = get_transient( 'kirki_remote_url_contents' );
@@ -180,9 +184,13 @@ class Kirki_Fonts_Downloader {
 			 * For woff2 format, use'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:73.0) Gecko/20100101 Firefox/73.0'.
 			 * The default user-agent is the only one compatible with woff (not woff2)
 			 * which also supports unicode ranges.
+			 *
+			 * From flatsome 3.18.5 User agent changed to woff2 compatible. Old: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/10.1.2 Safari/603.3.8'
 			 */
-			$user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/10.1.2 Safari/603.3.8';
+			$user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:73.0) Gecko/20100101 Firefox/73.0';
 		}
+
+		$user_agent = apply_filters( 'kirki_fonts_downloader_user_agent', $user_agent );
 
 		// Get the response.
 		$response = wp_remote_get( $url, array( 'user-agent' => $user_agent ) );

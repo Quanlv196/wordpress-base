@@ -4,11 +4,11 @@
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *
- * @package flatsome
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 ?>
-
 <section class="no-results not-found">
 	<header class="page-title">
 		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'flatsome' ); ?></h1>

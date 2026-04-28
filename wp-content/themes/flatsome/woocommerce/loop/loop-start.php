@@ -2,9 +2,10 @@
 /**
  * Product Loop Start
  *
- * @author 		WooThemes
- * @package 	WooCommerce/Templates
- * @version     3.3.0
+ * @author           WooThemes
+ * @package          WooCommerce/Templates
+ * @version          3.3.0
+ * @flatsome-version 3.16.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

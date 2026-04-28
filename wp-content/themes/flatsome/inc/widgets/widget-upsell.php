@@ -17,7 +17,7 @@ class Upsell_Widget extends WP_Widget {
 		parent::__construct(
 	 		'upsell_widget', // Base ID
 			'Flatsome Upsell Products', // Name
-			array( 'description' => __( 'Add upsell products to product page', 'flatsome' ), ) // Args
+			array( 'description' => __( 'Add upsell products to product pages.', 'flatsome' ), ) // Args
 		);
 	}
 
@@ -117,7 +117,7 @@ class Upsell_Widget extends WP_Widget {
 		}
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title','wordpress'); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title','flatsome'); ?>:</label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 		<?php

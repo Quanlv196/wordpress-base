@@ -1,3 +1,12 @@
+<?php
+/**
+ * Departments element.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <li class="menu-item">
 
   <a href="#sitemap" data-color="light" data-open="#departments-overlay" data-pos="dropdown">
@@ -6,17 +15,17 @@
 
   <div id="departments-overlay" class="mfp-hide container">
   		<ul class="nav nav-vertical nav-uppercase tabs">
-			
+
 				<li class="description_tab active">
 					<a href="#tab-description">Description</a>
 				</li>
 
-			
+
 				<li class="additional_information_tab">
 					<a href="#tab-additional_information">Additional Information</a>
 				</li>
 
-			
+
 				<li class="reviews_tab">
 					<a href="#tab-reviews">Reviews (3)</a>
 				</li>

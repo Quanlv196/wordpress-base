@@ -1,4 +1,18 @@
 <?php
+/**
+ * Checkout header small.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
+ */
+
+/**
+ * Checkout breadcrumb class.
+ *
+ * @param string $endpoint Endpoint to check for.
+ *
+ * @return string
+ */
 function flatsome_checkout_breadcrumb_class( $endpoint ) {
 	$classes = array();
 	if ( $endpoint == 'cart' && is_cart() ||

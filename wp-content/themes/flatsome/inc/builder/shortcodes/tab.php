@@ -18,5 +18,11 @@ add_ux_builder_shortcode( 'tab', array(
             'auto_focus' => true,
         ),
 
+        'anchor' => array(
+            'type' => 'textfield',
+            'heading' => __( 'Anchor' ),
+            'default' => '',
+            'description' => __( 'Automatically generated if left blank.' ),
+        ),
     ),
 ) );

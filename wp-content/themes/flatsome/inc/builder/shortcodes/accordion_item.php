@@ -15,6 +15,12 @@ add_ux_builder_shortcode( 'accordion-item', array(
             'default' => __( 'Accordion Panel Title' ),
             'auto_focus' => true,
         ),
+        'anchor' => array(
+            'type' => 'textfield',
+            'heading' => __( 'Anchor' ),
+            'description' => __( 'Automatically generated if left blank.' ),
+            'default' => '',
+        ),
         'class' => array(
             'type' => 'textfield',
             'heading' => 'Custom Class',

@@ -1,18 +1,27 @@
 <?php
 /**
- * Quick View
+ * Quick View.
  *
- * @package Flatsome
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.19.7
  */
 
 defined( 'ABSPATH' ) || exit;
 
 global $post, $product;
 
-do_action( 'wc_quick_view_before_single_product' );
+if ( post_password_required() ) {
+	echo '<div class="product-quick-view-container inner-padding">';
+	echo get_the_password_form(); // phpcs:ignore WordPress.Security.EscapeOutput
+	echo '</div>';
+	return;
+}
+
+do_action( 'flatsome_before_single_product_lightbox' );
+do_action_deprecated( 'wc_quick_view_before_single_product', array(), '3.18.0', 'flatsome_before_single_product_lightbox' );
 ?>
 <div class="product-quick-view-container">
-	<div class="row row-collapse mb-0 product" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'row row-collapse mb-0', $product ); ?>>
 		<div class="product-gallery large-6 col">
 			<div class="slider slider-show-nav product-gallery-slider main-images mb-0">
 				<?php if ( has_post_thumbnail() ) :
@@ -46,7 +55,8 @@ do_action( 'wc_quick_view_before_single_product' );
 				?>
 			</div>
 
-			<?php do_action( 'woocommerce_before_single_product_lightbox_summary' ); ?>
+			<?php do_action( 'flatsome_single_product_lightbox_product_gallery' ); ?>
+			<?php do_action_deprecated( 'woocommerce_before_single_product_lightbox_summary', array(), '3.18.0', 'flatsome_single_product_lightbox_product_gallery' ); ?>
 		</div>
 
 		<div class="product-info summary large-6 col entry-summary" style="font-size:90%;">
@@ -54,10 +64,13 @@ do_action( 'wc_quick_view_before_single_product' );
 				<a class="plain" href="<?php the_permalink(); ?>"><h1><?php the_title(); ?></h1></a>
 				<div class="is-divider small"></div>
 
-				<?php do_action( 'woocommerce_single_product_lightbox_summary' ); ?>
+				<?php do_action( 'flatsome_single_product_lightbox_summary' ); ?>
+				<?php do_action_deprecated( 'woocommerce_single_product_lightbox_summary', array(), '3.18.0', 'flatsome_single_product_lightbox_summary' ); ?>
 			</div>
 		</div>
 	</div>
 </div>
 
-<?php do_action( 'wc_quick_view_after_single_product' ); ?>
+<?php
+do_action( 'flatsome_after_single_product_lightbox' );
+do_action_deprecated( 'wc_quick_view_after_single_product', array(), '3.18.0', 'flatsome_after_single_product_lightbox' );

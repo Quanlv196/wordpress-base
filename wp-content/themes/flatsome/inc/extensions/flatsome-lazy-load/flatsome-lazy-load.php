@@ -56,6 +56,19 @@ class FL_LazyLoad_Images {
     $i = 0;
 
     foreach ( $matches[0] as $imgHTML ) {
+      if ( in_array( $imgHTML, $search, true ) ) {
+        continue; // already has a replacement
+      }
+
+	    if ( strpos( $imgHTML, 'fetchpriority="high"' ) !== false ) {
+		    continue; // don't lazy-load images with fetchpriority="high"
+	    }
+
+	    // Skip images with 'ux-skip-lazy' class.
+	    if ( preg_match( '/class=["\'].*?ux-skip-lazy.*?["\']/', $imgHTML ) ) {
+		    continue;
+	    }
+
       // don't do the replacement if the image is a data-uri
       if ( ! preg_match( "/src=['\"]data:image/is", $imgHTML ) ) {
         $i++;
@@ -83,13 +96,13 @@ class FL_LazyLoad_Images {
           $replaceHTML = preg_replace( '/<img/is', '<img class="' . $classes . '"', $replaceHTML );
         }
 
+		// Remove native lazy loading to minimize conflicts.
+	    $replaceHTML = preg_replace( '/(\s+)loading=["\']lazy["\']/is', '', $replaceHTML );
+
         array_push( $search, $imgHTML );
         array_push( $replace, $replaceHTML );
       }
     }
-
-    $search = array_unique( $search );
-    $replace = array_unique( $replace );
 
     $content = str_replace( $search, $replace, $content );
 

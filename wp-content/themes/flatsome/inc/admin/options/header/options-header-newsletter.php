@@ -52,6 +52,15 @@ function flatsome_customizer_header_newsletter_options() {
 		)
 	);
 
+	Flatsome_Option::add_field( 'option', array(
+		'type'      => 'text',
+		'settings'  => 'header_newsletter_title',
+		'label'     => __( 'Title', 'flatsome-admin' ),
+		'section'   => 'header_newsletter',
+		'transport' => flatsome_customizer_transport(),
+		'default'   => 'Sign up for Newsletter',
+	) );
+
 	Flatsome_Option::add_field( 'option',
 		array(
 			'type'        => 'select',
@@ -61,24 +70,6 @@ function flatsome_customizer_header_newsletter_options() {
 			'section'     => 'header_newsletter',
 			'default'     => false,
 			'choices'     => flatsome_customizer_blocks(),
-		)
-	);
-
-	Flatsome_Option::add_field( 'option',
-		array(
-			'type'            => 'text',
-			'settings'        => 'header_newsletter_title',
-			'active_callback' => array(
-				array(
-					'setting'  => 'header_newsletter_block',
-					'operator' => '==',
-					'value'    => false,
-				),
-			),
-			'label'           => __( 'Title', 'flatsome-admin' ),
-			'section'         => 'header_newsletter',
-			'transport'       => flatsome_customizer_transport(),
-			'default'         => 'Sign up for Newsletter',
 		)
 	);
 

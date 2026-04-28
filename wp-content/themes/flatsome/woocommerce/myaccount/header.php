@@ -1,4 +1,11 @@
 <?php
+/**
+ * Account header.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
+ */
+
 $is_facebook_login = is_nextend_facebook_login();
 $is_google_login   = is_nextend_google_login();
 

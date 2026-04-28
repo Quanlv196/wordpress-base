@@ -1,6 +1,15 @@
+<?php
+/**
+ * Category layout with left sidebar.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.18.7
+ */
+
+?>
 <div class="row category-page-row">
 
-		<div class="col large-3 hide-for-medium <?php flatsome_sidebar_classes(); ?>">
+		<div class="col large-4 hide-for-medium <?php flatsome_sidebar_classes(); ?>">
 			<?php flatsome_sticky_column_open( 'category_sticky_sidebar' ); ?>
 			<div id="shop-sidebar" class="sidebar-inner col-inner">
 				<?php
@@ -13,7 +22,7 @@
 			<?php flatsome_sticky_column_close( 'category_sticky_sidebar' ); ?>
 		</div>
 
-		<div class="col large-9">
+		<div class="col large-8">
 		<?php
 		/**
 		 * Hook: woocommerce_before_main_content.
@@ -24,19 +33,18 @@
 		 */
 		do_action( 'woocommerce_before_main_content' );
 
-		?>
-
-		<?php
-		/**
-		 * Hook: woocommerce_archive_description.
-		 *
-		 * @hooked woocommerce_taxonomy_archive_description - 10
-		 * @hooked woocommerce_product_archive_description - 10
-		 */
-		do_action( 'woocommerce_archive_description' );
-		?>
-
-		<?php
+		if ( fl_woocommerce_version_check( '8.8.0' ) ) {
+			/**
+			 * Hook: woocommerce_shop_loop_header.
+			 *
+			 * @since 8.8.0
+			 *
+			 * @hooked woocommerce_product_taxonomy_archive_header - 10
+			 */
+			do_action( 'woocommerce_shop_loop_header' );
+		} else {
+			do_action( 'woocommerce_archive_description' );
+		}
 
 		if ( woocommerce_product_loop() ) {
 

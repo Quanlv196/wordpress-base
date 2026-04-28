@@ -1,6 +1,16 @@
+<?php
+/**
+ * Dashboard links
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.19.9
+ */
+
+?>
+
 <ul class="dashboard-links">
 <?php if ( has_nav_menu( 'my_account' ) ) { ?>
-  <?php  
+  <?php
     wp_nav_menu(array(
       'theme_location' => 'my_account',
       'container'      => false,
@@ -12,7 +22,7 @@
     <li>Define your My Account dropdown menu in <b>Appearance > Menus</b></li>
 <?php } ?>
 
-<?php if(function_exists('wc_get_account_menu_items') && flatsome_option('wc_account_links')){ ?>
+<?php if ( function_exists( 'wc_get_account_menu_items' ) && get_theme_mod( 'wc_account_links', 1 ) ) { ?>
   <?php foreach ( wc_get_account_menu_items() as $endpoint => $label ) : ?>
     <li class="<?php echo wc_get_account_menu_item_classes( $endpoint ); ?>">
       <a href="<?php echo esc_url( wc_get_account_endpoint_url( $endpoint ) ); ?>"><?php echo esc_html( $label ); ?></a>

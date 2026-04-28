@@ -1,3 +1,12 @@
+<?php
+/**
+ * Category title featured.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <div class="shop-page-title category-page-title page-title featured-title dark <?php flatsome_header_title_classes() ?>">
 
 	<div class="page-title-bg fill">

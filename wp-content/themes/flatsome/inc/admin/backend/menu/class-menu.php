@@ -7,14 +7,14 @@
  * @since      3.13.0
  */
 
-namespace Flatsome\Inc\Admin;
+namespace Flatsome\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Menu
  *
- * @package Flatsome\Inc\Admin
+ * @package Flatsome\Admin
  */
 class Menu {
 
@@ -47,7 +47,7 @@ class Menu {
 	 * Menu constructor.
 	 */
 	public function __construct() {
-		if ( flatsome_wp_version_check( '5.4' ) ) {
+		if ( apply_filters( 'flatsome_admin_menu_items_enabled', true ) ) {
 			$this->ux_blocks = flatsome_get_block_list_by_id();
 
 			add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
@@ -65,7 +65,7 @@ class Menu {
 	 * @param \stdClass $args    An object of menu item arguments.
 	 * @param int       $id      Nav menu ID.
 	 */
-	public function add_menu_fields( $item_id, $item, $depth, $args, $id ) {
+	public function add_menu_fields( $item_id, $item, $depth, $args, $id ) {  //phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$design      = get_post_meta( $item_id, '_menu_item_design', true );
 		$width       = get_post_meta( $item_id, '_menu_item_width', true );
 		$height      = get_post_meta( $item_id, '_menu_item_height', true );
@@ -82,11 +82,9 @@ class Menu {
 		<?php $this->menu_divider(); ?>
 		<div class="ux-menu-item-options">
 			<h3>
-				<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style="margin-top: -3px; vertical-align: middle">
-					<path d="M10.005 16.476L7.51713 13.9894L10.005 11.5027V7.11759L5.32346 11.7968L3.49745 9.97169L10.005 3.4674V0L0 10L10.005 20V16.476Z" fill="black"/>
-					<g opacity="0.502624">
-						<path opacity="0.387069" d="M9.995 16.476L12.4829 13.9894L9.995 11.5027V7.11759L14.6765 11.7968L16.5025 9.97169L9.995 3.4674V0L20 10L9.995 20V16.476Z" fill="black"/>
-					</g>
+				<svg width="20" height="20" viewBox="0 0 438 438" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: -3px; vertical-align: middle">
+						<path d="M218.505 437.013V375.737L169.875 327.108L218.505 278.476V217.2L139.236 296.471L61.2764 218.51L218.505 61.2804V0.00683594L0 218.51L218.505 437.013Z" fill="black"/>
+						<path opacity="0.5" d="M218.507 61.2759L375.735 218.505L297.776 296.464L218.507 217.198V278.472L267.139 327.103L218.507 375.732V437.006L328.413 327.103L437.012 218.505L218.507 0V61.2759Z" fill="black"/>
 				</svg>
 				<?php esc_html_e( 'Flatsome menu item options', 'flatsome' ); ?>
 			</h3>
@@ -181,7 +179,7 @@ class Menu {
 		<?php $this->menu_divider(); ?>
 		<br>
 		<?php
-		echo ob_get_clean(); // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo ob_get_clean(); //phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -190,14 +188,13 @@ class Menu {
 	 * @param int   $menu_id         ID of the updated menu.
 	 * @param int   $menu_item_db_id ID of the updated menu item.
 	 * @param array $args            An array of arguments used to update a menu item.
-	 *
 	 */
-	public function update_menu_fields( $menu_id, $menu_item_db_id, $args ) {
+	public function update_menu_fields( $menu_id, $menu_item_db_id, $args ) { //phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		foreach ( $this->fields as $field ) {
 			$key = 'menu-item-' . $field;
 
-			if ( isset( $_REQUEST[ $key ] ) && isset( $_REQUEST[ $key ][ $menu_item_db_id ] ) && ! empty( $_REQUEST[ $key ] ) && is_array( $_REQUEST[ $key ] ) ) {
-				$value = $_REQUEST[ $key ][ $menu_item_db_id ];
+			if ( isset( $_POST[ $key ] ) && ! empty( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) && isset( $_POST[ $key ][ $menu_item_db_id ] ) ) { //phpcs:ignore WordPress.Security
+				$value = wp_unslash( $_POST[ $key ][ $menu_item_db_id ] ); //phpcs:ignore WordPress.Security
 				update_post_meta( $menu_item_db_id, '_menu_item_' . $field, $value );
 			}
 		}
@@ -245,12 +242,12 @@ class Menu {
 		);
 		$output .= sprintf( '<button type="button" class="upload-button button" data-item-id="%s">%s</button>',
 			esc_attr( $item_id ),
-			__( 'Select image' )
+			__( 'Select image', 'flatsome' )
 		);
 		$output .= sprintf( '<button type="button" class="remove-button button %s" data-item-id="%s">%s</button>',
 			! $image ? 'hidden' : '',
 			esc_attr( $item_id ),
-			__( 'Remove' )
+			__( 'Remove', 'flatsome' )
 		);
 		$output .= sprintf( '<input type="hidden" id="edit-menu-item-%1$s-%2$s" name="menu-item-%1$s[%2$s]" value="%3$s">',
 			$field_identifier,
@@ -268,13 +265,13 @@ class Menu {
 	 */
 	public function register_assets( $hook ) {
 		if ( 'nav-menus.php' === $hook ) {
-			$theme   = wp_get_theme( 'flatsome' );
-			$version = $theme['Version'];
+			$theme   = wp_get_theme( get_template() );
+			$version = $theme->get( 'Version' );
 
 			wp_enqueue_media();
 
-			wp_enqueue_script( 'flatsome-admin-menu', get_template_directory_uri() . '/assets/js/admin-menu.js', array( 'jquery' ), $version, true );
-			wp_enqueue_style( 'flatsome-admin-menu', get_template_directory_uri() . '/assets/css/admin/admin-menu.css', null, $version, 'all' );
+			flatsome_enqueue_asset( 'flatsome-admin-menu', 'admin/admin-menu', array( 'jquery', 'nav-menu' ) );
+			wp_enqueue_style( 'flatsome-admin-menu', get_template_directory_uri() . '/assets/css/admin/admin-menu.css', null, $version );
 		}
 	}
 }

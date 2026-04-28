@@ -2,7 +2,8 @@
 /**
  * Continue Shopping Button
  *
- * @package Flatsome/WooCommerce/Templates
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
  */
 
 defined( 'ABSPATH' ) || exit; ?>

@@ -42,7 +42,7 @@
       // BƯỚC 1: Đăng ký hooks ngay để không bỏ lỡ click của người dùng
       VNM_Map._attachHooks();
 
-      // BƯỚC 2: Khởi tạo select2 (chưa có option, chỉ init plugin)
+      // BƯỚC 2: Khởi tạo select2 + populate dropdown ngay từ danh sách tĩnh
       VNM_Map._initSelect();
 
       // BƯỚC 3: Fetch data bất đồng bộ
@@ -56,9 +56,6 @@
 
         // Cập nhật màu sắc trên bản đồ (re-render)
         VNM_Map._refreshMapColors(data);
-
-        // Populate dropdown
-        VNM_DataBuilder.populateSelect(data);
 
         // Nếu người dùng đã click tỉnh trước khi data về → xử lý ngay
         if (_pendingStateId) {
@@ -175,10 +172,13 @@
     },
 
     // ----------------------------------------------------------------
-    // Khởi tạo select2 dropdown (không cần data – populate riêng sau AJAX)
+    // Khởi tạo select2 dropdown + populate ngay từ VNM_CONFIG.provinces
     // ----------------------------------------------------------------
     _initSelect: function () {
-      // Khởi tạo select2 plugin (options sẽ được thêm sau khi AJAX xong)
+      // Populate tất cả 63 tỉnh thành ngay lập tức (không chờ AJAX)
+      VNM_DataBuilder.populateSelect();
+
+      // Khởi tạo select2 plugin
       $("#vn_map_province_select").select2({
         width: "100%",
         placeholder: "-- Chọn tỉnh thành --",

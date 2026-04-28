@@ -9,7 +9,7 @@ add_ux_builder_shortcode( 'col_grid', array(
     'tools' => 'shortcodes/col/col-tools.directive.html',
     'info' => '{{ span }}/12',
     'require' => array( 'row' ),
-    'allow' => array( 'ux_banner','ux_slider','ux_image'),
+    'allow' => array( 'ux_banner','ux_slider','ux_image', 'ux_lottie'),
     'resize' => array( 'right', 'bottom' ),
     'scroll_to' => false,
     'wrap'   => false,

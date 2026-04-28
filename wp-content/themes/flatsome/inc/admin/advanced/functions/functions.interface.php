@@ -121,6 +121,11 @@ function of_load_only() {
 	wp_enqueue_script( 'tipsy', ADMIN_DIR . 'assets/js/jquery.tipsy.js', array( 'jquery' ), $version, true );
 	wp_enqueue_script( 'cookie', ADMIN_DIR . 'assets/js/cookie.js', 'jquery', $version, true );
 	wp_enqueue_script( 'smof', ADMIN_DIR . 'assets/js/smof.js', array( 'jquery' ), $version, true );
+	wp_enqueue_script( 'flatsome-advanced', ADMIN_DIR . 'assets/js/index.js', array( 'wp-dom-ready', 'wp-escape-html' ), $version, true );
+
+	$data = array( 'nonce' => wp_create_nonce( 'flatsome_advanced' ) );
+
+	wp_add_inline_script( 'flatsome-advanced', 'var flatsomeAdvancedData = ' . wp_json_encode( $data ), 'before' );
 
 	// Enqueue colorpicker scripts for versions below 3.5 for compatibility.
 	if ( ! wp_script_is( 'wp-color-picker', 'registered' ) ) {
@@ -156,6 +161,7 @@ function of_ajax_callback()
 
 
 	if (! wp_verify_nonce($nonce, 'of_ajax_nonce') ) die('-1');
+	if (! current_user_can('manage_options') ) die('-1');
 
 	//get options array from db
 	$all = of_get_options();
@@ -206,6 +212,12 @@ function of_ajax_callback()
 		$backup['backup_log'] = date('r');
 
 		of_save_options($backup, BACKUPS) ;
+
+		die('1');
+	}
+	elseif($save_type == 'delete_backup_options')
+	{
+		remove_theme_mod( BACKUPS );
 
 		die('1');
 	}

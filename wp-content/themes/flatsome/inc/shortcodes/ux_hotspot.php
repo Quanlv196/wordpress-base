@@ -64,20 +64,20 @@ function ux_hotspot( $atts, $content = null ) {
 		wp_enqueue_script( 'wc-add-to-cart-variation' );
 	}
 	?>
-	<div class="<?php echo $classes; ?> dark">
-		<div data-animate="<?php echo $animate; ?>">
+	<div class="<?php echo esc_attr( $classes ); ?> dark">
+		<div data-animate="<?php echo esc_attr( $animate ); ?>">
 			<?php if ( $type == 'text' ) { ?>
-				<a href="<?php echo $link; ?>" class="<?php echo $classes_inner; ?>" title="<?php echo $text; ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
-					<i class="icon-<?php echo $icon; ?>"></i>
+				<a href="<?php echo esc_url( $link ); ?>" class="<?php echo esc_attr( $classes_inner ); ?>" title="<?php echo esc_attr( $text ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
+					<i class="icon-<?php echo esc_attr( $icon ); ?>"></i>
 				</a>
 			<?php } else if ( $type == 'product' ) {
 				if ( get_theme_mod( 'disable_quick_view' ) ) : ?>
-					<a href="<?php echo esc_url( get_permalink( $prod_id ) ); ?>" class="<?php echo $classes_inner; ?>" title="<?php echo get_the_title( $prod_id ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
-						<i class="icon-<?php echo $icon; ?>"></i>
+					<a href="<?php echo esc_url( get_permalink( $prod_id ) ); ?>" class="<?php echo esc_attr( $classes_inner ); ?>" title="<?php echo esc_attr( get_the_title( $prod_id ) ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
+						<i class="icon-<?php echo esc_attr( $icon ); ?>"></i>
 					</a>
 				<?php else : ?>
-					<a href="#quick-view" class="<?php echo $classes_inner; ?> quick-view" data-prod="<?php echo $prod_id; ?>" title="<?php echo get_the_title( $prod_id ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
-						<i class="icon-<?php echo $icon; ?>"></i>
+					<a href="#quick-view" class="<?php echo esc_attr( $classes_inner ); ?> quick-view" data-prod="<?php echo esc_attr( $prod_id ); ?>" title="<?php echo esc_attr( get_the_title( $prod_id ) ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
+						<i class="icon-<?php echo esc_attr( $icon ); ?>"></i>
 					</a>
 				<?php endif; ?>
 			<?php } ?>

@@ -1,3 +1,12 @@
+<?php
+/**
+ * Portfolio archive title featured image background.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <div class="page-title portfolio-featured-title featured-title no-overflow">
 
 	<div class="page-title-bg">

@@ -96,7 +96,7 @@ function flatsome_page_header_shortcode($atts) {
 
   // Parallax text
   if ( $parallax_text ) {
-    $parallax_text = 'data-parallax-fade="true" data-parallax="-' . $parallax_text . '"';
+    $parallax_text = 'data-parallax-fade="true" data-parallax="-' . esc_attr( $parallax_text ) . '"';
   }
 
    // Bg fix
@@ -113,7 +113,7 @@ function flatsome_page_header_shortcode($atts) {
    } else if ( $type == 'subnav' ) {
      get_flatsome_subnav( $nav_class );
    } else if ( $type == 'onpage' ) {
-     echo '<ul class="nav '.$nav_class.'"><li class="nav-single-page hidden"></li></ul>';
+     echo '<ul class="nav ' . esc_attr( $nav_class ) . '"><li class="nav-single-page hidden"></li></ul>';
    } else if ( $type == 'share' ) {
      echo '<div class="title-share pt-half pb-half">' . do_shortcode( '[share]' ) . '</div>';
    }
@@ -150,34 +150,34 @@ function flatsome_page_header_shortcode($atts) {
    ob_end_clean();
    ob_start();
   ?>
-  <div id="<?php echo $_id; ?>" class="page-header-wrapper">
-  <div class="page-title <?php echo implode(' ', $classes); ?>">
+  <div id="<?php echo esc_attr( $_id ); ?>" class="page-header-wrapper">
+  <div class="page-title <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
 
     <?php if ( $bg || $bg_color ) { ?>
     <div class="page-title-bg">
       <div class="title-bg fill bg-fill"
         data-parallax-container=".page-title"
         data-parallax-background
-        data-parallax="-<?php echo $parallax; ?>">
+        data-parallax="-<?php echo esc_attr( $parallax ); ?>">
       </div>
       <div class="title-overlay fill"></div>
     </div>
     <?php } ?>
 
-    <div class="page-title-inner container <?php echo implode( ' ', $container_classes ); ?>" <?php echo $parallax_text; ?>>
+    <div class="page-title-inner container <?php echo esc_attr( implode( ' ', $container_classes ) ); ?>" <?php echo $parallax_text; ?>>
       <?php if ( $show_title ) { ?>
-        <div class="title-wrapper <?php echo implode(' ', $title_classes ); ?>">
+        <div class="title-wrapper <?php echo esc_attr( implode(' ', $title_classes ) ); ?>">
           <h1 class="entry-title mb-0">
-            <?php echo $title; ?>
+            <?php echo wp_kses_post( $title ); ?>
           </h1>
         </div>
         <?php if ( $sub_title ) { ?>
-        <div class="page-title-sub op-7 <?php echo implode(' ', $subtitle_classes ); ?>">
-          <p class="lead"><?php echo $sub_title; ?></p>
+        <div class="page-title-sub op-7 <?php echo esc_attr( implode(' ', $subtitle_classes ) ); ?>">
+          <p class="lead"><?php echo wp_kses_post( $sub_title ); ?></p>
         </div>
         <?php } ?>
       <?php } ?>
-      <div class="title-content <?php echo implode( ' ', $content_classes ); ?>">
+      <div class="title-content <?php echo esc_attr( implode( ' ', $content_classes ) ); ?>">
         <?php echo $content; ?>
       </div>
     </div>
@@ -203,7 +203,7 @@ function flatsome_page_header_shortcode($atts) {
           'property' => 'background-color',
         ),
         'bg_color' => array(
-          'selector' => '',
+          'selector' => $style === 'featured' || $style === 'normal' ? '.' . $style . '-title' : '',
           'property' => 'background-color',
         ),
         'bg_pos' => array(

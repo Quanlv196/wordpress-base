@@ -3,34 +3,50 @@
 function title_shortcode( $atts, $content = null ){
   extract( shortcode_atts( array(
     '_id' => 'title-'.rand(),
-    'class' => '',
-    'visibility' => '',
     'text' => 'Lorem ipsum dolor sit amet...',
     'tag_name' => 'h3',
-    'sub_text' => '',
     'style' => 'normal',
     'size' => '100',
-    'link' => '',
-    'link_text' => '',
-    'target' => '',
     'margin_top' => '',
     'margin_bottom' => '',
-    'letter_case' => '',
     'color' => '',
     'width' => '',
     'icon' => '',
+    'link_text' => '',
+    'link' => '',
+    'target' => '',
+    'rel' => '',
+    'class' => '',
+    'visibility' => '',
+	// Deprecated.
+    'letter_case' => '',
+    'sub_text' => '',
   ), $atts ) );
+
+	if ( ! preg_match( '/^h[1-6]$/', trim( $tag_name ) ) ) $tag_name = 'h3';
 
   $classes = array('container', 'section-title-container');
   if ( $class ) $classes[] = $class;
   if ( $visibility ) $classes[] = $visibility;
   $classes = implode(' ', $classes);
 
-  $link_output = '';
-  if($link) $link_output = '<a href="'.$link.'" target="'.$target.'">'.$link_text.get_flatsome_icon('icon-angle-right').'</a>';
+
+	$link_atts   = array(
+		'href'   => esc_url( $link ),
+		'target' => esc_attr( $target ),
+		'rel'    => array( esc_attr( $rel ) ),
+	);
+	$link_output = '';
+	if ( $link_text ) {
+		$link_output = sprintf( '<a %s>%s%s</a>',
+			flatsome_html_atts( $link_atts ),
+			wp_kses_post( $link_text ),
+			get_flatsome_icon( 'icon-angle-right' )
+		);
+	}
 
   $small_text = '';
-  if($sub_text) $small_text = '<small class="sub-title">'.$atts['sub_text'].'</small>';
+  if($sub_text) $small_text = '<small class="sub-title">' . wp_kses_post( $atts['sub_text'] ) . '</small>';
 
   if($icon) $icon = get_flatsome_icon($icon);
 
@@ -55,7 +71,7 @@ function title_shortcode( $atts, $content = null ){
     $css_args_title[] = array( 'attribute' => 'color', 'value' => $color);
   }
 
-  return '<div class="'.$classes.'" '.get_shortcode_inline_css($css_args).'><'. $tag_name . ' class="section-title section-title-'.$style.'"><b></b><span class="section-title-main" '.get_shortcode_inline_css($css_args_title).'>'.$icon.$text.$small_text.'</span><b></b>'.$link_output.'</' . $tag_name .'></div>';
+  return '<div class="' . esc_attr( $classes ) . '" ' . get_shortcode_inline_css($css_args) . '><'. $tag_name . ' class="section-title section-title-' . esc_attr( $style ) . '"><b></b><span class="section-title-main" '.get_shortcode_inline_css($css_args_title).'>' . $icon . wp_kses_post( $text ) . $small_text . '</span><b></b>' . $link_output . '</' . $tag_name . '></div>';
 }
 add_shortcode('title', 'title_shortcode');
 

@@ -95,7 +95,7 @@ function get_flatsome_subnav( $style = '', $string = '' ) {
 
 			// Add active class.
 			$childpages = str_replace( 'current_page_item', 'current_page_item active', $childpages );
-			$string     = '<ul class="nav ' . $style . '">' . $childpages . '</ul>';
+			$string     = '<ul class="nav ' . esc_attr( $style ) . '">' . $childpages . '</ul>';
 		}
 
 		echo $string; // phpcs:ignore

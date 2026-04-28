@@ -1,7 +1,11 @@
 <?php
-/*
-Template name: Page - Full Width - Parallax Title
-*/
+/**
+ * Template name: Page - Full Width - Parallax Title
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.18.0
+ */
+
 get_header(); ?>
 <div class="parallax-title mb">
 <?php while ( have_posts() ) : the_post(); ?>
@@ -17,7 +21,7 @@ get_header(); ?>
 		</div>
 		<?php } ?>
 	</header>
-	<?php 
+	<?php
 	$bg = '#333';
 	if( has_post_thumbnail() ) $bg = get_post_thumbnail_id();
 	$header_html = ob_get_contents();
@@ -32,8 +36,14 @@ get_header(); ?>
 	<?php while ( have_posts() ) : the_post(); ?>
 
 		<?php the_content(); ?>
-	
+
+		<?php
+		if ( comments_open() || get_comments_number() ) {
+			comments_template();
+		}
+		?>
+
 	<?php endwhile; // end of the loop. ?>
-			
+
 </div>
 <?php get_footer(); ?>

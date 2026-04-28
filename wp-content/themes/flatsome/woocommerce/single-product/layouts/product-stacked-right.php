@@ -1,20 +1,31 @@
+<?php
+/**
+ * Product stacked.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.19.9
+ */
+
+?>
 <div class="product-container">
 	<div class="product-main">
 		<div class="row content-row mb-0">
 
-			<div class="product-gallery col large-<?php echo flatsome_option('product_image_width'); ?>">
-			<?php
-				/**
-				 * woocommerce_before_single_product_summary hook
-				 *
-				 * @hooked woocommerce_show_product_images - 20
-				 */
-				do_action( 'woocommerce_before_single_product_summary' );
-			?>
+			<div class="product-gallery col large-<?php echo get_theme_mod( 'product_image_width', '6' ); ?>">
+				<?php flatsome_sticky_column_open( 'product_sticky_gallery' ); ?>
+				<?php
+					/**
+					 * woocommerce_before_single_product_summary hook
+					 *
+					 * @hooked woocommerce_show_product_images - 20
+					 */
+					do_action( 'woocommerce_before_single_product_summary' );
+				?>
+				<?php flatsome_sticky_column_close( 'product_sticky_gallery' ); ?>
 			</div>
 
 			<div class="product-info summary col-fit col entry-summary <?php flatsome_product_summary_classes();?>">
-	      <div class="is-sticky-column"><div class="is-sticky-column__inner">
+			<?php flatsome_sticky_column_open(); ?>
 	        <div class="product-stacked-info">
 	              <?php if(!get_theme_mod('product_header') && get_theme_mod('product_next_prev_nav',1)) { ?>
 	                <div class="product-stacked-next-prev-nav absolute top right hide-for-medium">
@@ -37,7 +48,7 @@
 	        			?>
 	          </div>
 	        </div>
-	      </div></div>
+			<?php flatsome_sticky_column_close(); ?>
 		</div>
 
 		<div id="product-sidebar" class="mfp-hide">

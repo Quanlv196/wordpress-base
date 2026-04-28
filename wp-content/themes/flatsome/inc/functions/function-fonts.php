@@ -7,9 +7,9 @@
  */
 function flatsome_get_google_fonts_link() {
 	$type_headings = get_theme_mod( 'type_headings', array( 'font-family' => 'Lato', 'variant' => '700' ) );
-	$type_texts    = get_theme_mod( 'type_texts', array( 'font-family' => 'Lato', 'variant' => '400' ) );
+	$type_texts    = get_theme_mod( 'type_texts', array( 'font-family' => 'Lato', 'variant' => 'regular' ) );
 	$type_nav      = get_theme_mod( 'type_nav', array( 'font-family' => 'Lato', 'variant' => '700' ) );
-	$type_alt      = get_theme_mod( 'type_alt', array( 'font-family' => 'Dancing Script', 'variant' => '400' ) );
+	$type_alt      = get_theme_mod( 'type_alt', array( 'font-family' => 'Dancing Script', 'variant' => 'regular' ) );
 
 	// Fix old.
 	if ( ! is_array( $type_nav ) ) {
@@ -31,9 +31,8 @@ function flatsome_get_google_fonts_link() {
 
 	// Insert fonts.
 	foreach ( $fonts as $font ) {
-
 		// Add Fonts.
-		if ( isset( $font['font-family'] ) ) {
+		if ( isset( $font['font-family'] ) && ! empty( $font['font-family'] ) ) {
 			if ( ! isset( $font['variant'] ) ) {
 				$font['variant'] = 'default';
 			}
@@ -82,7 +81,7 @@ function flatsome_get_google_fonts_link() {
  * Add google font style when not disabled.
  */
 function flatsome_google_fonts() {
-	if ( get_theme_mod( 'disable_fonts', 0 ) ) {
+	if ( ! get_theme_mod( 'google_fonts_cdn' ) || get_theme_mod( 'disable_fonts', 0 ) ) {
 		return;
 	}
 

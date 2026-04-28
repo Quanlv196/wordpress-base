@@ -1,5 +1,14 @@
+<?php
+/**
+ * Posts content.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.19.9
+ */
+
+?>
 <div class="entry-content">
-	<?php if ( flatsome_option('blog_show_excerpt') || is_search())  { ?>
+	<?php if ( get_theme_mod( 'blog_show_excerpt', 1 ) || is_search() ) { ?>
 	<div class="entry-summary">
 		<?php the_excerpt(); ?>
 		<div class="text-<?php echo get_theme_mod( 'blog_posts_title_align', 'center' );?>">

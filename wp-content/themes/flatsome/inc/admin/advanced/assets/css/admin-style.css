@@ -5,8 +5,11 @@
 	display:none!important
 } /* disable the admin notices */
 
-.flatsome-instagram-accounts .theme .theme-screenshot::after {
-	padding-top: 100%;
+.flatsome-instagram-accounts .widefat td {
+	vertical-align: middle;
+}
+.flatsome-instagram-accounts .widefat th:last-child {
+	text-align: right;
 }
 
 .flatsome-instagram-connect {
@@ -26,6 +29,40 @@
 	max-width: 450px;
 	background: #fff;
 	box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+}
+
+.flatsome-instagram-accounts__access-token-form {
+	display: flex;
+	gap: 8px;
+}
+.flatsome-instagram-accounts__access-token-form > input {
+	margin-left: 0 !important;
+}
+.flatsome-instagram-accounts__access-token-form > button.button {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0;
+}
+
+.flatsome-instagram-accounts__access-token-form > button.button.is-busy {
+	opacity: 0.75;
+	background-size: 100px 100%;
+	background-image: linear-gradient(-45deg, #fafafa 33%, #e0e0e0 33%, #e0e0e0 70%, #fafafa 70%);
+	animation: flatsome-instagram-animate-busy 2500ms infinite linear;
+}
+
+.instagram-account-updated {
+  animation-duration: 1s;
+  animation-name: flatsome-instagram-animate-fade;
+  animation-fill-mode: backwards;
+}
+
+@keyframes flatsome-instagram-animate-fade {
+  0% { background-color: #edfaef; }
+  100% { background-color: transparent; }
+}
+@keyframes flatsome-instagram-animate-busy {
+  0% { background-position: 200px 0; }
 }
 
 #of_container {
@@ -98,7 +135,6 @@
 }
 #of_container #content .section h3.heading {
 	font-size: 13px;
-	text-transform: uppercase;
 	margin: 20px 0 0 0;
 	padding: 15px 0px;
 	border-top: 1px solid #ddd;
@@ -139,7 +175,7 @@
 
 #of_container #content .section-multicheck .controls input{
 	display: inline-block;
-	width: 20px;
+	width: 17px;
 	margin-right: 10px;
 }
 
@@ -244,9 +280,16 @@ html[data-iframe] #of_container .of-save-popup div{padding-top: 15px;}
 	margin: 10px 0;
 }
 
-#of_backup_button {
+#of_backup_button,
+#of_restore_button {
 	margin-right: 5px;
 }
+
+#of_delete_backup_button {
+	color: #d63638;
+	border-color: #d63638;
+}
+
 #of_import_button {
 	margin-top: 10px;
 }
@@ -463,3 +506,13 @@ width: 225px;
 #of_container #content .section-presets .controls img{max-width: 900px;border:3px solid #ccc; margin:10px 0}
 .pre_select_wrapper > a{display: inline-block;}
 #of_container #content .section-presets .controls img:hover{border-color:#0074a2;}
+
+#of_container .of-tag {
+	font-size: 75%;
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	margin-left: 10px;
+	color: #fff;
+	background: #767676;
+	border-radius: 3px;
+}

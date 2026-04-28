@@ -11,7 +11,9 @@ add_ux_builder_shortcode( 'text_box', array(
       'ux_breadcrumbs',
       'ux_the_title',
       'ux_image',
+      'ux_lottie',
       'ux_stack',
+      'ux_html',
       'text',
       'divider',
       'button',
@@ -173,7 +175,7 @@ add_ux_builder_shortcode( 'text_box', array(
             ),
             'depth_hover' => array(
               'type' => 'slider',
-              'heading' => __('Depth :Hover'),
+              'heading' => __('Depth :hover'),
               'default' => '0',
               'unit' => '+',
               'max' => '5',

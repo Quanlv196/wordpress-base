@@ -1,6 +1,9 @@
 <?php
 /**
- * Custom Languages dropdown
+ * Custom Languages dropdown.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 $current_lang = 'Languages';

@@ -36,7 +36,9 @@ function get_flatsome_repeater_start( $atts ) {
       'slider_bullets' => 'false',
       'slider_nav_color' => '',
       'auto_slide' => 'false',
+	  'infinitive' => 'true',
       'format' => '',
+	  'attrs' => '',
     ) );
 
 	$row_classes      = array();
@@ -130,7 +132,7 @@ function get_flatsome_repeater_start( $atts ) {
       // Add slider push class to normal text boxes
       if(!$atts['style'] || $atts['style'] == 'default' || $atts['style'] == 'normal' || $atts['style'] == 'bounce') $row_classes[] = 'slider-nav-push';
 
-      $slider_options = '{"imagesLoaded": true, "groupCells": '.$group_cells.', "dragThreshold" : 5, "cellAlign": "left","wrapAround": true,"prevNextButtons": true,"percentPosition": true,"pageDots": '.$atts['slider_bullets'].', "rightToLeft": '.$rtl.', "autoPlay" : '.$atts['auto_slide'].'}';
+      $slider_options = '{"imagesLoaded": true, "groupCells": '.$group_cells.', "dragThreshold" : 5, "cellAlign": "left","wrapAround": '.$atts['infinitive'].',"prevNextButtons": true,"percentPosition": true,"pageDots": '.$atts['slider_bullets'].', "rightToLeft": '.$rtl.', "autoPlay" : '.$atts['auto_slide'].'}';
 
     } else if($atts['type'] == 'slider-full'){
       $row_classes_full[] = 'slider slider-auto-height row-collapse';
@@ -139,7 +141,7 @@ function get_flatsome_repeater_start( $atts ) {
 
       if($atts['slider_style']) $row_classes_full[] = 'slider-nav-'.$atts['slider_style'];
 
-      $slider_options = '{"imagesLoaded": true, "dragThreshold" : 5, "cellAlign": "left","wrapAround": true,"prevNextButtons": true,"percentPosition": true,"pageDots": '.$atts['slider_bullets'].', "rightToLeft": '.$rtl.', "autoPlay" : '.$atts['auto_slide'].'}';
+      $slider_options = '{"imagesLoaded": true, "dragThreshold" : 5, "cellAlign": "left","wrapAround": '.$atts['infinitive'].',"prevNextButtons": true,"percentPosition": true,"pageDots": '.$atts['slider_bullets'].', "rightToLeft": '.$rtl.', "autoPlay" : '.$atts['auto_slide'].'}';
     }
 
 	$row_classes_full = array_unique( $row_classes_full );
@@ -152,28 +154,28 @@ function get_flatsome_repeater_start( $atts ) {
   <?php if($atts['title']){?>
   <div class="row">
     <div class="large-12 col">
-      <h3 class="section-title"><span><?php echo $atts['title']; ?></span></h3>
+      <h3 class="section-title"><span><?php echo wp_kses_post( $atts['title'] ); ?></span></h3>
     </div>
   </div>
   <?php } ?>
 
   <?php if($atts['type'] == 'slider') { // Slider grid ?>
-  <div class="row <?php echo $row_classes; ?>"  data-flickity-options='<?php echo $slider_options; ?>'>
+  <div class="row <?php echo esc_attr( $row_classes ); ?>"  data-flickity-options='<?php echo esc_attr( $slider_options ); ?>' <?php echo $atts['attrs'] ?>>
 
   <?php } else if($atts['type'] == 'slider-full') { // Full slider ?>
-  <div id="<?php echo $atts['id']; ?>" class="<?php echo $row_classes_full; ?>" data-flickity-options='<?php echo $slider_options; ?>'>
+  <div id="<?php echo esc_attr( $atts['id'] ); ?>" class="<?php echo esc_attr( $row_classes_full ); ?>" data-flickity-options='<?php echo esc_attr( $slider_options ); ?>'>
 
   <?php } else if($atts['type'] == 'masonry') { // Masonry grid ?>
-  <div id="<?php echo $atts['id']; ?>" class="row <?php echo $row_classes; ?>" data-packery-options='{"itemSelector": ".col", "gutter": 0, "presentageWidth" : true}'>
+  <div id="<?php echo esc_attr( $atts['id'] ); ?>" class="row <?php echo esc_attr( $row_classes ); ?>" data-packery-options='{"itemSelector": ".col", "gutter": 0, "presentageWidth" : true}'>
 
   <?php } else if($atts['type'] == 'grid') { ?>
-  <div id="<?php echo $atts['id']; ?>" class="row <?php echo $row_classes; ?>" data-packery-options='{"itemSelector": ".col", "gutter": 0, "presentageWidth" : true}'>
+  <div id="<?php echo esc_attr( $atts['id'] ); ?>" class="row <?php echo esc_attr( $row_classes ); ?>" data-packery-options='{"itemSelector": ".col", "gutter": 0, "presentageWidth" : true}'>
 
   <?php } else if($atts['type'] == 'blank') { //Blank type ?>
   <div class="container">
 
   <?php } else { // Normal Rows ?>
-  <div class="row <?php echo $row_classes; ?>">
+  <div class="row <?php echo esc_attr( $row_classes ); ?>" <?php echo $atts['attrs'] ?>>
   <?php }
 }
 
@@ -183,34 +185,34 @@ function get_flatsome_repeater_end($type){
 
 /* Fix Normal Shortcodes */
 function flatsome_contentfix($content){
+    if ( ! is_string( $content ) ) {
+      return $content;
+    }
+
     $fix = array (
             '<p>_____</p>' => '<div class="is-divider large"></div>',
             '<p>____</p>' => '<div class="is-divider medium"></div>',
             '<p>___</p>' => '<div class="is-divider small"></div>',
             '</div></p>' => '</div>',
             '<p><div' => '<div',
-            ']</p>' => ']',
             ']<br />' => ']',
-            '<p>[' => '[',
             '<br />[' => '[',
+            '<p>[' => '[',
+            ']</p>' => ']',
 
             // For Gutenberg blocks that is encoded by UX Builder.
             '&lt;!&#8211;' => '<!--',
             '&#8211;&gt;' => '-->',
     );
-    //$content = wpautop( preg_replace( '/<\/?p\>/', "\n", $content ) . "\n" );
-    $content = strtr($content, $fix);
-    return do_shortcode($content);
+
+    return strtr( $content, $fix );
 }
 
-/* Add shortcode fix to content */
-add_filter('the_content', 'flatsome_contentfix');
-
-/* Add shortcode to widgets */
-add_filter('widget_text', 'flatsome_contentfix');
-
-/* Add shortcode to excerpt */
-add_filter('the_excerpt', 'flatsome_contentfix');
+add_filter( 'the_content', 'flatsome_contentfix' );
+add_filter( 'widget_text', 'flatsome_contentfix' );
+add_filter( 'widget_text', 'do_shortcode' );
+add_filter( 'the_excerpt', 'flatsome_contentfix' );
+add_filter( 'the_excerpt', 'do_shortcode' );
 
 /**
  * Remove whitespace characters \r\n\t\f\v from HTML between > and <
@@ -232,7 +234,7 @@ function get_shortcode_inline_css($args){
         $unit = array_key_exists( 'unit', $value ) ? $value['unit'] : null;
         if($value['value']) $style .=  $value['attribute'].':'.$value['value'].$unit.';';
        }
-    if($style) return 'style="'.$style.'"';
+    if($style) return 'style="'.esc_attr($style).'"';
 }
 
 
@@ -254,12 +256,21 @@ function flatsome_get_image_url($id, $size = 'large'){
     }
 }
 
-function flatsome_get_image($id, $size = 'large', $alt = 'bg_image', $inline = false){
+function flatsome_get_image( $id, $size = 'large', $alt = 'bg_image', $inline = false, $image_title = false ) {
 
     if(!$id) return '<img src="'.get_template_directory_uri().'/assets/img/missing.jpg'.'" />';
 
+	$attr       = array();
+	$title_html = '';
+
+	if ( $image_title ) {
+		$the_title     = get_the_title( $id );
+		$attr['title'] = $the_title;
+		$title_html    = ' title="' . esc_attr( $the_title ) . '" ';
+	}
+
     if (!is_numeric($id)) {
-        return '<img src="'.$id.'" alt="'.$alt.'" />';
+        return '<img src="' . esc_url( $id ) . '" alt="' . esc_attr( $alt ) . '"' . $title_html . '/>';
     } else {
         $meta = get_post_mime_type($id);
 
@@ -274,7 +285,7 @@ function flatsome_get_image($id, $size = 'large', $alt = 'bg_image', $inline = f
           }
         }
 
-        return wp_get_attachment_image( $id, $size );
+        return wp_get_attachment_image( $id, $size, false, $attr );
     }
 }
 
@@ -285,7 +296,33 @@ function flatsome_string_limit_words($string, $word_limit) {
   return implode(' ', $words);
 }
 
+/**
+ * Retrieves a custom trimmed excerpt from either the post excerpt or the post content.
+ *
+ * @param int $num_words Optional. Number of words to trim the excerpt to. Default 15.
+ *
+ * @return string The trimmed excerpt or password protection message.
+ */
+function flatsome_get_the_excerpt( $num_words = 15 ) {
+	if ( has_excerpt() ) {
+		global $post;
 
+		if ( post_password_required( $post ) ) {
+			return esc_html__( 'There is no excerpt because this is a protected post.', 'default' );
+		}
+
+		return wp_trim_words( $post->post_excerpt, $num_words, apply_filters( 'excerpt_more', ' [&hellip;]' ) );
+	} else {
+		$excerpt_length_callback = function () use ( $num_words ) {
+			return $num_words;
+		};
+		add_filter( 'excerpt_length', $excerpt_length_callback, PHP_INT_MAX );
+		$trimmed_excerpt = get_the_excerpt();
+		remove_filter( 'excerpt_length', $excerpt_length_callback, PHP_INT_MAX );
+
+		return $trimmed_excerpt;
+	}
+}
 
 /* Create RGBA color of a #HEX color */
 function flatsome_hex2rgba($color, $opacity = false) {
@@ -403,18 +440,19 @@ function flatsome_smart_links($link){
     }
     // Get link by page title
     else if(strpos($link, '/') === false && !is_numeric($link)){
-      $get_page = get_page_by_title($link);
+      $get_page = flatsome_get_page_by_title($link);
       if( $get_page ) $link = get_permalink($get_page->ID);
     }
 
-	$protocols = wp_allowed_protocols();
-	array_push( $protocols, 'sms' );
-
-    return esc_url( $link, $protocols );
+	return esc_url( $link );
 }
 
 function flatsome_to_dashed($className) {
    return strtolower(preg_replace('/([\S\s])\s/', '$1-', $className));
+}
+
+function flatsome_to_underscore( $className ) {
+	return strtolower( preg_replace( '/([\S\s])\s/', '$1_', $className ) );
 }
 
 /*
@@ -432,7 +470,9 @@ function flatsome_get_gradient($primary){ ?>
 
 /**
  * Parse rel attribute values based on target value.
- * Adds 'noopener noreferrer' to rel when target is _blank.
+ * Adds 'noopener' to rel when target is _blank.
+ *
+ * @deprecated 3.18 In favor of flatsome_html_atts()
  *
  * @param array $link_atts Link attributes 'target' and 'rel'.
  * @param bool  $trim      Trim start and end whitespaces?
@@ -443,18 +483,17 @@ function flatsome_parse_target_rel( array $link_atts, $trim = false ) {
 	$attrs = array();
 
 	if ( $link_atts['target'] == '_blank' ) {
-		$attrs[]            = "target=\"{$link_atts['target']}\"";
+		$attrs[]            = sprintf( 'target="%s"', esc_attr( $link_atts['target'] ) );
 		$link_atts['rel'][] = 'noopener';
-		$link_atts['rel'][] = 'noreferrer';
 	}
 
 	if ( isset( $link_atts['rel'] ) && is_array( $link_atts['rel'] ) && ! empty( array_filter( $link_atts['rel'] ) ) ) {
 		$relations = array_unique( array_filter( $link_atts['rel'] ) );
 		$rel       = implode( ' ', $relations );
-		$attrs[]   = "rel=\"{$rel}\"";
+		$attrs[]   = sprintf( 'rel="%s"', esc_attr( $rel ) );
 	}
 
-	$attrs = ' ' . implode( ' ', $attrs ) . ' ';
+	$attrs = ! empty( $attrs ) ? ' ' . implode( ' ', $attrs ) . ' ' : ' ';
 
 	return $trim ? trim( $attrs ) : $attrs;
 }

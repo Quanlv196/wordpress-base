@@ -2,22 +2,44 @@
 
 add_shortcode( 'ux_product_gallery', function ( $atts ) {
 	extract( shortcode_atts( array(
-		'style' => 'normal',
+		'style'       => 'normal',
+		'grid_layout' => '',
+		'slider_type' => '',
 	), $atts ) );
 
 	if ( ! is_product() ) {
 		return null;
 	}
 
-	add_filter( 'theme_mod_product_image_style', function ( $input ) use ( $style ) {
+	add_filter( 'theme_mod_product_image_style', function () use ( $style ) {
+		if ( ! in_array( $style, [ 'normal', 'vertical' ], true ) ) {
+			return 'normal';
+		}
 		return $style;
 	} );
 
-	if ( $style == 'full-width' ) {
-		add_filter( 'theme_mod_product_layout', function ( $input ) use ( $style ) {
-			return 'gallery-wide';
-		} );
-	}
+	add_filter( 'theme_mod_product_layout', function () use ( $style ) {
+		$layout = '';
+
+		if ( $style === 'full-width' ) $layout = 'gallery-wide';
+		if ( $style === 'stacked' ) $layout = 'stacked-right';
+
+		return $layout;
+	} );
+
+	add_filter( 'theme_mod_product_gallery_grid_layout', function () use ( $grid_layout ) {
+		if ( ! in_array( $grid_layout, [ '', '1-2', '2', '3-1-2' ], true ) ) {
+			return '';
+		}
+		return $grid_layout;
+	} );
+
+	add_filter( 'theme_mod_product_gallery_slider_type', function () use ( $slider_type ) {
+		if ( ! in_array( $slider_type, [ '', 'fade' ], true ) ) {
+			return '';
+		}
+		return $slider_type;
+	} );
 
 	ob_start();
 	wc_get_template_part( 'single-product/product-image' );
@@ -52,7 +74,7 @@ add_shortcode( 'ux_product_title', function ( $atts ) {
 	}
 
 	ob_start();
-	echo '<div class="' . implode( ' ', $classes ) . '">';
+	echo '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 	woocommerce_template_single_title();
 	echo '</div>';
 
@@ -71,10 +93,13 @@ add_shortcode( 'ux_product_rating', function ( $atts ) {
 	}
 
 	add_filter( 'theme_mod_product_info_review_count', function () use ( $count ) {
-		return $count;
+		return $count === 'true';
 	} );
 
 	add_filter( 'theme_mod_product_info_review_count_style', function () use ( $style ) {
+		if ( ! in_array( $style, [ 'tooltip', 'stacked', 'inline' ], true ) ) {
+			return 'inline';
+		}
 		return $style;
 	} );
 
@@ -93,8 +118,20 @@ add_shortcode( 'ux_product_hook', function ( $atts ) {
 		return null;
 	}
 
+	$hooks = array_keys( apply_filters( 'flatsome_custom_product_single_product_hooks', [
+		'woocommerce_before_single_product_summary' => 'woocommerce_before_single_product_summary',
+		'woocommerce_single_product_summary'        => 'woocommerce_single_product_summary',
+		'woocommerce_after_single_product_summary'  => 'woocommerce_after_single_product_summary',
+		'flatsome_custom_single_product_1'          => 'flatsome_custom_single_product_1',
+		'flatsome_custom_single_product_2'          => 'flatsome_custom_single_product_2',
+		'flatsome_custom_single_product_3'          => 'flatsome_custom_single_product_3',
+	] ) );
+
 	ob_start();
-	do_action( $hook );
+
+	if ( in_array( $hook, $hooks, true ) ) {
+		do_action( $hook );
+	}
 
 	return ob_get_clean();
 } );
@@ -110,7 +147,7 @@ add_shortcode( 'ux_product_price', function ( $atts ) {
 	}
 
 	ob_start();
-	echo '<div class="product-price-container is-' . $size . '">';
+	echo '<div class="product-price-container is-' . esc_attr( $size ) . '">';
 	woocommerce_template_single_price();
 	echo '</div>';
 
@@ -158,13 +195,13 @@ add_shortcode( 'ux_product_add_to_cart', function ( $atts ) {
 	}
 
 	add_filter( 'theme_mod_product_info_form', function () use ( $style ) {
-		if ( $style ) {
+		if ( in_array( $style, [ '', 'flat', 'minimal' ], true ) ) {
 			return $style;
 		}
 	} );
 
 	ob_start();
-	echo '<div class="add-to-cart-container form-' . $style . ' is-' . $size . '">';
+	echo '<div class="add-to-cart-container form-' . esc_attr( $style ) . ' is-' . esc_attr( $size ) . '">';
 	woocommerce_template_single_add_to_cart();
 	echo '</div>';
 
@@ -197,13 +234,13 @@ add_shortcode( 'ux_product_tabs', function ( $atts ) {
 	}
 
 	add_filter( 'theme_mod_product_display', function ( $input ) use ( $style ) {
-		if ( $style ) {
+		if ( in_array( $style, [ 'tabs', 'tabs_normal', 'line-grow', 'tabs_vertical', 'tabs_pills', 'tabs_outline', 'sections', 'accordian', 'accordian-collapsed' ], true ) ) {
 			return $style;
 		}
 	} );
 
 	add_filter( 'theme_mod_product_tabs_align', function ( $input ) use ( $align ) {
-		if ( $align ) {
+		if ( in_array( $align, [ 'left', 'center', 'right' ], true ) ) {
 			return $align;
 		}
 	} );
@@ -225,7 +262,7 @@ add_shortcode( 'ux_product_upsell', function ( $atts ) {
 	}
 
 	add_filter( 'theme_mod_product_upsell', function ( $input ) use ( $style ) {
-		if ( $style ) {
+		if ( in_array( $style, [ 'sidebar', 'bottom', 'disabled' ], true ) ) {
 			return $style;
 		}
 	} );
@@ -246,7 +283,7 @@ add_shortcode( 'ux_product_related', function ( $atts ) {
 	}
 
 	add_filter( 'theme_mod_related_products', function ( $input ) use ( $style ) {
-		if ( $style ) {
+		if ( in_array( $style, [ 'slider', 'grid', 'hidden' ] ) ) {
 			return $style;
 		}
 	} );
@@ -267,7 +304,7 @@ add_shortcode( 'ux_product_breadcrumbs', function ( $atts ) {
 	}
 
 	ob_start();
-	echo '<div class="product-breadcrumb-container is-' . $size . '">';
+	echo '<div class="product-breadcrumb-container is-' . esc_attr( $size ) . '">';
 	flatsome_breadcrumb();
 	echo '</div>';
 

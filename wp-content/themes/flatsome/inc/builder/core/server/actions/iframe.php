@@ -50,11 +50,11 @@ add_filter( 'post_content', function ( $content, $post_id, $context ) {
 add_filter( 'get_post_metadata', function ( $value, $object_id, $meta_key, $single ) {
   $post_id = null;
 
-  if ( array_key_exists( 'post_id', $_GET) ) $post_id = $_GET['post_id'];
-  if ( array_key_exists( 'edit_post_id', $_GET) ) $post_id = $_GET['edit_post_id'];
+  if ( array_key_exists( 'post_id', $_GET) ) $post_id = intval( $_GET['post_id'] );
+  if ( array_key_exists( 'edit_post_id', $_GET) ) $post_id = intval( $_GET['edit_post_id'] );
 
   if ( array_key_exists( $meta_key, $_GET ) && $post_id == $object_id ) {
-      return $_GET[$meta_key];
+      return sanitize_text_field( $_GET[$meta_key] );
   }
 
   return $value;
@@ -64,15 +64,15 @@ add_filter( 'get_post_metadata', function ( $value, $object_id, $meta_key, $sing
  * Change post content to prevent shortcodes
  * beeing rendered before the builder content.
  *
- * @param  array $posts
- * @return array
+ * @param  WP_Post[] $posts
+ * @param  WP_Query  $query
+ * @return WP_Post[]
  */
-add_action( 'the_posts', function ( $posts ) {
-  static $is_replaced;
-  // Do nothing if another post is beeing edited or is replaced already.
-  if ( array_key_exists( 'edit_post_id', $_GET ) || $is_replaced ) return $posts;
-  // do nothing if «the_post» action has already been called.
-  // if ( did_action('the_post') ) return $posts;
+add_action( 'the_posts', function ( $posts, $query ) {
+  // Do nothing if another post is beeing edited or is not the main query.
+  if ( array_key_exists( 'edit_post_id', $_GET ) || ! $query->is_main_query() ) {
+    return $posts;
+  }
   // Get current post if no posts are found. Happens when editing a draft.
   if ( empty ( $posts ) && ( array_key_exists( 'page_id', $_GET ) || array_key_exists( 'p', $_GET ) ) ) {
     $posts[] = get_post( isset( $_GET['page_id'] ) ? $_GET['page_id'] : $_GET['p'] );
@@ -83,10 +83,9 @@ add_action( 'the_posts', function ( $posts ) {
     $posts[0]->post_content = '<post-wrapper></post-wrapper>';
     // Wrap post excerpt to let the excerpt option change its content when changed.
     $posts[0]->post_excerpt = '<div class="uxb-post-excerpt">' . $posts[0]->post_excerpt . '</div>';
-    $is_replaced = true;
   }
   return $posts;
-} );
+}, 10, 2 );
 
 /**
  * Add assets to the iframe.
@@ -95,8 +94,8 @@ add_action( 'ux_builder_enqueue_scripts', function ( $context ) {
   $version = UX_BUILDER_VERSION;
   wp_enqueue_style( 'dashicons' );
   wp_enqueue_style( 'ux-builder-core', ux_builder_asset( 'css/builder/core/content.css' ), null, $version );
-  wp_enqueue_script( 'ux-builder-vendors', ux_builder_asset( 'js/builder/core/vendors.js' ), array( 'jquery', 'underscore' ), $version, true );
-  wp_enqueue_script( 'ux-builder-core', ux_builder_asset( 'js/builder/core/content.js' ), array( 'underscore' ), $version, true );
+  flatsome_enqueue_asset( 'ux-builder-vendors', 'builder/vendors/vendors', array( 'underscore', 'jquery-ui-sortable' ) );
+  flatsome_enqueue_asset( 'ux-builder-core', 'builder/core/content', array( 'underscore' ) );
 }, 0 );
 
 /**
@@ -104,7 +103,7 @@ add_action( 'ux_builder_enqueue_scripts', function ( $context ) {
  */
 add_action( 'wp_enqueue_scripts', function () {
   do_action( 'ux_builder_enqueue_scripts', 'content' );
-} );
+}, 5 );
 
 
 
@@ -114,3 +113,8 @@ add_action( 'wp_enqueue_scripts', function () {
 add_action( 'wp_print_footer_scripts', function () {
   echo '<app-tools></app-tools>';
 } );
+
+/**
+ * Don’t redirect to cart when empty cart.
+ */
+add_filter( 'woocommerce_checkout_redirect_empty_cart', '__return_false', 999 );

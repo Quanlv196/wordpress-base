@@ -1,16 +1,32 @@
 <?php
-	function flatsome_checkout_breadcrumb_class($endpoint){
-		$classes = array();
-		if($endpoint == 'cart' && is_cart() ||
-			$endpoint == 'checkout' && is_checkout() && !is_wc_endpoint_url('order-received') ||
-			$endpoint == 'order-received' && is_wc_endpoint_url('order-received')) {
-			$classes[] = 'current';
-		} else{
-			$classes[] = 'hide-for-small';
-		}
-		return implode(' ', $classes);
+/**
+ * Checkout header.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
+ */
+
+/**
+ * Checkout breadcrumb class.
+ *
+ * @param string $endpoint Endpoint to check for.
+ *
+ * @return string
+ */
+function flatsome_checkout_breadcrumb_class( $endpoint ) {
+	$classes = array();
+	if ( $endpoint == 'cart' && is_cart() ||
+		 $endpoint == 'checkout' && is_checkout() && ! is_wc_endpoint_url( 'order-received' ) ||
+		 $endpoint == 'order-received' && is_wc_endpoint_url( 'order-received' ) ) {
+		$classes[] = 'current';
+	} else {
+		$classes[] = 'hide-for-small';
 	}
-	$steps = get_theme_mod('cart_steps_numbers', 0);
+
+	return implode( ' ', $classes );
+}
+
+$steps = get_theme_mod( 'cart_steps_numbers', 0 );
 ?>
 
 <div class="checkout-page-title page-title">

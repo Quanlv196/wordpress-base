@@ -14,11 +14,11 @@ function ux_blocks_widget() {
 class Flatsome_UX_Blocks_Widget extends WP_Widget {
 
 	function __construct() {
-		$widget_ops = array( 'classname' => 'block_widget', 'description' => __('A widget that displays a Block ', 'flatsome'), 'customize_selective_refresh' => true);
+		$widget_ops = array( 'classname' => 'block_widget', 'description' => __('Display a UX Block.', 'flatsome'), 'customize_selective_refresh' => true);
 
 		$control_ops = array('id_base' => 'block_widget' );
 
-		parent::__construct( 'block_widget', __('Flatsome Blocks', 'flatsome'), $widget_ops, $control_ops );
+		parent::__construct( 'block_widget', __('Flatsome UX Blocks', 'flatsome'), $widget_ops, $control_ops );
 	}
 
 	function widget($args, $instance) {
@@ -82,16 +82,16 @@ class Flatsome_UX_Blocks_Widget extends WP_Widget {
 		$instance['block'] = isset( $instance['block'] ) ? esc_attr( $instance['block'] ) : '';
 
 ?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'flatsome' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'flatsome' ); ?>:</label>
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'block' ); ?>"><?php _e( 'Block:', 'flatsome' ); ?></label>
+		<p><label for="<?php echo $this->get_field_id( 'block' ); ?>"><?php _e( 'UX Block', 'flatsome' ); ?>:</label>
 		<select class="widefat" name="<?php echo $this->get_field_name( 'block' ); ?>" id="<?php echo $this->get_field_id( 'block' ); ?>">
 		<?php foreach ($blocks as $key => $value) {
  		   echo '<option '.selected( $instance['block'], $key).' value="'.$key.'">'.$value.'</option>';
  		} ?>
 		</select></p>
- 		<p>You can edit blocks with the UX Builder if you hover them in the front-end.<br/><a href="http://docs.uxthemes.com/article/237-ux-builder-how-to-use-blocks" target="_blank">Learn more about Blocks</a></p>
+ 		<p>UX Blocks can be edited with the UX Builder when you hover over them in the front-end.<br/><a href="http://docs.uxthemes.com/article/237-ux-builder-how-to-use-blocks" target="_blank">Learn more about UX Blocks</a></p>
 <?php
 	}
 }

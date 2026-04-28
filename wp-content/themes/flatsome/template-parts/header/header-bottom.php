@@ -1,4 +1,12 @@
-<?php if(flatsome_has_bottom_bar()['large_or_mobile']) {
+<?php
+/**
+ * Header bottom.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+if(flatsome_has_bottom_bar()['large_or_mobile']) {
 ?>
 <div id="wide-nav" class="header-bottom wide-nav <?php header_inner_class('bottom'); ?>">
     <div class="flex-row container">

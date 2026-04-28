@@ -17,10 +17,10 @@ function ux_lightbox( $atts, $content = null ) {
 
 	ob_start();
 	?>
-	<div id="<?php echo $id; ?>"
-	     class="lightbox-by-id lightbox-content mfp-hide lightbox-white <?php echo $class; ?>"
-	     style="max-width:<?php echo $width ?> ;padding:<?php echo $padding; ?>">
-		<?php echo flatsome_contentfix( $content ); ?>
+	<div id="<?php echo esc_attr( $id ); ?>"
+	     class="lightbox-by-id lightbox-content mfp-hide lightbox-white <?php echo esc_attr( $class ); ?>"
+	     style="max-width:<?php echo esc_attr( $width ); ?> ;padding:<?php echo esc_attr( $padding ); ?>">
+		<?php echo do_shortcode( $content ); ?>
 	</div>
 	<?php if ( $auto_open ) : ?>
 		<script>
@@ -28,39 +28,41 @@ function ux_lightbox( $atts, $content = null ) {
 			jQuery(document).ready(function ($) {
 				/* global flatsomeVars */
 				'use strict'
-				var cookieId = '<?php echo "lightbox_{$id}" ?>'
-				var cookieValue = '<?php echo "opened_{$version}"; ?>'
-				var timer = parseInt('<?php echo $auto_timer; ?>')
+				var cookieId = '<?php echo 'lightbox_' . esc_js( $id ); ?>'
+				var cookieValue = '<?php echo 'opened_' . esc_js( $version ); ?>'
+				var timer = parseInt('<?php echo intval( $auto_timer ); ?>', 10)
 
 				// Auto open lightbox
 				<?php if ( $auto_show == 'always' ) : ?>
-				cookie(cookieId, false)
+				Flatsome.cookie(cookieId, false)
 				<?php endif; ?>
 
 				// Run lightbox if no cookie is set
-				if (cookie(cookieId) !== cookieValue) {
+				if (Flatsome.cookie(cookieId) !== cookieValue) {
 
 					// Ensure closing off canvas
 					setTimeout(function () {
-						jQuery.magnificPopup.close()
+						if (jQuery.fn.magnificPopup) jQuery.magnificPopup.close()
 					}, timer - 350)
 
 					// Open lightbox
 					setTimeout(function () {
-						$.magnificPopup.open({
-							midClick: true,
-							removalDelay: 300,
-							// closeBtnInside: flatsomeVars.lightbox.close_btn_inside,
-							// closeMarkup: flatsomeVars.lightbox.close_markup,
-							items: {
-								src: '#<?php echo $id; ?>',
-								type: 'inline'
-							}
+						$.loadMagnificPopup().then(function() {
+							$.magnificPopup.open({
+								midClick: true,
+								removalDelay: 300,
+								// closeBtnInside: flatsomeVars.lightbox.close_btn_inside,
+								// closeMarkup: flatsomeVars.lightbox.close_markup,
+								items: {
+									src: '#<?php echo esc_js( $id ); ?>',
+									type: 'inline'
+								}
+							})
 						})
 					}, timer)
 
 					// Set cookie
-					cookie(cookieId, cookieValue, 365)
+					Flatsome.cookie(cookieId, cookieValue, 365)
 				}
 			})
 		</script>

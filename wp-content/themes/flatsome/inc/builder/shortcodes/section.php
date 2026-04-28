@@ -181,6 +181,7 @@ add_ux_builder_shortcode( 'section', array(
 				),
 			),
 		),
+		'shape_divider_options' => require( __DIR__ . '/commons/shape-divider.php' ),
 		'border_options'     => require( __DIR__ . '/commons/border.php' ),
 		'video_options'      => require( __DIR__ . '/commons/video.php' ),
 	 	'advanced_options' => require( __DIR__ . '/commons/advanced.php'),

@@ -1,7 +1,11 @@
 <?php
-/*
-Template name: Page - Vertical Sub-Nav
-*/
+/**
+ * Template name: Page - Vertical Sub-Nav
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
 get_header(); ?>
 
 <?php do_action( 'flatsome_before_page' ); ?>
@@ -38,8 +42,11 @@ get_header(); ?>
 
 					<?php the_content(); ?>
 
-					<?php if ( comments_open() || '0' != get_comments_number() ){
-							comments_template(); } ?>
+					<?php
+					if ( comments_open() || get_comments_number() ) {
+						comments_template();
+					}
+					?>
 
 				<?php endwhile; // end of the loop. ?>
 

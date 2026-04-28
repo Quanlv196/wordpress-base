@@ -29,6 +29,16 @@ class VNM_Shortcode {
             self::enqueue_scripts();
         }
 
+        // Đọc danh sách tỉnh thành để nhúng trực tiếp vào HTML
+        $provinces_file = VNM_PATH . 'assets/data/provinces.json';
+        $provinces_raw  = file_exists( $provinces_file )
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+            ? file_get_contents( $provinces_file )
+            : '[]';
+        $provinces_json = wp_json_encode(
+            json_decode( ltrim( $provinces_raw, "\xEF\xBB\xBF" ), true ) ?: []
+        );
+
         ob_start();
         include VNM_PATH . 'templates/map-shortcode.php';
         return ob_get_clean();
@@ -68,13 +78,21 @@ class VNM_Shortcode {
         // để simplemaps render đúng element trong template của plugin.
         // Simplemaps dùng property "div" (không phải "map_div"),
         // cũng tắt state_url và bật auto_load để map tự render khi gọi .load().
+        $register_url = esc_url( apply_filters( 'vnm_register_url', '#' ) );
+        $state_desc   = 'Tỉnh thành này hiện chưa có đối tác.<br/><ul>'
+            . '<li>Đối với khách hàng, vui lòng liên hệ 1C Việt Nam theo số: <strong>(+84)247 108 8887</strong></li>'
+            . '<li>Đối với đối tác, để trở thành đại diện cho tỉnh thành này, vui lòng đăng ký <a href=\'' . esc_js( $register_url ) . '\'>tại đây</a></li>'
+            . '</ul>';
+
         wp_add_inline_script(
             'vnm-mapdata',
             'if (typeof simplemaps_countrymap_mapdata !== "undefined") {
                 simplemaps_countrymap_mapdata.main_settings = simplemaps_countrymap_mapdata.main_settings || {};
-                simplemaps_countrymap_mapdata.main_settings.div        = "vn_map";
-                simplemaps_countrymap_mapdata.main_settings.state_url  = "";
-                simplemaps_countrymap_mapdata.main_settings.auto_load  = "no";
+                simplemaps_countrymap_mapdata.main_settings.div              = "vn_map";
+                simplemaps_countrymap_mapdata.main_settings.state_url        = "";
+                simplemaps_countrymap_mapdata.main_settings.auto_load        = "no";
+                simplemaps_countrymap_mapdata.main_settings.popup_font       = "inherit";
+                simplemaps_countrymap_mapdata.main_settings.state_description = ' . wp_json_encode( $state_desc ) . ';
             }',
             'after'
         );
@@ -114,11 +132,17 @@ class VNM_Shortcode {
         );
 
         // Truyền cấu hình sang JavaScript qua wp_localize_script
+        $provinces_file = VNM_PATH . 'assets/data/provinces.json';
+        $provinces_json = file_exists( $provinces_file ) ? file_get_contents( $provinces_file ) : '[]'; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+        $provinces      = json_decode( ltrim( $provinces_json, "\xEF\xBB\xBF" ), true );
+
         wp_localize_script( 'vnm-map-init', 'VNM_CONFIG', [
-            'rest_url'   => esc_url_raw( rest_url( 'vn-map/v1/partners' ) ),
-            'nonce'      => wp_create_nonce( 'wp_rest' ),
-            'plugin_url' => VNM_URL,
-            'version'    => VNM_VERSION,
+            'rest_url'     => esc_url_raw( rest_url( 'vn-map/v1/partners' ) ),
+            'nonce'        => wp_create_nonce( 'wp_rest' ),
+            'plugin_url'   => VNM_URL,
+            'version'      => VNM_VERSION,
+            'provinces'    => is_array( $provinces ) ? $provinces : [],
+            'register_url' => esc_url( apply_filters( 'vnm_register_url', '#' ) ),
         ] );
     }
 }

@@ -1,6 +1,9 @@
 <?php
 /**
- * Portfolio related
+ * Portfolio related.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 if ( get_theme_mod( 'portfolio_related', 1 ) == 0 ) {

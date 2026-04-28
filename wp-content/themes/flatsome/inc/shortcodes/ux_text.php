@@ -60,6 +60,7 @@ function flatsome_render_ux_text_shortcode( $atts, $content, $tag ) {
 						'property' => 'text-align',
 					),
 					'text_color'  => array(
+						'selector' => ', > *',
 						'property' => 'color',
 					),
 				),

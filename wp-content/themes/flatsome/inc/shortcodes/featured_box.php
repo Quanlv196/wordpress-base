@@ -68,11 +68,11 @@ function featured_box( $atts, $content = null ) {
 	ob_start();
 	?>
 
-	<?php if ( $link ) echo '<a class="plain" href="' . $link . '"' . flatsome_parse_target_rel( $link_atts ) . '>'; ?>
-	<div class="icon-box <?php echo $classes; ?>" <?php if ( $tooltip )
-		echo 'title="' . $tooltip . '"' ?> <?php echo get_shortcode_inline_css( $css_args_out ); ?>>
+	<?php if ( $link ) echo '<a class="plain" href="' . esc_url( $link ) . '"' . flatsome_parse_target_rel( $link_atts ) . '>'; ?>
+	<div class="icon-box <?php echo esc_attr( $classes ); ?>" <?php if ( $tooltip )
+		echo 'title="' . esc_attr( $tooltip ) . '"' ?> <?php echo get_shortcode_inline_css( $css_args_out ); ?>>
 		<?php if ( $img ) { ?>
-			<div class="<?php echo $classes_img; ?>" style="<?php if ( $img_width ) {
+			<div class="<?php echo esc_attr( $classes_img ); ?>" style="<?php if ( $img_width ) {
 				echo $img_width;
 			} ?>">
 				<div class="icon">
@@ -83,9 +83,9 @@ function featured_box( $atts, $content = null ) {
 			</div>
 		<?php } ?>
 		<div class="icon-box-text last-reset">
-			<?php if ( $title ) { ?><h5 class="uppercase"><?php echo $title; ?></h5><?php } ?>
-			<?php if ( $title_small ) { ?><h6><?php echo $title_small; ?></h6><?php } ?>
-			<?php echo flatsome_contentfix( $content ); ?>
+			<?php if ( $title ) { ?><h5 class="uppercase"><?php echo wp_kses_post( $title ); ?></h5><?php } ?>
+			<?php if ( $title_small ) { ?><h6><?php echo wp_kses_post( $title_small ); ?></h6><?php } ?>
+			<?php echo do_shortcode( $content ); ?>
 		</div>
 	</div>
 	<?php if ( $link ) echo '</a>'; ?>

@@ -30,6 +30,21 @@ Flatsome_Option::add_field( 'option',
 
 Flatsome_Option::add_field( 'option',
 	array(
+		'type'      => 'radio-buttonset',
+		'settings'  => 'header_button_1_letter_case',
+		'transport' => flatsome_customizer_transport(),
+		'label'     => __( 'Letter case', 'flatsome-admin' ),
+		'section'   => 'header_buttons',
+		'default'   => '',
+		'choices'   => array(
+			''          => __( 'ABC', 'flatsome-admin' ),
+			'lowercase' => __( 'Abc', 'flatsome-admin' ),
+		),
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
 		'type'        => 'text',
 		'settings'    => 'header_button_1_link',
 		'transport'   => $transport,
@@ -74,6 +89,62 @@ Flatsome_Option::add_field( 'option',
 		'default'   => '99px',
 		'label'     => __( 'Radius', 'flatsome-admin' ),
 		'section'   => 'header_buttons',
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'      => 'select',
+		'settings'  => 'header_button_1_icon',
+		'transport' => flatsome_customizer_transport(),
+		'label'     => __( 'Icon', 'flatsome-admin' ),
+		'section'   => 'header_buttons',
+		'default'   => '',
+		'choices'   => require get_template_directory() . '/inc/builder/shortcodes/values/icons.php',
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'            => 'radio-buttonset',
+		'settings'        => 'header_button_1_icon_position',
+		'transport'       => flatsome_customizer_transport(),
+		'label'           => __( 'Icon position', 'flatsome-admin' ),
+		'section'         => 'header_buttons',
+		'default'         => '',
+		'choices'         => array(
+			'left' => __( 'Left', 'flatsome-admin' ),
+			''     => __( 'Right', 'flatsome-admin' ),
+		),
+		'active_callback' => array(
+			array(
+				'setting'  => 'header_button_1_icon',
+				'operator' => '!=',
+				'value'    => '',
+			),
+		),
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'            => 'radio-buttonset',
+		'settings'        => 'header_button_1_icon_visibility',
+		'transport'       => flatsome_customizer_transport(),
+		'label'           => __( 'Icon visibility', 'flatsome-admin' ),
+		'section'         => 'header_buttons',
+		'default'         => '',
+		'choices'         => array(
+			''     => __( 'Always visible', 'flatsome-admin' ),
+			'true' => __( 'Visible on hover', 'flatsome-admin' ),
+		),
+		'active_callback' => array(
+			array(
+				'setting'  => 'header_button_1_icon',
+				'operator' => '!=',
+				'value'    => '',
+			),
+		),
 	)
 );
 
@@ -137,7 +208,7 @@ Flatsome_Option::add_field( 'option',
 	array(
 		'type'      => 'slider',
 		'settings'  => 'header_button_1_depth_hover',
-		'label'     => __( 'Depth:hover', 'flatsome-admin' ),
+		'label'     => __( 'Depth :hover', 'flatsome-admin' ),
 		'section'   => 'header_buttons',
 		'default'   => 0,
 		'choices'   => array(
@@ -167,6 +238,21 @@ Flatsome_Option::add_field( 'option',
 		'default'   => 'Button 2',
 		'label'     => __( 'Text', 'flatsome-admin' ),
 		'section'   => 'header_buttons',
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'      => 'radio-buttonset',
+		'settings'  => 'header_button_2_letter_case',
+		'transport' => flatsome_customizer_transport(),
+		'label'     => __( 'Letter case', 'flatsome-admin' ),
+		'section'   => 'header_buttons',
+		'default'   => '',
+		'choices'   => array(
+			''          => __( 'ABC', 'flatsome-admin' ),
+			'lowercase' => __( 'Abc', 'flatsome-admin' ),
+		),
 	)
 );
 
@@ -216,6 +302,62 @@ Flatsome_Option::add_field( 'option',
 		'default'   => '99px',
 		'label'     => __( 'Radius', 'flatsome-admin' ),
 		'section'   => 'header_buttons',
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'      => 'select',
+		'settings'  => 'header_button_2_icon',
+		'transport' => flatsome_customizer_transport(),
+		'label'     => __( 'Icon', 'flatsome-admin' ),
+		'section'   => 'header_buttons',
+		'default'   => '',
+		'choices'   => require get_template_directory() . '/inc/builder/shortcodes/values/icons.php',
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'            => 'radio-buttonset',
+		'settings'        => 'header_button_2_icon_position',
+		'transport'       => flatsome_customizer_transport(),
+		'label'           => __( 'Icon position', 'flatsome-admin' ),
+		'section'         => 'header_buttons',
+		'default'         => '',
+		'choices'         => array(
+			'left' => __( 'Left', 'flatsome-admin' ),
+			''     => __( 'Right', 'flatsome-admin' ),
+		),
+		'active_callback' => array(
+			array(
+				'setting'  => 'header_button_2_icon',
+				'operator' => '!=',
+				'value'    => '',
+			),
+		),
+	)
+);
+
+Flatsome_Option::add_field( 'option',
+	array(
+		'type'            => 'radio-buttonset',
+		'settings'        => 'header_button_2_icon_visibility',
+		'transport'       => flatsome_customizer_transport(),
+		'label'           => __( 'Icon visibility', 'flatsome-admin' ),
+		'section'         => 'header_buttons',
+		'default'         => '',
+		'choices'         => array(
+			''     => __( 'Always visible', 'flatsome-admin' ),
+			'true' => __( 'Visible on hover', 'flatsome-admin' ),
+		),
+		'active_callback' => array(
+			array(
+				'setting'  => 'header_button_2_icon',
+				'operator' => '!=',
+				'value'    => '',
+			),
+		),
 	)
 );
 
@@ -280,7 +422,7 @@ Flatsome_Option::add_field( 'option',
 	array(
 		'type'      => 'slider',
 		'settings'  => 'header_button_2_depth_hover',
-		'label'     => __( 'Depth:hover', 'flatsome-admin' ),
+		'label'     => __( 'Depth :hover', 'flatsome-admin' ),
 		'section'   => 'header_buttons',
 		'default'   => 0,
 		'choices'   => array(
@@ -311,6 +453,10 @@ function flatsome_refresh_header_buttons_partials( WP_Customize_Manager $wp_cust
 				'header_button_2_size',
 				'header_button_2_depth',
 				'header_button_2_depth_hover',
+				'header_button_2_icon',
+				'header_button_2_icon_position',
+				'header_button_2_icon_visibility',
+				'header_button_2_letter_case',
 			),
 			'render_callback'     => function () {
 				get_template_part( 'template-parts/header/partials/element', 'button-2' );
@@ -331,6 +477,10 @@ function flatsome_refresh_header_buttons_partials( WP_Customize_Manager $wp_cust
 				'header_button_1_size',
 				'header_button_1_depth',
 				'header_button_1_depth_hover',
+				'header_button_1_icon',
+				'header_button_1_icon_position',
+				'header_button_1_icon_visibility',
+				'header_button_1_letter_case',
 			),
 			'render_callback'     => function () {
 				get_template_part( 'template-parts/header/partials/element', 'button-1' );

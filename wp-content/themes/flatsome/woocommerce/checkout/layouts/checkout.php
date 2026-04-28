@@ -1,5 +1,11 @@
 <?php
-// Default checkout layout
+/**
+ * Default checkout layout.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.16.0
+ */
+
 get_header(); ?>
 
 <?php while ( have_posts() ) : the_post(); ?>

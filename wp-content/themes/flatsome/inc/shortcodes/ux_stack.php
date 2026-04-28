@@ -59,8 +59,6 @@ function flatsome_render_ux_stack_shortcode( $atts, $content, $tag ) {
 		}
 	}
 
-	wp_enqueue_script( 'css-vars-polyfill' );
-
 	ob_start();
 
 	?>

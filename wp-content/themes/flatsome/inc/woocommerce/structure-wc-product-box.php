@@ -93,13 +93,13 @@ if ( ! function_exists( 'flatsome_woocommerce_shop_loop_category' ) ) {
 	 * Add and/or Remove Categories
 	 */
 	function flatsome_woocommerce_shop_loop_category() {
-		if ( ! flatsome_option( 'product_box_category' ) ) {
+		if ( ! get_theme_mod( 'product_box_category', 1 ) ) {
 			return;
 		} ?>
 		<p class="category uppercase is-smaller no-text-overflow product-cat op-7">
 			<?php
 			global $product;
-			$product_cats = function_exists( 'wc_get_product_category_list' ) ? wc_get_product_category_list( get_the_ID(), '\n', '', '' ) : $product->get_categories( '\n', '', '' );
+			$product_cats = wc_get_product_category_list( get_the_ID(), '\n', '', '' );
 			$product_cats = strip_tags( $product_cats );
 
 			if ( $product_cats ) {
@@ -119,12 +119,12 @@ if ( ! function_exists( 'flatsome_woocommerce_shop_loop_ratings' ) ) {
 	 */
 	function flatsome_woocommerce_shop_loop_ratings() {
 		// Switch ratings position when grid 3 is chosen.
-		if ( 'grid3' === flatsome_option( 'grid_style' ) && ! get_theme_mod( 'disable_reviews' ) ) {
+		if ( 'grid3' === get_theme_mod( 'grid_style', 'grid1' ) && ! get_theme_mod( 'disable_reviews' ) ) {
 			remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5 );
 			add_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_rating' );
 		}
 		// Remove ratings.
-		if ( flatsome_option( 'product_box_rating' ) ) {
+		if ( get_theme_mod( 'product_box_rating', 1 ) ) {
 			return;
 		}
 		remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5 );
@@ -240,7 +240,7 @@ if ( ! function_exists( 'flatsome_woocommerce_shop_loop_excerpt' ) ) {
 	 * Add Product Short description
 	 */
 	function flatsome_woocommerce_shop_loop_excerpt() {
-		if ( ! flatsome_option( 'short_description_in_grid' ) ) {
+		if ( ! get_theme_mod( 'short_description_in_grid', 0 ) ) {
 			return;
 		}
 		?>
@@ -256,19 +256,22 @@ if ( ! function_exists( 'flatsome_product_box_class' ) ) {
 	/**
 	 * Add Classes to product box
 	 *
-	 * @return null/string
+	 * @return string
 	 */
 	function flatsome_product_box_class() {
 		$classes             = array();
-		$category_grid_style = get_theme_mod( 'category_grid_style', 'grid');
+		$category_grid_style = get_theme_mod( 'category_grid_style', 'grid' );
 
 		if ( $category_grid_style == 'list' ) {
 			$classes[] = 'box-vertical';
 		}
+
+		$classes = apply_filters( 'flatsome_product_box_classes', $classes );
+
 		if ( ! empty( $classes ) ) {
 			return implode( ' ', $classes );
 		}
-		return null;
+		return '';
 	}
 }
 
@@ -276,19 +279,21 @@ if ( ! function_exists( 'flatsome_product_box_image_class' ) ) {
 	/**
 	 * Add Classes to product image box
 	 *
-	 * @return null/string
+	 * @return string
 	 */
 	function flatsome_product_box_image_class() {
-		$hover_style = flatsome_option( 'product_hover' );
-		if ( $hover_style == 'fade_in_back' && $hover_style == 'zoom_in' ) {
-			return null;
-		}
+		$hover_style = get_theme_mod( 'product_hover', 'fade_in_back' );
+
 		$classes   = array();
 		$classes[] = 'image-' . $hover_style;
+
+		$classes = apply_filters( 'flatsome_product_box_image_classes', $classes );
+
 		if ( ! empty( $classes ) ) {
 			return implode( ' ', $classes );
 		}
-		return null;
+
+		return '';
 	}
 }
 
@@ -299,7 +304,20 @@ if ( ! function_exists( 'flatsome_product_box_actions_class' ) ) {
 	 * @return string
 	 */
 	function flatsome_product_box_actions_class() {
-		return 'grid-tools text-center hide-for-small bottom hover-slide-in show-on-hover';
+		$classes = apply_filters( 'flatsome_product_box_actions_classes', [
+			'grid-tools',
+			'text-center',
+			'hide-for-small',
+			'bottom',
+			'hover-slide-in',
+			'show-on-hover',
+		] );
+
+		if ( ! empty( $classes ) ) {
+			return implode( ' ', $classes );
+		}
+
+		return '';
 	}
 }
 
@@ -312,7 +330,7 @@ if ( ! function_exists( 'flatsome_product_box_text_class' ) ) {
 	function flatsome_product_box_text_class() {
 		$classes = array( 'box-text-products' );
 
-		$grid_style = flatsome_option( 'grid_style' );
+		$grid_style = get_theme_mod( 'grid_style', 'grid1' );
 
 		if ( $grid_style == 'grid2' ) {
 			$classes[] = 'text-center grid-style-2';
@@ -322,6 +340,12 @@ if ( ! function_exists( 'flatsome_product_box_text_class' ) ) {
 			$classes[] = 'flex-row align-top grid-style-3 flex-wrap';
 		}
 
-		return implode( ' ', $classes );
+		$classes = apply_filters( 'flatsome_product_box_text_classes', $classes );
+
+		if ( ! empty( $classes ) ) {
+			return implode( ' ', $classes );
+		}
+
+		return '';
 	}
 }

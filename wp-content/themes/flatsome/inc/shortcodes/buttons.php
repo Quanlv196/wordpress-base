@@ -49,8 +49,8 @@ function button_shortcode( $atts, $content = null ) {
 	}
 
 	$attributes = array();
-	$icon_left  = $icon && $icon_pos == 'left' ? get_flatsome_icon( $icon ) : '';
-	$icon_right = $icon && $icon_pos !== 'left' ? get_flatsome_icon( $icon ) : '';
+	$icon_left  = $icon && $icon_pos == 'left' ? get_flatsome_icon( $icon, null, array( 'aria-hidden' => 'true' ) ) : '';
+	$icon_right = $icon && $icon_pos !== 'left' ? get_flatsome_icon( $icon, null, array( 'aria-hidden' => 'true' ) ) : '';
 
 	// Add Button Classes.
 	$classes   = array();
@@ -74,7 +74,7 @@ function button_shortcode( $atts, $content = null ) {
 	if ( $letter_case ) {
 		$classes[] = $letter_case;
 	}
-	if ( $icon_reveal ) {
+	if ( $icon && $icon_reveal ) {
 		$classes[] = 'reveal-icon';
 	}
 	if ( $expand ) {
@@ -87,25 +87,22 @@ function button_shortcode( $atts, $content = null ) {
 		$classes[] = $visibility;
 	}
 	if ( $animate ) {
-		$attributes['data-animate'] = $animate;
-	}
-	if ( $target == '_blank' ) {
-		$attributes['rel'][] = 'noopener noreferrer';
+		$attributes['data-animate'] = esc_attr( $animate );
 	}
 	if ( $rel ) {
-		$attributes['rel'][] = $rel;
+		$attributes['rel'][] = esc_attr( $rel );
 	}
 	if ( $link ) {
 		// Smart links.
 		$link               = flatsome_smart_links( $link );
 		$attributes['href'] = $link;
 		if ( $target ) {
-			$attributes['target'] = $target;
+			$attributes['target'] = esc_attr( $target );
 		}
 	}
 	if ( $tooltip ) {
 		$classes[]           = 'has-tooltip';
-		$attributes['title'] = $tooltip;
+		$attributes['title'] = wp_kses_post( $tooltip );
 	}
 
 	$styles = get_shortcode_inline_css( array(
@@ -125,7 +122,7 @@ function button_shortcode( $atts, $content = null ) {
 		),
 	) );
 
-	$attributes['class'] = $classes;
+	$attributes['class'] = esc_attr( implode( ' ', $classes ) );
 	$attributes          = flatsome_html_atts( $attributes );
 
 	// Template is located in template-parts/shortcodes.
@@ -148,7 +145,7 @@ function facebook_login_shortcode( $atts, $content = null ) {
 	?>
 	<a href="<?php echo esc_url( $facebook_url ); ?>" class="button <?php echo esc_attr( $size ); ?> facebook-button" data-plugin="nsl" data-action="connect" data-redirect="current" data-provider="facebook" data-popupwidth="475" data-popupheight="175">
 		<?php echo get_flatsome_icon( 'icon-facebook' ); ?>
-		<?php echo $text; ?>
+		<?php echo wp_kses_post( $text ); ?>
 	</a>
 	<?php
 	$content = ob_get_contents();
@@ -201,10 +198,10 @@ function ux_video_button( $atts, $content = null ) {
 		'size'  => '',
 	), $atts ) );
 	if ( $size ) {
-		$size = 'style="font-size:' . $size . '%"';
+		$size = 'style="font-size:' . esc_attr( $size ) . '%"';
 	}
 
-	return '<div class="video-button-wrapper" ' . $size . '><a href="' . $video . '" class="button open-video icon circle is-outline is-xlarge">' . get_flatsome_icon( 'icon-play', '1.5em' ) . '</a></div>';
+	return '<div class="video-button-wrapper" ' . $size . '><a href="' . esc_url( $video ) . '" class="button open-video icon circle is-outline is-xlarge">' . get_flatsome_icon( 'icon-play', '1.5em' ) . '</a></div>';
 }
 
 add_shortcode( 'video_button', 'ux_video_button' );

@@ -1,3 +1,12 @@
+<?php
+/**
+ * Post archive title.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <header class="archive-page-header">
 	<div class="row">
 	<div class="large-12 text-center col">

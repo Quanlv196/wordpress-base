@@ -45,7 +45,7 @@ $options_custom = array(
 		'param_name' => 'ids',
 		'config'     => array(
 			'multiple'    => true,
-			'placeholder' => 'Select..',
+			'placeholder' => 'Select...',
 			'postSelect'  => array(
 				'post_type' => array( 'product' ),
 			),

@@ -6,7 +6,7 @@ add_ux_builder_shortcode( 'ux_slider', array(
     'category' => __( 'Layout' ),
     'message' => __( 'Add slides here' ),
     'directives' => array( 'ux-slider' ),
-    'allow' => array( 'ux_banner','ux_image','section','row','ux_banner_grid','logo'),
+    'allow' => array( 'ux_banner','ux_image','ux_lottie','section','row','ux_banner_grid','logo'),
     'template' => flatsome_ux_builder_template( 'ux_slider.html' ),
     'thumbnail' =>  flatsome_ux_builder_thumbnail( 'slider' ),
     'tools' => 'shortcodes/ux_slider/ux-slider-tools.directive.html',
@@ -69,6 +69,7 @@ add_ux_builder_shortcode( 'ux_slider', array(
             ),
             'slide_width' => array(
               'type' => 'scrubfield',
+              'responsive' => true,
               'heading' => 'Slide Width',
               'placeholder' => 'Width in Px',
               'default' => '',

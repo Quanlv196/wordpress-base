@@ -18,11 +18,11 @@ if(!function_exists('flatsome_html_cart_footer')) {
 // Add Content in cart sidebar
 if(!function_exists('flatsome_html_cart_sidebar')) {
   function flatsome_html_cart_sidebar(){
-  	$content = get_theme_mod('html_cart_sidebar');
   	$icons = get_theme_mod('payment_icons_placement');
-
-      echo '<div class="cart-sidebar-content relative">'.do_shortcode($content).'</div>';
-      if(is_array($icons) && in_array('cart', $icons)) echo do_shortcode('[ux_payment_icons]');
+	if ( $content = get_theme_mod('html_cart_sidebar') ) {
+		echo '<div class="cart-sidebar-content relative">' . do_shortcode( $content) . '</div>';
+	}
+	if(is_array($icons) && in_array('cart', $icons)) echo do_shortcode('[ux_payment_icons]');
   }
   add_action( 'flatsome_cart_sidebar', 'flatsome_html_cart_sidebar', 10);
 }

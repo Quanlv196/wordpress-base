@@ -14,8 +14,8 @@ add_action('flatsome_after_header','flatsome_product_header', 10);
 // Add Transparent Header To Cateogry if Set
 function flatsome_product_header_classes($classes){
 
-    // Add transparent header to product page if set.
-    if(is_product() && flatsome_option('product_header_transparent')){
+	// Add transparent header to product page if set.
+	if ( is_product() && get_theme_mod( 'product_header_transparent', 0 ) ) {
          $classes[] = 'transparent has-transparent nav-dark toggle-nav-dark';
     }
 
@@ -89,7 +89,7 @@ add_action('flatsome_before_product_sidebar','flatsome_product_nav_sidebar', 0);
 
 if(!function_exists('flatsome_product_next_prev_nav')) {
   function flatsome_product_next_prev_nav($class = ''){
-        echo '<ul class="next-prev-thumbs is-small '.$class.'">';
+        echo '<ul class="next-prev-thumbs is-small ' . esc_attr( $class ) . '">';
         flatsome_next_post_link_product();
         flatsome_previous_post_link_product();
         echo '</ul>';

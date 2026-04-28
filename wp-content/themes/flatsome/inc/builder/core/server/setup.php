@@ -10,6 +10,11 @@ add_action( 'ux_builder_setup', function () {
    ),
   ) );
   add_ux_builder_option_type( 'colorpicker' );
+  add_ux_builder_option_type( 'file', array(
+    'defaults' => array(
+      'mime_types' => array()
+    ),
+  ) );
   add_ux_builder_option_type( 'group', array(
    'class' => 'UxBuilder\Options\Custom\GroupOption',
    'defaults' => array(

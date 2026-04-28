@@ -2,6 +2,7 @@
 
 namespace UxBuilder\Elements;
 
+#[\AllowDynamicProperties]
 class Element {
 
   public $tag;

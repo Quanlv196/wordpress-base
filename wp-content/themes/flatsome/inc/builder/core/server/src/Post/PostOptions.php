@@ -12,7 +12,7 @@ class PostOptions {
   public function __construct( $post ) {
     $attribute_options = apply_filters( 'ux_builder_post_options', array(), $post );
     $meta_options = apply_filters( 'ux_builder_meta_options', array(), $post );
-    $meta = get_post_meta( $post->ID, null, true );
+    $meta = get_post_meta( $post->ID );
 
     $this->attributes = new Options( $attribute_options );
     $this->meta = new Options( $meta_options );

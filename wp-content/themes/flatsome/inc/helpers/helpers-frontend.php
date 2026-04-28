@@ -21,17 +21,65 @@ function flatsome_template( $name, array $vars = array() ) {
 /**
  * Converts an array into html attributes.
  *
- * @param  array  $atts
+ * @param array $atts Attributes array.
+ *
  * @return string
  */
 function flatsome_html_atts( array $atts ) {
-  $string = '';
-  foreach ( $atts as $key => $value ) {
-    if ( is_array( $value ) ) $value = implode( ' ', $value );
-    $string .= "${key}=\"${value}\" ";
-  }
-  return $string;
+	$string = '';
+
+	$atts = apply_filters( 'flatsome_html_atts', $atts );
+
+	foreach ( $atts as $key => $value ) {
+		if ( $value === null ) continue;
+		if ( is_array( $value ) ) $value = implode( ' ', $value );
+		if ( empty( $value ) ) {
+			$string .= "$key ";
+			continue;
+		}
+		$string .= "$key=\"$value\" ";
+	}
+
+	return $string;
 }
+
+/**
+ * Processes the 'target' and 'rel' attributes for an HTML tag.
+ *
+ * This function prepares the 'target' and 'rel' attributes for an HTML tag based on the given input attributes.
+ * If the 'target' attribute is set to '_blank', it adds 'noopener' to the 'rel' attribute.
+ * The function also filters and removes any duplicate values from the 'rel' attribute.
+ *
+ * @param array $atts An array containing the input attributes.
+ *
+ * @return array An array with the processed 'target' and 'rel' attributes, merged with the original input attributes.
+ */
+function flatsome_process_target_rel_attributes( array $atts ) {
+	if ( empty( $atts['target'] ) && empty( $atts['rel'] ) ) {
+		return $atts;
+	}
+
+	$rel_values = ! empty( $atts['rel'] ) ? ( is_array( $atts['rel'] ) ? $atts['rel'] : explode( ' ', $atts['rel'] ) ) : [];
+
+	if ( ! empty( $atts['target'] ) ) {
+		if ( $atts['target'] === '_blank' ) {
+			$rel_values[] = 'noopener';
+		}
+
+		if ( $atts['target'] === '_self' ) {
+			unset( $atts['target'] );
+		}
+	}
+
+	$rel_values = array_unique( array_filter( $rel_values ) );
+	$rel_values = ! empty( $rel_values ) ? $rel_values : null;
+
+	unset( $atts['rel'] );
+
+	return array_merge( $atts, [ 'rel' => $rel_values ] );
+}
+
+add_filter( 'flatsome_html_atts', 'flatsome_process_target_rel_attributes' );
 
 /**
  * Get Flatsome Icon classes

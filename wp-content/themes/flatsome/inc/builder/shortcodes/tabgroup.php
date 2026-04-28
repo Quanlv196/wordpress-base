@@ -79,6 +79,22 @@ add_ux_builder_shortcode( 'tabgroup', array(
             'default' => 'left',
             'options' => require( __DIR__ . '/values/align-radios.php' ),
         ),
+        'bahavior_group' => array(
+	        'type' => 'group',
+	        'heading' => __( 'Behavior' ),
+	        'options' => array(
+		        'event' => array(
+			        'type'    => 'radio-buttons',
+			        'heading' => __( 'Activate' ),
+			        'description' => 'On hover takes effect in non-edit mode.',
+			        'default' => '',
+			        'options' => array(
+				        ''      => array( 'title' => 'On click' ),
+				        'hover' => array( 'title' => 'On hover' ),
+			        ),
+		        ),
+	        ),
+        ),
         'advanced_options' => require( __DIR__ . '/commons/advanced.php'),
     ),
 ) );

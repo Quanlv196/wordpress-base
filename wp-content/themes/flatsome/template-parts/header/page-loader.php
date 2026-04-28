@@ -1,4 +1,11 @@
 <?php
+/**
+ * Page loader.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
 $color = get_theme_mod('site_loader_color');
 $bg_color = get_theme_mod('site_loader_bg');
 
@@ -21,7 +28,7 @@ if(empty($bg_color) && $color == 'dark'){
 			background-color: <?php echo $bg_color; ?>;
 		}
 		.loading-site .page-loader{opacity: .98;}
-		.page-loader-logo{max-width: <?php get_theme_mod('logo_width', 200); ?>px; animation: pageLoadZoom 1.3s ease-out; -webkit-animation: pageLoadZoom 1.3s ease-out;}
+		.page-loader-logo{max-width: <?php echo get_theme_mod('logo_width', 200); ?>px; animation: pageLoadZoom 1.3s ease-out; -webkit-animation: pageLoadZoom 1.3s ease-out;}
 		.page-loader-spin{animation: pageLoadZoomSpin 1.3s ease-out;}
 		.page-loader-spin .loading-spin{width: 40px; height: 40px; }
 		@keyframes pageLoadZoom {

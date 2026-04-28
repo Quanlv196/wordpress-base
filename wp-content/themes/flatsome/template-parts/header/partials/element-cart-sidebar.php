@@ -1,5 +1,12 @@
-<?php if ( is_woocommerce_activated() ) { ?>
 <?php
+/**
+ * Cart sidebar element.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.18.7
+ */
+
+if ( is_woocommerce_activated() && flatsome_is_wc_cart_available() ) {
 	// Get Cart replacement for `catalog_mode`.
 	if ( get_theme_mod( 'catalog_mode' ) ) {
 		get_template_part( 'template-parts/header/partials/element', 'cart-replace' );
@@ -10,6 +17,10 @@
 	$icon                = get_theme_mod( 'cart_icon', 'basket' );
 	$cart_title          = get_theme_mod( 'header_cart_title', 1 );
 	$cart_total          = get_theme_mod( 'header_cart_total', 1 );
+
+	if ( fl_woocommerce_version_check( '7.8.0' ) && ! wp_script_is( 'wc-cart-fragments' ) ) {
+		wp_enqueue_script( 'wc-cart-fragments' );
+	}
 ?>
 <li class="menu-item cart-item has-icon has-child">
 	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" title="<?php _e( 'Cart', 'woocommerce' ); ?>" class="header-cart-link">
@@ -27,14 +38,16 @@
 	<ul class="children">
 		<li>
 			<!-- Cart Sidebar Popup -->
-			<div id="cart-popup" class="widget_shopping_cart">
+			<div id="cart-popup">
 				<div class="cart-popup-inner inner-padding">
 						<div class="cart-popup-title text-center">
-								<h4 class="uppercase"><?php _e('Cart', 'woocommerce'); ?></h4>
+								<span class="heading-font uppercase"><?php _e('Cart', 'woocommerce'); ?></span>
 								<div class="is-divider"></div>
 						</div>
-						<div class="widget_shopping_cart_content">
+						<div class="widget_shopping_cart">
+							<div class="widget_shopping_cart_content">
 								<?php woocommerce_mini_cart(); ?>
+							</div>
 						</div>
 						<?php if($custom_cart_content) {
 							echo '<div class="header-cart-content">'.do_shortcode($custom_cart_content).'</div>'; }

@@ -30,7 +30,7 @@ add_ux_builder_shortcode( 'ux_hotspot', array(
         ),
         'prod_id' => array(
           'type' => 'select',
-          'heading' => __('PRoduct'),
+          'heading' => __('Product'),
           'full-width' => true,
           'conditions' => 'type === "product"',
           'config' => array(
@@ -50,7 +50,6 @@ add_ux_builder_shortcode( 'ux_hotspot', array(
           'param_name' => 'text',
           'focus' => 'true',
           'default' => 'Enter any text...',
-          'auto_focus' => true,
         ),
         'link' => array(
           'type' => 'textfield',
@@ -60,7 +59,6 @@ add_ux_builder_shortcode( 'ux_hotspot', array(
           'param_name' => 'text',
           'focus' => 'true',
           'default' => '',
-          'auto_focus' => true,
        ),
        'icon' => array(
             'type' => 'radio-buttons',

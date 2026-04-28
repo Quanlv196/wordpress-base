@@ -64,7 +64,7 @@ class Option {
   }
 
   public function set_value( $value ) {
-    $this->data['value'] = trim( $value );
+    $this->data['value'] = trim( (string) $value );
     $this->raw_data['value'] = $value;
   }
 

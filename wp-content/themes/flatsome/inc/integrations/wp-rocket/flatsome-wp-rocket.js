@@ -1,27 +1,26 @@
-Flatsome.behavior('wp-rocket-lazy-load-sliders', {
-  attach: function (context) {
-     jQuery('.slider', context).each(function (index, element) {
-        var $element = jQuery(element);
-        var waypoint = $element.waypoint(function (direction) {
-          if($element.hasClass('slider-lazy-load-active')) return;
-          setTimeout(function(){
-            $element.imagesLoaded( function() {
-               if($element.flickity) $element.flickity('resize');
-               $element.addClass('slider-lazy-load-active');
-            });
-          }, 300);
-         }, { offset: '90%' });
-      });
-  }
-});
-
+/* eslint-disable semi, no-var */
 Flatsome.behavior('wp-rocket-lazy-load-packery', {
   attach: function (context) {
-       jQuery('.has-packery .lazy-load', context).waypoint(function (direction) {
-          var $element = jQuery(this.element);
-          $element.imagesLoaded( function() {
-              jQuery('.has-packery').packery('layout');
-          });
-      }, { offset: '90%' });
+    var $lazyLoad = jQuery('.has-packery .lazy-load', context)
+
+    if (!$lazyLoad.length) return
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.intersectionRatio > 0) {
+          observer.unobserve(entry.target)
+          jQuery(entry.target).imagesLoaded(function () {
+            jQuery('.has-packery').packery('layout')
+          })
+        }
+      })
+    }, {
+      rootMargin: '0px',
+      threshold: 0.1
+    })
+
+    $lazyLoad.each(function (i, el) {
+      observer.observe(el)
+    })
   }
 });

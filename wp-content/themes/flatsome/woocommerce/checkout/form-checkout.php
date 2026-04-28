@@ -10,9 +10,10 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.5.0
+ * @see              https://woocommerce.com/document/template-structure/
+ * @package          WooCommerce\Templates
+ * @version          9.4.0
+ * @flatsome-version 3.19.9
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +25,7 @@ $row_classes     = array();
 $main_classes    = array();
 $sidebar_classes = array();
 
-$layout = get_theme_mod( 'checkout_layout' );
+$layout = get_theme_mod( 'checkout_layout', '' );
 
 if ( ! $layout ) {
 	$sidebar_classes[] = 'has-border';
@@ -48,12 +49,12 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 }
 
 // Social login.
-if ( flatsome_option( 'facebook_login_checkout' ) && get_option( 'woocommerce_enable_myaccount_registration' ) == 'yes' && ! is_user_logged_in() ) {
+if ( get_theme_mod( 'facebook_login_checkout', 0 ) && get_option( 'woocommerce_enable_myaccount_registration' ) == 'yes' && ! is_user_logged_in() ) {
 	wc_get_template( 'checkout/social-login.php' );
 }
 ?>
 
-<form name="checkout" method="post" class="checkout woocommerce-checkout <?php echo esc_attr( $wrapper_classes ); ?>" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+<form name="checkout" method="post" class="checkout woocommerce-checkout <?php echo esc_attr( $wrapper_classes ); ?>" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data" aria-label="<?php echo esc_attr__( 'Checkout', 'woocommerce' ); ?>">
 
 	<div class="row pt-0 <?php echo esc_attr( $row_classes ); ?>">
 		<div class="large-7 col  <?php echo esc_attr( $main_classes ); ?>">

@@ -28,7 +28,7 @@ function flatsome_refresh_blog_partials( WP_Customize_Manager $wp_customize ) {
 
 	$wp_customize->selective_refresh->add_partial( 'blog-layout-single', array(
 	    'selector' => '.blog-wrapper.blog-single',
-	    'settings' => array('blog_posts_depth_hover','blog_posts_depth','blog_post_layout','blog_post_style','blog_single_header_meta','blog_single_footer_meta','blog_single_featured_image','blog_share','blog_author_box','blog_single_next_prev_nav'),
+	    'settings' => array('blog_posts_depth_hover','blog_posts_depth','blog_post_layout','blog_post_style','blog_single_header_category','blog_single_header_title','blog_single_header_meta','blog_single_footer_meta','blog_single_featured_image','blog_share','blog_author_box','blog_single_next_prev_nav'),
 	    'render_callback' => function() {
 	        get_template_part( 'template-parts/posts/layout', get_theme_mod('blog_post_layout','right-sidebar') );
 	    },

@@ -3,18 +3,20 @@
  * WP SEO integration
  *
  * @author      UX Themes
- * @package     Flatsome/Integrations
+ * @package     Flatsome\Integrations
  * @since       3.7.0
  */
 
-namespace Flatsome\Inc\Integrations;
+namespace Flatsome\Integrations;
+
+use Flatsome_Shortcode_Image_Extractor;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class WP_Seo
  *
- * @package Flatsome\Inc\Integrations
+ * @package Flatsome\Integrations
  */
 class WP_Seo {
 
@@ -28,8 +30,9 @@ class WP_Seo {
 	/**
 	 * WP_Seo constructor.
 	 */
-	public function __construct() {
+	private function __construct() {
 		add_action( 'wp', [ $this, 'integrate' ] );
+		add_filter( 'wpseo_sitemap_urlimages', [ $this, 'sitemap_url_images' ], 10, 2 );
 	}
 
 	/**
@@ -39,6 +42,7 @@ class WP_Seo {
 		// Primary term.
 		if ( get_theme_mod( 'wpseo_primary_term' ) ) {
 			add_filter( 'flatsome_woocommerce_shop_loop_category', [ $this, 'get_primary_term' ], 10, 2 );
+			add_filter( 'woocommerce_product_categories_widget_main_term', [ $this, 'make_primary_term_current_category' ] );
 		}
 		if ( get_theme_mod( 'wpseo_manages_product_layout_priority' ) ) {
 			add_filter( 'flatsome_product_block_primary_term_id', [ $this, 'get_primary_term_id' ], 10, 2 );
@@ -49,14 +53,13 @@ class WP_Seo {
 			add_action( 'flatsome_breadcrumb', [ $this, 'yoast_breadcrumb' ], 20, 2 );
 
 			// Manipulate last crumb.
-			if ( get_theme_mod( 'wpseo_breadcrumb_remove_last', 1 ) && apply_filters( 'flatsome_wpseo_breadcrumb_remove_last', is_product() ) ) {
+			if ( is_woocommerce_activated() && get_theme_mod( 'wpseo_breadcrumb_remove_last', 1 ) && apply_filters( 'flatsome_wpseo_breadcrumb_remove_last', is_product() ) ) {
 				add_filter( 'wpseo_breadcrumb_links', [ $this, 'remove_last_crumb' ] );
 				add_filter( 'wpseo_breadcrumb_single_link', [ $this, 'add_link_to_last_crumb' ], 10, 2 );
 			}
 
 			add_filter( 'wpseo_breadcrumb_separator', [ $this, 'wrap_crumb_separator' ] );
 		}
-
 	}
 
 	/**
@@ -73,6 +76,28 @@ class WP_Seo {
 		}
 		if ( ! empty( $primary_term ) ) {
 			return $primary_term;
+		}
+
+		return $term;
+	}
+
+	/**
+	 * Make primary term the active term in category widget.
+
+	 * @param  \WP_Term $term WooCommerce main term object.
+	 *
+	 * @return \WP_Term Term object.
+	 */
+	public function make_primary_term_current_category( $term ) {
+		global $product;
+
+		$primary_term_id = $this->get_primary_term_id( false, $product );
+
+		if ( $primary_term_id ) {
+			$_term = get_term_by( 'id', $primary_term_id, 'product_cat' );
+			if ( $_term instanceof \WP_Term ) {
+				return $_term;
+			}
 		}
 
 		return $term;
@@ -100,7 +125,6 @@ class WP_Seo {
 
 	/**
 	 * Yoast breadcrumbs.
-	 * TODO: See if we want to add the before and after hooks.
 	 *
 	 * @param string|array $class   One or more classes to add to the class list.
 	 * @param bool         $display Whether to display the breadcrumb (true) or return it (false).
@@ -114,9 +138,7 @@ class WP_Seo {
 			$classes   = array_unique( array_filter( $classes ) );
 			$classes   = implode( ' ', $classes );
 
-			// do_action( 'flatsome_before_breadcrumb' );
 			yoast_breadcrumb( '<nav id="breadcrumbs" class="' . esc_attr( $classes ) . '">', '</nav>', $display );
-			// do_action( 'flatsome_after_breadcrumb' );
 		}
 	}
 
@@ -160,6 +182,28 @@ class WP_Seo {
 	 */
 	public function wrap_crumb_separator( $separator ) {
 		return '<span class="divider">' . $separator . '</span>';
+	}
+
+	/**
+	 * Adds images to XML sitemap.
+	 *
+	 * @param array $images  Current post images.
+	 * @param int   $post_id The post ID.
+	 */
+	public function sitemap_url_images( $images, $post_id ) {
+		$post = get_post( $post_id );
+		if ( ! $post ) return $images;
+
+		$content = $post->post_content;
+
+		$image_extractor = Flatsome_Shortcode_Image_Extractor::get_instance();
+
+		$extracted_images = $image_extractor->extract_images( $content );
+		if ( ! empty( $extracted_images ) ) {
+			$images = array_merge( $images, $extracted_images );
+		}
+
+		return $images;
 	}
 
 	/**

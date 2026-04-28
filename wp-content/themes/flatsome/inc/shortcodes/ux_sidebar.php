@@ -25,7 +25,7 @@ function flatsome_sidebar_shortcode( $atts ){
 	dynamic_sidebar($id);
 	$sidebar = trim( ob_get_clean() );
 
-	return '<ul class="'.$classes.'">'.$sidebar.'</ul>';
+	return '<ul class="'.esc_attr($classes).'">'.$sidebar.'</ul>';
 
 }
 add_shortcode('ux_sidebar', 'flatsome_sidebar_shortcode');

@@ -1,7 +1,7 @@
 <?php
 
 function flatsome_get_grid_height($height, $id){
-
+  $id = esc_attr( $id );
   $height_sm = null;
   $height_md = null;
 

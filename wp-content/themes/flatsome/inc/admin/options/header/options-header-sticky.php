@@ -104,4 +104,5 @@ Flatsome_Option::add_field( 'option', array(
 	'section'   => 'header_sticky',
 	'transport' => $transport,
 	'default'   => '',
+	'choices'   => array( 'save_as' => 'id' ),
 ) );

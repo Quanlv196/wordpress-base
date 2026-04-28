@@ -1,3 +1,12 @@
+<?php
+/**
+ * Post-entry footer single.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <footer class="entry-meta clearfix">
 	<?php if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search ?>
 		<?php

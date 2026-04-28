@@ -5,9 +5,9 @@ namespace UxBuilder\Ajax;
 class Posts {
 
   public function get_posts () {
-    $post_id = array_key_exists( 'id', $_GET ) ? $_GET['id'] : array();
-    $post_ids = array_key_exists( 'values', $_GET ) ? $_GET['values'] : array();
-    $option = array_key_exists( 'option', $_GET ) ? $_GET['option'] : array();
+    $post_id = array_key_exists( 'id', $_GET ) ? intval( $_GET['id'] ) : array();
+    $post_ids = array_key_exists( 'values', $_GET ) ? flatsome_clean( $_GET['values'] ) : array();
+    $option = array_key_exists( 'option', $_GET ) ? flatsome_clean( $_GET['option'] ) : array();
 
     // Return an error if nonce is invalid.
     check_ajax_referer( 'ux-builder-' . $post_id, 'security' );
@@ -36,8 +36,8 @@ class Posts {
   }
 
   public function search_posts() {
-    $post_id = array_key_exists( 'id', $_GET ) ? $_GET['id'] : array();
-    $query = array_key_exists( 'query', $_GET ) ? $_GET['query'] : array();
+    $post_id = array_key_exists( 'id', $_GET ) ? intval( $_GET['id'] ) : array();
+    $query = array_key_exists( 'query', $_GET ) ? sanitize_text_field( $_GET['query'] ) : array();
     $option = array_key_exists( 'option', $_GET ) ? $_GET['option'] : array();
 
     // Return an error if nonce is invalid.
@@ -47,7 +47,7 @@ class Posts {
       's' => $query,
       'numberposts' => 25,
       'ignore_sticky_posts' => true,
-      'post_type' => isset( $option['post_type'] ) ? $option['post_type'] : null,
+      'post_type' => isset( $option['post_type'] ) ? flatsome_clean( $option['post_type'] ) : null,
       'suppress_filters' => false
       ) );
 

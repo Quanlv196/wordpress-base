@@ -1,5 +1,7 @@
 <?php
 
+global $extensions_url;
+global $extensions_uri;
 $extensions_url = get_template_directory() . '/inc/extensions';
 $extensions_uri = get_template_directory_uri() . '/inc/extensions';
 
@@ -25,10 +27,22 @@ if(is_woocommerce_activated()){
 	if(!get_theme_mod('disable_quick_view', 0)){
 		require $extensions_url.'/flatsome-wc-quick-view/flatsome-quick-view.php';
 	}
-	if ( get_theme_mod( 'flatsome_infinite_scroll' ) ) {
+	if ( get_theme_mod( 'shop_pagination' ) === 'infinite-scroll' ) {
 		require $extensions_url . '/flatsome-infinite-scroll/class-flatsome-infinite-scroll.php';
 	}
 	if ( get_theme_mod( 'cart_auto_refresh' ) ) {
 		require $extensions_url . '/flatsome-cart-refresh/flatsome-cart-refresh.php';
+	}
+
+	if ( get_theme_mod( 'swatches' ) ) {
+		require $extensions_url . '/flatsome-swatches/index.php';
+	}
+
+	if ( get_theme_mod( 'additional_variation_images' ) && ! get_theme_mod( 'product_gallery_woocommerce' ) ) {
+		require $extensions_url . '/flatsome-variation-images/index.php';
+	}
+
+	if ( get_theme_mod( 'ajax_add_to_cart' ) ) {
+		require $extensions_url . '/flatsome-ajax-add-to-cart/flatsome-ajax-add-to-cart.php';
 	}
 }

@@ -2,8 +2,9 @@
 /**
  * Checkout terms and conditions area.
  *
- * @package WooCommerce/Templates
- * @version 3.4.0
+ * @package          WooCommerce/Templates
+ * @version          3.4.0
+ * @flatsome-version 3.18.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -12,7 +13,7 @@ if ( apply_filters( 'woocommerce_checkout_show_terms', true ) && function_exists
 	do_action( 'woocommerce_checkout_before_terms_and_conditions' );
 
 	?>
-	<div class="woocommerce-terms-and-conditions-wrapper">
+	<div class="woocommerce-terms-and-conditions-wrapper mb-half">
 		<?php
 		/**
 		 * Terms and conditions hook used to inject content.

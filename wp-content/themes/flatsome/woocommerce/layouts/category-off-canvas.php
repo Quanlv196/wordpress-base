@@ -1,8 +1,17 @@
+<?php
+/**
+ * Category layout with off canvas sidebar.
+ *
+ * @package          Flatsome/WooCommerce/Templates
+ * @flatsome-version 3.18.7
+ */
+
+?>
 <div class="row category-page-row">
 
 		<div class="col large-12">
 		<?php
-		do_action('flatsome_products_before');
+		do_action( 'flatsome_products_before' );
 
 		/**
 		* Hook: woocommerce_before_main_content.
@@ -13,19 +22,18 @@
 		*/
 		do_action( 'woocommerce_before_main_content' );
 
-		?>
-
-		<?php
-		/**
-		 * Hook: woocommerce_archive_description.
-		 *
-		 * @hooked woocommerce_taxonomy_archive_description - 10
-		 * @hooked woocommerce_product_archive_description - 10
-		 */
-		do_action( 'woocommerce_archive_description' );
-		?>
-
-		<?php
+		if ( fl_woocommerce_version_check( '8.8.0' ) ) {
+			/**
+			 * Hook: woocommerce_shop_loop_header.
+			 *
+			 * @since 8.8.0
+			 *
+			 * @hooked woocommerce_product_taxonomy_archive_header - 10
+			 */
+			do_action( 'woocommerce_shop_loop_header' );
+		} else {
+			do_action( 'woocommerce_archive_description' );
+		}
 
 		if ( woocommerce_product_loop() ) {
 
@@ -93,8 +101,12 @@
 		<div id="shop-sidebar" class="mfp-hide">
 			<div class="sidebar-inner">
 				<?php
-				  $no_widgets_msg = '<p>You need to assign Widgets to <strong>"Shop Sidebar"</strong> in <a href="'.get_site_url().'/wp-admin/widgets.php">Appearance > Widgets</a> to show anything here</p>';
-				  if(is_active_sidebar('shop-sidebar')) { dynamic_sidebar('shop-sidebar'); } else{ echo $no_widgets_msg; }
+				$no_widgets_msg = '<p>You need to assign Widgets to <strong>"Shop Sidebar"</strong> in <a href="' . get_site_url() . '/wp-admin/widgets.php">Appearance > Widgets</a> to show anything here</p>';
+				if ( is_active_sidebar( 'shop-sidebar' ) ) {
+					dynamic_sidebar( 'shop-sidebar' );
+				} else {
+					echo $no_widgets_msg;
+				}
 				?>
 			</div>
 		</div>

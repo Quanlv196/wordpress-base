@@ -37,5 +37,29 @@ add_ux_builder_shortcode( 'scroll_to', array(
                 'true'  => array( 'title' => 'On'),
             ),
         ),
+        'offset_options' => array(
+	        'type'    => 'group',
+	        'heading' => 'Scroll offset',
+	        'options' => array(
+		        'offset_type' => array(
+			        'type'    => 'radio-buttons',
+			        'heading' => 'Type',
+			        'default' => '',
+			        'options' => array(
+				        ''      => array( 'title' => 'Auto' ),
+				        'custom' => array( 'title' => 'Custom' ),
+			        ),
+		        ),
+		        'offset'      => array(
+			        'type'       => 'slider',
+			        'heading'    => 'Value',
+			        'conditions' => 'offset_type == "custom"',
+			        'default'    => '0',
+			        'min'        => '0',
+			        'max'        => '1000',
+			        'unit'       => 'px',
+		        ),
+	        ),
+        ),
     ),
 ) );

@@ -43,24 +43,24 @@ function ux_price_table( $atts, $content = null ){
   );
 
 ?>
-<div class="<?php echo implode(' ', $classes_wrapper); ?>">
-  <div class="<?php echo implode(' ', $classes); ?>"<?php echo get_shortcode_inline_css($css_args); ?>>
+<div class="<?php echo esc_attr( implode( ' ', $classes_wrapper ) ); ?>">
+  <div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>"<?php echo get_shortcode_inline_css($css_args); ?>>
     <div class="pricing-table-header">
-      <div class="title uppercase strong"><?php echo $title;?></div>
-      <div class="price is-xxlarge"><?php echo $price;?></div>
+      <div class="title uppercase strong"><?php echo wp_kses_post( $title ); ?></div>
+      <div class="price is-xxlarge"><?php echo wp_kses_post( $price ); ?></div>
       <?php if(!empty($description)) { ?>
         <div class="description is-small">
-          <?php echo $description;?>
+          <?php echo wp_kses_post( $description ); ?>
         </div>
       <?php } ?>
     </div>
     <div class="pricing-table-items items">
-      <?php echo flatsome_contentfix($content); ?>
+      <?php echo do_shortcode( $content ); ?>
     </div>
     <?php if($button_text) { ?>
     <div class="cta-button">
-        <a class="button <?php echo $button_style;?>" href="<?php echo $button_link;?>">
-        <?php echo $button_text;?></a>
+        <a class="button <?php echo esc_attr( $button_style ); ?>" href="<?php echo esc_url( $button_link ); ?>">
+        <?php echo wp_kses_post( $button_text ); ?></a>
     </div>
     <?php } ?>
   </div>
@@ -88,7 +88,7 @@ function bullet_item( $atts, $content = null ){
       $classes[] = 'has-hover';
       $tooltip_html = '<span class="tag-label bullet-more-info circle">?</span>';
     }
-    $content = '<div class="'.implode(' ',$classes).'" title="'.$tooltip.'"><span class="text">'.$text.'</span>'.$tooltip_html.'</div>';
+    $content = '<div class="' . esc_attr( implode( ' ', $classes ) ) . '" title="' . esc_attr( $tooltip ) . '"><span class="text">' . wp_kses_post( $text ) . '</span>' . $tooltip_html . '</div>';
     return $content;
 }
 add_shortcode('bullet_item', 'bullet_item');

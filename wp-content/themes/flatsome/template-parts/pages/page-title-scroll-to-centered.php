@@ -1,3 +1,12 @@
+<?php
+/**
+ * Page title with scroll to centered.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+?>
 <div class="page-title <?php flatsome_header_title_classes() ?> is-sticky">
 
 	<div class="page-title-bg fill"><div class="page-title-bg-overlay"></div></div>

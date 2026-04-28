@@ -37,7 +37,7 @@ var simplemaps_countrymap_mapdata = {
 
     //State defaults
     state_description:
-      "Tá»‰nh thÃ nh nÃ y hiá»‡n chÆ°a cÃ³ Ä‘á»‘i tÃ¡c.<br/><ul><li>Äá»‘i vá»›i khÃ¡ch hÃ ng, vui lÃ²ng liÃªn há»‡ 1C Viá»‡t Nam theo sá»‘: <strong>(+84)247 108 8887</strong></li><li>Äá»‘i vá»›i Ä‘á»‘i tÃ¡c, Ä‘á»ƒ trá»Ÿ thÃ nh Ä‘áº¡i diá»‡n cho tá»‰nh thÃ nh nÃ y, vui lÃ²ng Ä‘Äƒng kÃ½ <a href='https://ketoan.cloud/doi-tac'>táº¡i Ä‘Ã¢y</a></li></ul>",
+      "Tỉnh thành này hiện chưa có đối tác.<br/><ul><li>Đối với khách hàng, vui lòng liên hệ 1C Việt Nam theo số: <strong>(+84)247 108 8887</strong></li><li>Đối với đối tác, để trở thành đại diện cho tỉnh thành này, vui lòng đăng ký <a href='https://ketoan.cloud/doi-tac'>tại đây</a></li></ul>",
     state_color: "#88A4BC",
     state_hover_color: "#3B729F",
     state_url: "",
@@ -64,7 +64,7 @@ var simplemaps_countrymap_mapdata = {
     label_color: "#d5ddec",
     label_hover_color: "#d5ddec",
     label_size: 22,
-    label_font: "Arial",
+    label_font: "inherit",
     hide_labels: "no",
     hide_eastern_labels: "no",
 
@@ -86,7 +86,7 @@ var simplemaps_countrymap_mapdata = {
     popup_opacity: 0.9,
     popup_shadow: 1,
     popup_corners: 5,
-    popup_font: "12px/1.5 Verdana, Arial, Helvetica, sans-serif",
+    popup_font: "inherit",
     popup_nocss: "no",
 
     //Advanced settings
@@ -104,13 +104,13 @@ var simplemaps_countrymap_mapdata = {
       lat: "16.7707896",
       lng: "111.3047593",
       color: "#939598",
-      name: "HoÃ ng Sa",
+      name: "Hoàng Sa",
     },
     1: {
       lat: "11.7707896",
       lng: "111.3047593",
       color: "#939598",
-      name: "TrÆ°á»ng Sa",
+      name: "Trường Sa",
     },
   },
   labels: {},

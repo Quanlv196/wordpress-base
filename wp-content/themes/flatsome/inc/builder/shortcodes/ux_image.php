@@ -35,14 +35,8 @@ add_ux_builder_shortcode( 'ux_image', array(
             'type' => 'select',
             'heading' => 'Image Size',
             'param_name' => 'image_size',
-            'default' => '',
-            'options' => array(
-                '' => 'Normal',
-                'large' => 'Large',
-                'medium' => 'Medium',
-                'thumbnail' => 'Thumbnail',
-                'original' => 'Original',
-            )
+            'default' => 'large',
+            'options' => flatsome_ux_builder_image_sizes(),
         ),
         'width' => array(
           'type' => 'slider',
@@ -93,14 +87,8 @@ add_ux_builder_shortcode( 'ux_image', array(
 	        'type'       => 'select',
 	        'heading'    => __( 'Lightbox Image Size' ),
 	        'conditions' => 'lightbox == "true"',
-	        'default'    => '',
-	        'options'    => array(
-		        ''          => 'Default',
-		        'large'     => 'Large',
-		        'medium'    => 'Medium',
-		        'thumbnail' => 'Thumbnail',
-		        'original'  => 'Original',
-	        )
+	        'default'    => 'large',
+	        'options'    => flatsome_ux_builder_image_sizes(),
         ),
 
         'caption' => array(
@@ -121,6 +109,16 @@ add_ux_builder_shortcode( 'ux_image', array(
 			'options'    => array(
 				''     => array( 'title' => 'Off' ),
 				'true' => array( 'title' => 'On' ),
+			),
+		),
+
+		'image_title' => array(
+			'type'    => 'radio-buttons',
+			'heading' => __( 'Title' ),
+			'default' => '',
+			'options' => array(
+				''      => array( 'title' => 'Off' ),
+				'true'  => array( 'title' => 'On' ),
 			),
 		),
 
@@ -173,7 +171,7 @@ add_ux_builder_shortcode( 'ux_image', array(
 
         'depth_hover' => array(
             'type' => 'slider',
-            'heading' => 'Depth :Hover',
+            'heading' => 'Depth :hover',
             'default' => '0',
             'max' => '5',
             'min' => '0',

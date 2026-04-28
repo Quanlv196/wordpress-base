@@ -1,4 +1,11 @@
 <?php
+/**
+ * Newsletter element.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
 $icon_style = get_theme_mod( 'newsletter_icon_style', 'plain' );
 $label      = get_theme_mod( 'header_newsletter_label', 'Newsletter' );
 $title      = get_theme_mod( 'header_newsletter_title', 'Sign up for Newsletter' );

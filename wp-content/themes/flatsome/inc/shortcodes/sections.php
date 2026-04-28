@@ -37,6 +37,27 @@ function ux_section( $atts, $content = null ) {
 		'margin'           => '',
 		'loading'          => '',
 		'scroll_for_more'  => '',
+		// Shape divider.
+		'divider_top'            => '',
+		'divider_top_height'     => '150px',
+		'divider_top_height__sm' => null,
+		'divider_top_height__md' => null,
+		'divider_top_width'      => '100',
+		'divider_top_width__sm'  => null,
+		'divider_top_width__md'  => null,
+		'divider_top_fill'       => '',
+		'divider_top_flip'       => 'false',
+		'divider_top_to_front'   => 'false',
+		'divider'                => '',
+		'divider_height'         => '150px',
+		'divider_height__sm'     => null,
+		'divider_height__md'     => null,
+		'divider_width'          => '100',
+		'divider_width__sm'      => null,
+		'divider_width__md'      => null,
+		'divider_fill'           => '',
+		'divider_flip'           => 'false',
+		'divider_to_front'       => 'false',
 		// Border Control.
 		'border'           => '',
 		'border_hover'     => '',
@@ -57,7 +78,7 @@ function ux_section( $atts, $content = null ) {
 
 	$classes = array( 'section' );
 
-	$classes_bg = array( 'bg', 'section-bg', 'fill', 'bg-fill' );
+	$classes_bg = array( 'section-bg', 'fill' );
 
 	// Fix old.
 	if ( strpos( $bg, '#' ) !== false ) {
@@ -93,7 +114,7 @@ function ux_section( $atts, $content = null ) {
 	// Add Parallax.
 	if ( $parallax ) {
 		$classes[] = 'has-parallax';
-		$parallax  = 'data-parallax-container=".section" data-parallax-background data-parallax="-' . $parallax . '"';
+		$parallax  = 'data-parallax-container=".section" data-parallax-background data-parallax="-' . esc_attr( $parallax ) . '"';
 	}
 
 	// Background effects.
@@ -106,10 +127,6 @@ function ux_section( $atts, $content = null ) {
 		$classes[] = 'is-full-height';
 	}
 
-	// Lazy load.
-	$classes_bg[] = get_theme_mod( 'lazy_load_backgrounds', 1 ) ? '' : 'bg-loaded';
-	$classes_bg[] = $bg ? '' : 'bg-loaded';
-
 	if ( $border_hover ) {
 		$classes[] = 'has-hover';
 	}
@@ -117,11 +134,11 @@ function ux_section( $atts, $content = null ) {
 	$classes    = implode( ' ', $classes );
 	$classes_bg = implode( ' ', $classes_bg );
 	?>
-	<section class="<?php echo $classes; ?>" id="<?php echo $_id; ?>">
-		<div class="<?php echo $classes_bg; ?>" <?php echo $parallax; ?>>
 
+	<section class="<?php echo esc_attr( $classes ); ?>" id="<?php echo esc_attr( $_id ); ?>">
+		<div class="<?php echo esc_attr( $classes_bg ); ?>" <?php echo $parallax; ?>>
+			<?php require __DIR__ . '/commons/background-image.php'; ?>
 			<?php require( __DIR__ . '/commons/video.php' ); ?>
-
 			<?php
 			if ( $bg_overlay ) {
 				echo '<div class="section-bg-overlay absolute fill"></div>';
@@ -130,16 +147,18 @@ function ux_section( $atts, $content = null ) {
 				echo '<div class="loading-spin centered"></div>';
 			}
 			if ( $scroll_for_more ) {
-				echo '<button class="scroll-for-more z-5 icon absolute bottom h-center">' . get_flatsome_icon( 'icon-angle-down', '42px' ) . '</button>';
+				echo '<button class="scroll-for-more z-5 icon absolute bottom h-center" aria-label="' . esc_attr__( 'Scroll for more', 'flatsome' ) . '">' . get_flatsome_icon( 'icon-angle-down', '42px' ) . '</button>';
 			}
 			if ( $effect ) {
-				echo '<div class="effect-' . $effect . ' bg-effect fill no-click"></div>';
+				echo '<div class="effect-' . esc_attr( $effect ) . ' bg-effect fill no-click"></div>';
 			}
 			?>
 
 			<?php require( __DIR__ . '/commons/border.php' ); ?>
 
 		</div>
+
+		<?php require __DIR__ . '/commons/shape-divider.php'; ?>
 
 		<div class="section-content relative">
 			<?php echo $content; ?>
@@ -168,16 +187,47 @@ function ux_section( $atts, $content = null ) {
 				'selector' => '.section-bg-overlay',
 				'property' => 'background-color',
 			),
-			'bg'         => array(
-				'selector' => '.section-bg.bg-loaded',
-				'property' => 'background-image',
-				'size'     => $bg_size,
-			),
 			'bg_pos'     => array(
-				'selector' => '.section-bg',
-				'property' => 'background-position',
+				'selector' => '.section-bg img',
+				'property' => 'object-position',
 			),
 		);
+
+		if ( $divider_top ) {
+			$args = array_merge( $args, array(
+				'divider_top_height' => array(
+					'selector' => '.ux-shape-divider--top svg',
+					'property' => 'height',
+				),
+				'divider_top_width'  => array(
+					'selector' => '.ux-shape-divider--top svg',
+					'property' => '--divider-top-width',
+					'unit'     => '%',
+				),
+				'divider_top_fill'   => array(
+					'selector' => '.ux-shape-divider--top .ux-shape-fill',
+					'property' => 'fill',
+				),
+			) );
+		}
+
+		if ( $divider ) {
+			$args = array_merge( $args, array(
+				'divider_height' => array(
+					'selector' => '.ux-shape-divider--bottom svg',
+					'property' => 'height',
+				),
+				'divider_width'  => array(
+					'selector' => '.ux-shape-divider--bottom svg',
+					'property' => '--divider-width',
+					'unit'     => '%',
+				),
+				'divider_fill'   => array(
+					'selector' => '.ux-shape-divider--bottom .ux-shape-fill',
+					'property' => 'fill',
+				),
+			) );
+		}
 		echo ux_builder_element_style_tag( $_id, $args, $atts );
 		?>
 	</section>

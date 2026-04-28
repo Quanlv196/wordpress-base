@@ -1,11 +1,12 @@
 <?php
 // [tabgroup]
-function ux_tabgroup( $params, $content = null, $tag ) {
+function ux_tabgroup( $params, $content = null, $tag = '' ) {
 	$GLOBALS['tabs'] = array();
 	$GLOBALS['tab_count'] = 0;
 	$i = 1;
 
 	extract(shortcode_atts(array(
+		'id' => 'panel-'.rand(),
 		'title' => '',
 		'style' => 'line',
 		'align' => 'left',
@@ -14,15 +15,15 @@ function ux_tabgroup( $params, $content = null, $tag ) {
 		'type' => '', // horizontal, vertical
 		'nav_style' => 'uppercase',
 		'nav_size' => 'normal',
-		'id' => 'panel-'.rand(),
 		'history' => 'false',
+		'event' => '',
 	), $params));
 
 	if($tag == 'tabgroup_vertical'){
 		$type = 'vertical';
 	}
 
-	$content = flatsome_contentfix($content);
+	$content = do_shortcode( $content );
 
 	$wrapper_class[] = 'tabbed-content';
 	if ( $class ) $wrapper_class[] = $class;
@@ -35,24 +36,33 @@ function ux_tabgroup( $params, $content = null, $tag ) {
 	if($nav_style) $classes[] = 'nav-'.$nav_style;
 	if($nav_size) $classes[] = 'nav-size-'.$nav_size;
 	if($align) $classes[] = 'nav-'.$align;
+	if($event) $classes[] = 'active-on-' . $event;
 
 
 	$classes = implode(' ', $classes);
 
+	$return = '';
+
 	if( is_array( $GLOBALS['tabs'] )){
 
 		foreach( $GLOBALS['tabs'] as $key => $tab ){
-			if($tab['title']) $id = flatsome_to_dashed($tab['title']);
+			if ( ! empty( $tab['anchor'] ) ) {
+				$id = flatsome_to_dashed( $tab['anchor'] );
+				$anchor = rawurlencode( $tab['anchor'] );
+			} else {
+				$id = $tab['title'] ? flatsome_to_dashed( $tab['title'] ) : wp_rand();
+				$anchor = "tab_$id";
+			}
 			$active = $key == 0 ? ' active' : ''; // Set first tab active by default.
-			$tabs[] = '<li class="tab'.$active.' has-icon"><a href="#tab_'.$id.'"><span>'.$tab['title'].'</span></a></li>';
-			$panes[] = '<div class="panel'.$active.' entry-content" id="tab_'.$id.'">'.flatsome_contentfix($tab['content']).'</div>';
+			$tabs[] = '<li id="tab-'.$id.'" class="tab'.$active.' has-icon" role="presentation"><a href="#'.$anchor.'"'.($key != 0 ? ' tabindex="-1"' : '').' role="tab" aria-selected="'.($key == 0 ? 'true' : 'false').'" aria-controls="tab_'.$id.'"><span>' . wp_kses_post( $tab['title'] ) . '</span></a></li>';
+			$panes[] = '<div id="tab_'.$id.'" class="panel'.$active.' entry-content" role="tabpanel" aria-labelledby="tab-'.$id.'">'.do_shortcode( $tab['content'] ).'</div>';
 			$i++;
 		}
-			if($title) $title = '<h4 class="uppercase text-'.$align.'">'.$title.'</h4>';
+			if($title) $title = '<h4 class="uppercase text-' . esc_attr( $align ) . '">' . wp_kses_post( $title ) . '</h4>';
 			$return = '
-		<div class="'.implode(' ', $wrapper_class).'">
+		<div class="' . esc_attr( implode( ' ', $wrapper_class ) ) . '">
 			'.$title.'
-			<ul class="'.$classes.'">'.implode( "\n", $tabs ).'</ul><div class="tab-panels">'.implode( "\n", $panes ).'</div></div>';
+			<ul class="' . esc_attr( $classes ) . '" role="tablist">'.implode( "\n", $tabs ).'</ul><div class="tab-panels">'.implode( "\n", $panes ).'</div></div>';
 	}
 
 
@@ -62,11 +72,11 @@ function ux_tabgroup( $params, $content = null, $tag ) {
 function ux_tab( $params, $content = null) {
 	extract(shortcode_atts(array(
 			'title' => '',
-			'title_small' => ''
+			'anchor' => ''
 	), $params));
 
 	$x = $GLOBALS['tab_count'];
-	$GLOBALS['tabs'][$x] = array( 'title' => sprintf( $title, $GLOBALS['tab_count'] ), 'content' =>  $content );
+	$GLOBALS['tabs'][ $x ] = array( 'title' => $title, 'anchor' => $anchor, 'content' => $content );
 	$GLOBALS['tab_count']++;
 }
 

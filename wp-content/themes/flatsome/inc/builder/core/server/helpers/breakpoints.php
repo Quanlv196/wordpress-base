@@ -97,7 +97,7 @@ function ux_builder_parse_value( $value, $use_indexes = false ) {
   $values = array();
 
   foreach ( $names as $name ) {
-      $colon_names[] = "${name}:";
+      $colon_names[] = "$name:";
       $values[$name] = null;
   }
 
@@ -134,7 +134,7 @@ function ux_builder_parse_value( $value, $use_indexes = false ) {
  */
 function ux_builder_process_breakpoint_values( $values ) {
   for ( $i = count( $values ) - 1; $i > 0; $i-- ) {
-    if ( ! $values[$i - 1] ) {
+    if ( ! $values[$i - 1] && $values[$i - 1] !== '0' ) {
       $values[$i - 1] = $values[$i];
       unset( $values[$i] );
     }
@@ -160,8 +160,8 @@ function ux_builder_parse_responsive_string( $value, $string_keys = true, $fill_
     if ( ! is_array( $cache ) ) $cache = array();
 
     // Return the cached results if value is already parsed.
-    if ( array_key_exists( "${value}-${string_keys}-${fill_empty}", $cache ) ) {
-        return $cache["${value}-${string_keys}-${fill_empty}"];
+    if ( array_key_exists( "$value-$string_keys-$fill_empty", $cache ) ) {
+        return $cache["$value-$string_keys-$fill_empty"];
     }
 
     $breakpoints = get_ux_builder_breakpoints();
@@ -170,7 +170,7 @@ function ux_builder_parse_responsive_string( $value, $string_keys = true, $fill_
     $media_values = array();
 
     foreach ( $breakpoints as $name => $data ) {
-        $breakpoint_names[] = "${name}:";
+        $breakpoint_names[] = "$name:";
         $media_values[$name] = null;
     }
 
@@ -209,7 +209,7 @@ function ux_builder_parse_responsive_string( $value, $string_keys = true, $fill_
     $media_values['_default'] = $default_value;
 
     // Cache the results.
-    $cache["${value}-${string_keys}-${fill_empty}"] = $media_values;
+    $cache["$value-$string_keys-$fill_empty"] = $media_values;
 
     return $media_values;
 }
@@ -237,7 +237,7 @@ function ux_builder_parse_responsive_array( $option ) {
     $media_values = array();
 
     foreach ( $breakpoints as $name => $data ) {
-        $breakpoint_names[] = "${name}:";
+        $breakpoint_names[] = "$name:";
         $media_values[$name] = null;
     }
 
@@ -264,7 +264,7 @@ function ux_builder_parse_responsive_array( $option ) {
 
     // Generate reset of the string value.
     foreach ( $media_values as $media => $value ) {
-        if ( strlen( $value ) > 0 ) $string .= " ${media}:${value}";
+        if ( strlen( $value ) > 0 ) $string .= " $media:$value";
     }
 
     return $string;

@@ -10,9 +10,10 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.3.0
+ * @see              https://docs.woocommerce.com/document/template-structure/
+ * @package          WooCommerce\Templates
+ * @version          7.0.1
+ * @flatsome-version 3.16.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -61,7 +62,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php endif ?>
 		</div>
 		<div class="flex-col">
-			<button type="submit" value="<?php echo esc_attr_x( 'Search', 'submit button', 'woocommerce' ); ?>" class="ux-search-submit submit-button secondary button icon mb-0" aria-label="<?php esc_attr_e( 'Submit', 'flatsome' ); ?>">
+			<button type="submit" value="<?php echo esc_attr_x( 'Search', 'submit button', 'woocommerce' ); ?>" class="ux-search-submit submit-button secondary button <?php if ( fl_woocommerce_version_check( '7.0.1' ) ) { echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ); } ?> icon mb-0" aria-label="<?php esc_attr_e( 'Submit', 'flatsome' ); ?>">
 				<?php echo get_flatsome_icon( 'icon-search' ); ?>
 			</button>
 		</div>

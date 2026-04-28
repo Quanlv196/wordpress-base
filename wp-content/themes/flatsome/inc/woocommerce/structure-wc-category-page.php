@@ -31,7 +31,7 @@ add_filter( 'loop_shop_columns', 'flatsome_category_row_count', 20 );
 function flatsome_product_row_classes($cols = null){
     $classes = array('row','row-small');
 
-    $category_grid_style = flatsome_option('category_grid_style');
+	$category_grid_style = get_theme_mod( 'category_grid_style', 'grid' );
 
     if($category_grid_style == 'masonry'){
       wp_enqueue_script('flatsome-masonry-js');
@@ -42,17 +42,17 @@ function flatsome_product_row_classes($cols = null){
         $classes[] = 'has-box-vertical';
     }
 
-    $columns = flatsome_option('category_row_count');
+	$columns = get_theme_mod( 'category_row_count', 3 );
 
     if($cols) $columns = $cols;
-    if(is_cart()) $columns = 4;
+	if ( is_cart() ) $columns = apply_filters( 'woocommerce_cross_sells_columns', 4 );
 
     $classes[] = 'large-columns-'.$columns;
-    $classes[] = 'medium-columns-'.flatsome_option('category_row_count_tablet');
-    $classes[] = 'small-columns-'.flatsome_option('category_row_count_mobile');
+	$classes[] = 'medium-columns-' . get_theme_mod( 'category_row_count_tablet', 3 );
+	$classes[] = 'small-columns-' . get_theme_mod( 'category_row_count_mobile', 2 );
 
-    $shadow = flatsome_option('category_shadow');
-    $shadow_hover = flatsome_option('category_shadow_hover');
+	$shadow       = get_theme_mod( 'category_shadow', 0 );
+	$shadow_hover = get_theme_mod( 'category_shadow_hover', 0 );
 
     if($shadow || $shadow_hover) $classes[] = 'has-shadow';
     if($shadow) $classes[] = 'row-box-shadow-'.$shadow;

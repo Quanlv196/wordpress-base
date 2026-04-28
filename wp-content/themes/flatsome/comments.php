@@ -6,8 +6,8 @@
  * and the comment form.
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
- *
- * @package flatsome
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
  */
 
 /*
@@ -30,6 +30,7 @@ if ( post_password_required() ) {
 		<h3 class="comments-title uppercase">
 			<?php
 				printf( // WPCS: XSS OK.
+					/* translators: %1$s: Comment count, %2$s: Comment title */
 					esc_html( _nx( 'One thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', get_comments_number(), 'comments title', 'flatsome' ) ),
 					number_format_i18n( get_comments_number() ),
 					'<span>' . get_the_title() . '</span>'

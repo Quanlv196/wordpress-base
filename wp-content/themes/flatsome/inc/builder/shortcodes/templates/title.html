@@ -1,6 +1,6 @@
 <div class="container section-title-container {{shortcode.options.class}} {{shortcode.options.visibility}}"
 	ng-style="{
-	'margin-top': shortcode.options.marginTop, 
+	'margin-top': shortcode.options.marginTop,
 	'margin-bottom': shortcode.options.marginBottom,
     'max-width': shortcode.options.width,
   }" ng-switch="shortcode.options.tagName">
@@ -12,7 +12,7 @@
 		{{shortcode.options.text}}
 		</span>
 		<b></b>
-		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}</a>
+		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}<i class="icon-angle-right"></i></a>
 	</h1>
 
 	<h2 ng-switch-when="h2" class="section-title section-title-{{shortcode.options.style}}">
@@ -22,7 +22,7 @@
 		{{shortcode.options.text}}
 		</span>
 		<b></b>
-		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}</a>
+		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}<i class="icon-angle-right"></i></a>
 	</h2>
 
 	<h3 ng-switch-when="h3" class="section-title section-title-{{shortcode.options.style}}">
@@ -32,7 +32,7 @@
 		{{shortcode.options.text}}
 		</span>
 		<b></b>
-		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}</a>
+		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}<i class="icon-angle-right"></i></a>
 	</h3>
 
 	<h4 ng-switch-when="h4" class="section-title section-title-{{shortcode.options.style}}">
@@ -42,6 +42,6 @@
 		{{shortcode.options.text}}
 		</span>
 		<b></b>
-		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}</a>
+		<a ng-if="shortcode.options.linkText" href="">{{shortcode.options.linkText}}<i class="icon-angle-right"></i></a>
 	</h4>
 </div>

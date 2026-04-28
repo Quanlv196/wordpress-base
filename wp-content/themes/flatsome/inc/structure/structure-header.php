@@ -14,7 +14,7 @@
  * @return void
  */
 function flatsome_viewport_meta() {
-	echo apply_filters( 'flatsome_viewport_meta', '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo apply_filters( 'flatsome_viewport_meta', '<meta name="viewport" content="width=device-width, initial-scale=1" />' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 add_action( 'wp_head', 'flatsome_viewport_meta', 1 );
@@ -56,7 +56,7 @@ function flatsome_header_nav( $nav, $walker = false ) {
 			'walker'         => new $walker(),
 		));
 
-	} else {
+	} elseif ( current_user_can( 'edit_theme_options' ) ) {
 		echo '<li><a href="' . $admin_url . '">Assign a menu in Theme Options > Menus</a></li>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
@@ -85,12 +85,16 @@ function flatsome_header_elements( $options, $type = '' ) {
 				echo '<li class="header-divider"></li>';
 			} elseif ( $value == 'html' || $value == 'html-2' || $value == 'html-3' || $value == 'html-4' || $value == 'html-5' ) {
 				flatsome_get_header_html_element( $value );
-			} elseif ( $value == 'block-1' || $value == 'block-2' ) {
+			} elseif ( $value == 'block-1' || $value == 'block-2' || $value == 'block-3' || $value == 'block-4' ) {
 				echo do_shortcode( '<li class="header-block"><div class="header-block-' . $value . '">[block id="' . get_theme_mod( 'header-' . $value ) . '"]</div></li>' );
 			} elseif ( $value == 'nav-top' ) {
 				flatsome_header_nav( 'top_bar_nav', $walker );
 			} elseif ( $value == 'nav' ) {
 				flatsome_header_nav( 'primary', $walker );
+			} elseif ( $value == 'nav-secondary' ) {
+				flatsome_header_nav( 'secondary', $walker );
+			} elseif ( $value == 'nav-vertical' && $type === 'sidebar' ) {
+				flatsome_header_nav( 'vertical', $walker );
 			} elseif ( $value == 'wpml' ) {
 				get_template_part( 'template-parts/header/partials/element-languages', $type );
 			} else {
@@ -255,14 +259,14 @@ class FlatsomeNavDropdown extends Walker_Nav_Menu {
 
 		// LEGACY Add flatsome Icons.
 		$menu_icon = '';
-		if ( strpos( $classes[0], 'icon-' ) !== false ) {
+		if ( isset( $classes[0] ) && strpos( $classes[0], 'icon-' ) !== false ) {
 			$menu_icon  = get_flatsome_icon( $classes[0] );
 			$classes[0] = 'has-icon-left';
 		}
 
 		if ( $icon_type === 'media' && ! empty( $icon_id )
 			 || $icon_type === 'html' && ! empty( $icon_html ) ) {
-			$classes[0] = 'has-icon-left';
+			$classes[] = 'has-icon-left';
 		}
 
 		/**
@@ -310,7 +314,7 @@ class FlatsomeNavDropdown extends Walker_Nav_Menu {
 		$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
 		$atts['target'] = ! empty( $item->target ) ? $item->target : '';
 		if ( '_blank' === $item->target && empty( $item->xfn ) ) {
-			$atts['rel'] = 'noopener noreferrer';
+			$atts['rel'] = 'noopener';
 		} else {
 			$atts['rel'] = $item->xfn;
 		}
@@ -365,6 +369,10 @@ class FlatsomeNavDropdown extends Walker_Nav_Menu {
 		if ( $depth == 0 ) {
 			// These lines adds your custom class and attribute.
 			$attributes .= ' class="nav-top-link"';
+
+			if ( in_array( 'has-dropdown', $classes, true ) ) {
+				$attributes .= ' aria-expanded="false" aria-haspopup="menu"';
+			}
 		}
 
 		// Image Column.
@@ -537,7 +545,7 @@ class FlatsomeNavSidebar extends Walker_Nav_Menu {
 	 *
 	 * @return void
 	 */
-	public function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output ) {
+	public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
 		// Check, whether there are children for the given ID and append it to the element with a (new) ID.
 		$element->has_children = isset( $children_elements[ $element->ID ] ) && ! empty( $children_elements[ $element->ID ] );
 
@@ -623,15 +631,11 @@ class FlatsomeNavSidebar extends Walker_Nav_Menu {
 		$icon_html   = get_post_meta( $item->ID, '_menu_item_icon-html', true );
 
 		// LEGACY if icon.
-		$menu_icon = '';
-		if ( strpos( $classes[0], 'icon-' ) !== false ) {
-			$menu_icon  = '<span class="' . $classes[0] . '"></span>';
-			$classes[0] = '';
-		}
+		if ( isset( $classes[0] ) && strpos( $classes[0], 'icon-' ) !== false ) $classes[0] = '';
 
 		if ( $icon_type === 'media' && ! empty( $icon_id )
 			 || $icon_type === 'html' && ! empty( $icon_html ) ) {
-			$classes[0] = 'has-icon-left';
+			$classes[] = 'has-icon-left';
 		}
 
 		/**
@@ -679,7 +683,7 @@ class FlatsomeNavSidebar extends Walker_Nav_Menu {
 		$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
 		$atts['target'] = ! empty( $item->target ) ? $item->target : '';
 		if ( '_blank' === $item->target && empty( $item->xfn ) ) {
-			$atts['rel'] = 'noopener noreferrer';
+			$atts['rel'] = 'noopener';
 		} else {
 			$atts['rel'] = $item->xfn;
 		}
@@ -797,11 +801,17 @@ function flatsome_main_classes() {
 /**
  * Flatsome header title classes.
  *
- * @return void
+ * @param bool $echo Optional. Whether to echo the classes or not. Default true.
+ *
+ * @return string|void If $echo is true, the classes will be echoed. If $echo is false, the classes will be returned.
  */
-function flatsome_header_title_classes() {
-	// Add / remove hooked classes.
-	echo implode( ' ', apply_filters( 'flatsome_header_title_class', array() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+function flatsome_header_title_classes( $echo = true ) {
+	$class = implode( ' ', apply_filters( 'flatsome_header_title_class', array() ) );
+	if ( $echo ) {
+		echo $class; // phpcs:ignore WordPress.Security.EscapeOutput
+	} else {
+		return $class;
+	}
 }
 
 /**
@@ -1159,7 +1169,7 @@ function flatsome_logo_position() {
 	$classes[] = 'logo-' . get_theme_mod( 'logo_position', 'left' );
 
 	// Mobile logo position.
-	if (get_theme_mod( 'logo_position_mobile', 'center' ) == 'center') $classes[] = 'medium-logo-center';
+	$classes[] = 'medium-logo-' . get_theme_mod( 'logo_position_mobile', 'center' );
 
 	echo implode( ' ', $classes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

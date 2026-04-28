@@ -37,12 +37,7 @@ add_ux_builder_shortcode( 'logo',
 				'heading'    => 'Image Size',
 				'param_name' => 'image_size',
 				'default'    => 'original',
-				'options'    => array(
-					'thumbnail' => 'Thumbnail',
-					'medium'    => 'Medium',
-					'large'     => 'Large',
-					'original'  => 'Original',
-				),
+				'options'    => flatsome_ux_builder_image_sizes(),
 			),
 			'title'  => array(
 				'type'    => 'textfield',

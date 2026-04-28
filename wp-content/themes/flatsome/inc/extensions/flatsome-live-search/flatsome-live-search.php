@@ -38,7 +38,8 @@ function flatsome_ajax_search_posts( $args ) {
  */
 function flatsome_ajax_search_get_products( $search_type, array $args ) {
 	$order_by      = get_theme_mod( 'search_products_order_by', 'relevance' );
-	$ordering_args = WC()->query->get_catalog_ordering_args( $order_by, 'ASC' );
+	$order         = get_theme_mod( 'search_products_order', 'ASC' );
+	$ordering_args = WC()->query->get_catalog_ordering_args( $order_by, $order );
 	$defaults      = $args;
 
 	$args['post_type']  = 'product';
@@ -130,6 +131,7 @@ function flatsome_ajax_search_query_by_category( $args ) {
 function flatsome_ajax_search() {
 	// The string from search text field.
 	$query        = apply_filters( 'flatsome_ajax_search_query', $_REQUEST['query'] );
+	$wc_activated = is_woocommerce_activated();
 	$products     = array();
 	$posts        = array();
 	$sku_products = array();
@@ -147,20 +149,20 @@ function flatsome_ajax_search() {
 		'suppress_filters'    => false,
 	);
 
-	if ( is_woocommerce_activated() ) {
+	if ( $wc_activated ) {
 		$products     = flatsome_ajax_search_get_products( 'product', $args );
 		$sku_products = get_theme_mod( 'search_by_sku', 0 ) ? flatsome_ajax_search_get_products( 'sku', $args ) : array();
 		$tag_products = get_theme_mod( 'search_by_product_tag', 0 ) ? flatsome_ajax_search_get_products( 'tag', $args ) : array();
 	}
 
-	if ( get_theme_mod( 'search_result', 1 ) && ! isset( $_REQUEST['product_cat'] ) ) {
+	if ( ( ! $wc_activated || get_theme_mod( 'search_result', 1 ) ) && ! isset( $_REQUEST['product_cat'] ) ) {
 		$posts = flatsome_ajax_search_posts( $args );
 	}
 
 	$results = array_merge( $products, $sku_products, $tag_products, $posts );
 
 	foreach ( $results as $key => $post ) {
-		if ( is_woocommerce_activated() && ( $post->post_type === 'product' || $post->post_type === 'product_variation' ) ) {
+		if ( $wc_activated && ( $post->post_type === 'product' || $post->post_type === 'product_variation' ) ) {
 			$product = wc_get_product( $post );
 
 			if ( $product->get_parent_id() ) {
@@ -179,7 +181,7 @@ function flatsome_ajax_search() {
 				'id'    => $product->get_id(),
 				'value' => $product->get_title(),
 				'url'   => $product->get_permalink(),
-				'img'   => $product_image[0],
+				'img'   => $product_image ? $product_image[0] : '',
 				'price' => $product->get_price_html(),
 			);
 		} else {
@@ -195,7 +197,7 @@ function flatsome_ajax_search() {
 	}
 
 	if ( empty( $results ) ) {
-		$no_results = is_woocommerce_activated() ? __( 'No products found.', 'woocommerce' ) : __( 'No matches found', 'flatsome' );
+		$no_results = $wc_activated ? __( 'No products found.', 'woocommerce' ) : __( 'No matches found', 'flatsome' );
 
 		$suggestions[] = array(
 			'id'    => -1,
@@ -225,8 +227,16 @@ function flatsome_unique_suggestions( array $raw_results, array $suggestions ) {
 	$needs_filtering = count( array_filter( $results ) ) > 1;
 
 	if ( $needs_filtering ) {
-		$suggestions = array_map( 'unserialize', array_unique( array_map( 'serialize', $suggestions ) ) );
+		$unique_suggestions = array();
+		foreach ( $suggestions as $suggestion ) {
+			$id = $suggestion['id'];
+			if ( ! isset( $unique_suggestions[ $id ] ) ) {
+				$unique_suggestions[ $id ] = $suggestion;
+			}
+		}
+		$suggestions = array_values( $unique_suggestions );
 	}
 
 	return $suggestions;
 }
+

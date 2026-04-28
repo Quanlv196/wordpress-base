@@ -18,23 +18,23 @@ function flatsome_facebook_oauth_url() {
 function flatsome_facebook_login_button_html() {
   $url = flatsome_facebook_oauth_url();
   ob_start(); ?>
-
-  <hr />
+  <div class="notice notice-warning inline" style="margin-top: 0; margin-left: 0;">
+    <p><?php echo sprintf( __( 'Connecting Instagram Business accounts is deprecated and will be removed in a future update. Please enter an access token instead. %1$sSee documentation%2$s.', 'flatsome-admin' ), '<a href="https://docs.uxthemes.com/article/427-instagram-api" target="_blank" rel="noopener">', '</a>' ); ?></p>
+  </div>
   <p><?php _e('Login with Facebook to connect an Instagram Business account:')  ?></p>
   <a class="button" style="padding: 5px 15px; height: auto; background-color: #4267b2; border-color: #4267b2; color: #ffffff;" href="<?php echo $url ?>">
     <span class="dashicons dashicons-facebook-alt" style="vertical-align: middle; margin-top: -2px;"></span>
     <?php _e( 'Login with Facebook', 'flatsome-admin' ) ?>
   </a>
-  <p>
-    <button class="button" name="flatsome_instagram_clear_cache">
-      <?php _e( 'Clear Instagram cache', 'flatsome-admin' ) ?>
-    </button>
-  </p>
-  <p>
-    <a href="https://docs.uxthemes.com/article/379-how-to-connect-to-instagram-api" target="_blank" rel="noopener noreferrer">
-      <?php _e( 'How to setup an Instagram Business account', 'flatsome-admin' ) ?>
-    </a>
-  </p>
+  <?php return ob_get_clean();
+}
+
+function flatsome_facebook_cache_html() {
+  ob_start(); ?>
+  <p style="margin-top: 0;"><?php _e('Clear the cache to fetch fresh data from the Instagram API:')  ?></p>
+  <button class="button" name="flatsome_instagram_clear_cache">
+    <?php _e( 'Clear Instagram cache', 'flatsome-admin' ) ?>
+  </button>
   <?php return ob_get_clean();
 }
 
@@ -43,44 +43,68 @@ function flatsome_facebook_accounts_html() {
 
   ob_start(); ?>
 
+  <div id="flatsome-instagram-errors"></div>
   <input type="hidden" value="0" name="facebook_accounts[]">
 
-  <div class="flatsome-instagram-accounts theme-browser">
-    <div class="themes wp-clearfix">
-      <?php if ( empty( $accounts ) ) : ?>
-        <div class="notice notice-info inline">
-          <p><?php _e('No accounts connected yet...')  ?></p>
-        </div>
-      <?php else: ?>
-      <?php foreach ( $accounts as $username => $account ) : ?>
-      <div class="theme instagram-account instagram-account--<?php echo esc_attr( $username ) ?>" style="width: 46%">
-        <input type="hidden" value="<?php echo esc_attr( $account['id'] ) ?>" name="facebook_accounts[<?php echo esc_attr( $username ) ?>]">
-        <div class="theme-screenshot">
-          <?php if ( ! empty( $account['profile_picture'] ) ) : ?>
-          <img src="<?php echo esc_attr( $account['profile_picture'] ) ?>" alt="<?php echo esc_attr( $username ) ?>">
-          <?php else : ?>
-          <img src="<?php echo get_template_directory_uri() ?>/inc/admin/advanced/assets/images/instagram-profile.png" alt="<?php echo esc_attr( $username ) ?>">
-          <?php endif ?>
-        </div>
-        <!-- <div class="notice inline notice-alt"><p></p></div> -->
-        <div class="theme-id-container">
-          <h2 class="theme-name">
-            <a target="_blank" href="https://www.instagram.com/<?php echo esc_attr( $username ) ?>/">
+  <div class="flatsome-instagram-accounts">
+    <table class="widefat striped">
+      <thead>
+        <th><?php _e( 'Username' ); ?></th>
+        <th><?php _e( 'Actions' ); ?></th>
+      </thead>
+      <tbody class="flatsome-instagram-accounts__body">
+        <?php foreach ( $accounts as $username => $account ) : ?>
+        <tr class="instagram-account instagram-account--<?php echo esc_attr( $username ) ?>">
+          <td>
+            <?php foreach ( $account as $key => $value ) : ?>
+              <?php if ( is_string( $value ) || is_numeric( $value ) ) : ?>
+              <input type="hidden" name="facebook_accounts[<?php echo esc_attr( $username ) ?>][<?php echo esc_attr( $key ) ?>]" value="<?php echo esc_attr( $value ) ?>">
+              <?php endif ?>
+            <?php endforeach ?>
+            <a target="_blank" href="https://www.instagram.com/<?php echo esc_attr( $username ) ?>/" rel="noopener">
               <?php echo esc_html( $username ) ?>
             </a>
-          </h2>
-          <div class="theme-actions">
+            <?php if ( empty( $account['type'] ) || $account['type'] !== 'instagram' ) : ?>
+              <em><?php _e( 'deprecated', 'flatsome-admin' ) ?></em>
+            <?php endif; ?>
+		    <?php if ( isset( $account['error'] ) ) : ?>
+			<div class="notice notice-error inline">
+			  <p>
+				<?php
+					// translators: %s is the error message.
+					echo sprintf( __( 'An error occured while refreshing the access token: %s', 'flatsome-admin' ), esc_html( $account['error'] ) );
+			  	?>
+			  </p>
+			</div>
+            <?php endif; ?>
+          </td>
+          <td align="right">
             <button type="button" class="button button-small" onclick="jQuery(this).closest('.instagram-account').remove()">
-              Disconnect
+              <?php _e( 'Remove' ); ?>
             </button>
-          </div>
-        </div>
-      </div>
-      <?php endforeach; ?>
-      <?php endif; ?>
-    </div>
+          </td>
+        </tr>
+        <?php endforeach; ?>
+      <tbody>
+      <tfoot class="flatsome-instagram-accounts__foot">
+        <tr>
+          <td colspan="2">
+			<div class="flatsome-instagram-accounts__access-token-form">
+              <input id="flatsome-instagram-access-token-value" type="text" placeholder="<?php esc_attr_e( 'Enter an Instagram access token', 'flatsome-admin' ) ?>">
+              <button id="flatsome-instagram-access-token-submit" type="button" class="button" title="<?php esc_attr_e( 'Add access token', 'flatsome-admin' ); ?>">
+			    <span class="dashicons dashicons-plus-alt2"></span>
+              </button>
+			</div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
-
+  <p>
+	<a href="<?php echo esc_url( 'https://docs.uxthemes.com/article/427-instagram-api' ) ?>" target="_blank" rel="noopener">
+	  <?php esc_html_e( 'How to get an Instagram access token', 'flatsome-admin' ); ?>
+	</a>
+  </p>
   <?php return ob_get_clean();
 }
 
@@ -240,21 +264,6 @@ function flatsome_facebook_connect_accounts() {
 }
 add_action( 'admin_post_flatsome_instagram_connect', 'flatsome_facebook_connect_accounts' );
 
-function flatsome_facebook_set_theme_mod( $values, $old_values ) {
-  $result = array();
-
-  foreach ( $values as $username => $id ) {
-    if ( is_array( $old_values ) && array_key_exists( $username, $old_values ) ) {
-      $result[ $username ] = $old_values[ $username ];
-    } else {
-      $result[ $username ] = $id;
-    }
-  }
-
-  return $result;
-}
-add_filter( 'pre_set_theme_mod_facebook_accounts', 'flatsome_facebook_set_theme_mod', 10, 2 );
-
 /**
  * Deletes the Instagram oEmbed cache and transients.
  *
@@ -270,3 +279,55 @@ function flatsome_facebook_clear_cache() {
   }
 }
 add_action( 'of_save_options_before', 'flatsome_facebook_clear_cache' );
+
+/**
+ * Validate an Instagram access token.
+ *
+ * @return void
+ */
+function flatsome_ajax_validate_instagram_access_token() {
+	if ( ! wp_verify_nonce( $_POST['nonce'], 'flatsome_advanced' ) ) {
+		wp_send_json_error( __( 'Invalid nonce.', 'flatsome-admin' ) );
+	}
+
+	$access_token = isset( $_POST['access_token'] )
+		? sanitize_text_field( wp_unslash( $_POST['access_token'] ) )
+		: '';
+
+	if ( empty( $access_token ) ) {
+		wp_send_json_error( __( 'Invalid access token.', 'flatsome-admin' ) );
+	}
+
+	$response = wp_remote_get(
+		add_query_arg(
+			array(
+				'fields'       => 'id,username',
+				'access_token' => $access_token,
+			),
+			'https://graph.instagram.com/me'
+		),
+		array(
+			'timeout' => 30,
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		wp_send_json_error( $response->get_error_message() );
+	} elseif ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
+		wp_send_json_error( __( 'Invalid access token.', 'flatsome-admin' ) );
+	}
+
+	$body = wp_remote_retrieve_body( $response );
+	$data = json_decode( $body, true );
+
+	if ( ! isset( $data['username'] ) ) {
+		wp_send_json_error( __( 'No username found for the access token', 'flatsome-admin' ) );
+	}
+
+	// Set the expiration date to a week from now.
+	$data['expires_at']   = time() + WEEK_IN_SECONDS;
+	$data['access_token'] = $access_token;
+
+	wp_send_json_success( $data );
+}
+add_action( 'wp_ajax_flatsome_validate_instagram_access_token', 'flatsome_ajax_validate_instagram_access_token' );

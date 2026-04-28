@@ -36,8 +36,8 @@ function flatsome_message_box($atts, $content = null) {
    $css_bg_overlay = array(
       array( 'attribute' => 'background-color', 'value' => $bg_color ),
    );
-	
-	return '<div class="'.implode(' ', $classes).'" '.get_shortcode_inline_css($css_args).'><div class="message-box-bg-image bg-fill fill" '.get_shortcode_inline_css($css_bg).'></div><div class="message-box-bg-overlay bg-fill fill" '.get_shortcode_inline_css($css_bg_overlay).'></div><div class="container relative"><div class="inner last-reset">'.do_shortcode($content).'</div></div></div>';
+
+	return '<div class="' . esc_attr( implode( ' ', $classes ) ) . '" '.get_shortcode_inline_css($css_args).'><div class="message-box-bg-image bg-fill fill" '.get_shortcode_inline_css($css_bg).'></div><div class="message-box-bg-overlay bg-fill fill" '.get_shortcode_inline_css($css_bg_overlay).'></div><div class="container relative"><div class="inner last-reset">'.do_shortcode($content).'</div></div></div>';
 }
 
 add_shortcode("message_box", "flatsome_message_box");

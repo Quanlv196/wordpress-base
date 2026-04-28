@@ -76,7 +76,7 @@ function ux_gallery($atts) {
       }
 
       // Add Animations
-      if($animate) {$animate = 'data-animate="'.$animate.'"';}
+      if($animate) {$animate = 'data-animate="' . esc_attr( $animate ) . '"';}
 
       // Set box style
       if($style) $classes_box[] = 'box-'.$style;
@@ -116,22 +116,23 @@ function ux_gallery($atts) {
 	}
 
       // Repeater options
-      $repater['id'] = $_id;
-      $repater['type'] = $type;
-      $repater['style'] = $style;
-      $repater['class'] = implode ( ' ', $classes );
-      $repater['visibility'] = $visibility;
-      $repater['slider_style'] = $slider_nav_style;
-      $repater['slider_style'] = $slider_nav_style;
-      $repater['slider_nav_position'] = $slider_nav_position;
-      $repater['slider_bullets'] = $slider_bullets;
-      $repater['slider_nav_color'] = $slider_nav_color;
-      $repater['auto_slide'] = $auto_slide;
-      $repater['row_spacing'] = $col_spacing;
-      $repater['row_width'] = $width;
-      $repater['columns'] = $columns;
-      $repater['columns__sm'] = $columns__sm;
-      $repater['columns__md'] = $columns__md;
+      $repeater['id'] = $_id;
+      $repeater['type'] = $type;
+      $repeater['style'] = $style;
+      $repeater['class'] = implode ( ' ', $classes );
+      $repeater['visibility'] = $visibility;
+      $repeater['slider_style'] = $slider_nav_style;
+      $repeater['slider_style'] = $slider_nav_style;
+      $repeater['slider_nav_position'] = $slider_nav_position;
+      $repeater['slider_bullets'] = $slider_bullets;
+      $repeater['slider_nav_color'] = $slider_nav_color;
+      $repeater['auto_slide'] = $auto_slide;
+	  $repeater['infinitive'] = $infinitive;
+      $repeater['row_spacing'] = $col_spacing;
+      $repeater['row_width'] = $width;
+      $repeater['columns'] = $columns;
+      $repeater['columns__sm'] = $columns__sm;
+      $repeater['columns__md'] = $columns__md;
 
       // Get attachments
       $_attachments = get_posts( array( 'include' => $ids, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby ) );
@@ -147,7 +148,7 @@ function ux_gallery($atts) {
       }
 
 
-      get_flatsome_repeater_start($repater);
+      get_flatsome_repeater_start($repeater);
 
       foreach ( $attachments as $id => $attachment ) {
 
@@ -164,13 +165,14 @@ function ux_gallery($atts) {
         if(isset($content) && strpos($content, 'watch?v=') !== false){
             $has_video = true;
             if(!$image_overlay) $image_overlay = 'rgba(0,0,0,.2)';
-            $link_start = '<a href="'.$content.'" class="open-video" title="'. esc_attr( $attachment->post_excerpt ) . '">';
+            $link_start = '<a href="'.esc_url($content).'" class="open-video" title="'. esc_attr( $attachment->post_excerpt ) . '">';
             $link_end = '</a>';
 
         } else if( 'false' !== $lightbox) {
-           $get_image = wp_get_attachment_image_src( $attachment->ID, $lightbox_image_size);
+           $image_src = wp_get_attachment_image_src( $attachment->ID, $lightbox_image_size);
+		   $link_href = $image_src ? $image_src[0] : '';
            $link_class = $is_multi_gallery ? '' : 'image-lightbox lightbox-gallery';
-           $link_start = '<a class="' . $link_class . '" href="'.$get_image[0].'" title="'. esc_attr( $attachment->post_excerpt ) . '">';
+           $link_start = '<a class="' . $link_class . '" href="' . esc_url( $link_href ) . '" title="' . esc_attr( $attachment->post_excerpt ) . '">';
            $link_end = '</a>';
         }
 
@@ -188,16 +190,15 @@ function ux_gallery($atts) {
         }
 
         $image_output = wp_get_attachment_image( $id, $image_size, false, $atts );
-      ?>
-        <div class="<?php echo implode(' ', $classes_col); ?>" <?php echo $animate;?>>
+      ?><div class="<?php echo esc_attr( implode( ' ', $classes_col ) ); ?>" <?php echo $animate;?>>
           <div class="col-inner">
             <?php echo $link_start; ?>
-            <div class="<?php echo implode(' ', $classes_box); ?>">
-              <div class="<?php echo implode(' ', $classes_image); ?>" <?php echo get_shortcode_inline_css($css_args_img); ?>>
+            <div class="<?php echo esc_attr( implode( ' ', $classes_box ) ); ?>">
+              <div class="<?php echo esc_attr( implode( ' ', $classes_image ) ); ?>" <?php echo get_shortcode_inline_css($css_args_img); ?>>
                 <?php echo $image_output; ?>
                 <?php if($image_overlay){ ?>
                   <div class="overlay fill"
-                      style="background-color: <?php echo $image_overlay;?>">
+                      style="background-color: <?php echo esc_attr( $image_overlay ); ?>">
                   </div>
                 <?php } ?>
                 <?php if($style == 'shade'){ ?>
@@ -211,17 +212,16 @@ function ux_gallery($atts) {
                     </div>
                 <?php } ?>
               </div>
-              <div class="<?php echo implode(' ', $classes_text); ?>" <?php echo get_shortcode_inline_css($css_args_text); ?>>
-                 <p><?php echo $attachment->post_excerpt; ?></p>
+              <div class="<?php echo esc_attr( implode( ' ', $classes_text ) ); ?>" <?php echo get_shortcode_inline_css($css_args_text); ?>>
+                 <p><?php echo wp_kses_post( $attachment->post_excerpt ); ?></p>
               </div>
             </div>
             <?php echo $link_end; ?>
           </div>
-         </div>
-         <?php
+         </div><?php
     } // Loop
 
-    get_flatsome_repeater_end($repater);
+    get_flatsome_repeater_end($repeater);
 
     $content = ob_get_contents();
     ob_end_clean();

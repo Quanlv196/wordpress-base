@@ -8,7 +8,7 @@
             ng-repeat="shortcode in $customCtrl.shortcode.children track by shortcode.$id"
             ng-class="{ 'active': $customCtrl.shortcode.states.activeTab === shortcode.index }">
             <a href="javascript:void(0);"
-                ng-click="$customCtrl.setTab($index); $event.stopPropagation();">
+               ng-click="$customCtrl.setTab($index); $event.stopPropagation();">
                 {{ shortcode.options.title }}
             </a>
         </li>

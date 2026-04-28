@@ -6,6 +6,16 @@
  * @package  Flatsome/Functions
  */
 
+/**
+ * Checks whether a feature is enabled.
+ *
+ * @param string $name The feature name.
+ */
+function flatsome_is_feature_enabled( $name ) {
+	$features = get_option( 'flatsome_features', [] );
+	return ! empty( $features[ $name ] );
+}
+
 if ( ! function_exists( 'is_nextend_facebook_login' ) ) {
 	/**
 	 * Returns true if Nextend facebook provider is enabled for v3
@@ -79,4 +89,57 @@ if ( ! function_exists( 'is_extension_activated' ) ) {
 	function is_extension_activated( $extension, $autoload = true ) {
 		return class_exists( $extension, $autoload );
 	}
+}
+
+/**
+ * Checks if the current request is a login request from WooCommerce.
+ *
+ * @return bool Returns true if all login-related POST parameters are set, false otherwise.
+ */
+function flatsome_is_login_request() {
+	return isset( $_POST['login'], $_POST['username'], $_POST['password'] ); // phpcs:ignore WordPress.Security.NonceVerification
+}
+
+/**
+ * Checks if the current request is a register request from WooCommerce.
+ *
+ * @return bool Returns true if all register-related POST parameters are set, false otherwise.
+ */
+function flatsome_is_register_request() {
+	return isset( $_POST['register'], $_POST['email'] ) && ( isset( $_POST['password'] ) || 'yes' === get_option( 'woocommerce_registration_generate_password' ) ); // phpcs:ignore WordPress.Security.NonceVerification
+}
+
+/**
+ * Checks if current page is a blog archive.
+ *
+ * @return bool
+ */
+function flatsome_is_blog_archive() {
+	return apply_filters( 'flatsome_is_blog_archive', is_home() || is_search() || is_tag() || is_category() || is_date() || is_author() );
+}
+
+/**
+ * Checks if current page is a WooCommerce shop archive.
+ *
+ * @return bool
+ */
+function flatsome_is_shop_archive() {
+	$queried_object               = get_queried_object();
+	$taxonomy                     = ( $queried_object && property_exists( $queried_object, 'taxonomy' ) ) ? $queried_object->taxonomy : false;
+	$additional_taxonomy_archives = [
+		'product_brand', // Included in WooCommerce core from 9.4
+		'berocket_brand',
+		'product_brands',
+		'pwb-brand',
+		'yith_product_brand',
+	];
+
+	$is_product_search_archive      = is_search() && is_post_type_archive( 'product' );
+	$is_product_attribute_archive   = $taxonomy && taxonomy_is_product_attribute( $taxonomy );
+	$is_additional_taxonomy_archive = $taxonomy && in_array( $taxonomy, $additional_taxonomy_archives, true );
+
+	return apply_filters(
+		'flatsome_is_shop_archive',
+		is_shop() || is_product_category() || is_product_tag() || $is_product_search_archive || $is_product_attribute_archive || $is_additional_taxonomy_archive
+	);
 }

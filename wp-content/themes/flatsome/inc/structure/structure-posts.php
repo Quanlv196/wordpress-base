@@ -217,33 +217,27 @@ endif; // ends check for flatsome_comment()
 
 if ( ! function_exists( 'flatsome_posted_on' ) ) :
 
-// Prints HTML with meta information for the current post-date/time and author.
-function flatsome_posted_on() {
-    $time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
-    if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
-        $time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s">%4$s</time>';
-    }
+	// Prints HTML with meta information for the current post-date/time and author.
+	function flatsome_posted_on() {
+		$time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
+		if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
+			$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s">%4$s</time>';
+		}
 
-    $time_string = sprintf( $time_string,
-        esc_attr( get_the_date( 'c' ) ),
-        esc_html( get_the_date() ),
-        esc_attr( get_the_modified_date( 'c' ) ),
-        esc_html( get_the_modified_date() )
-    );
+		$time_string = sprintf( $time_string,
+			esc_attr( get_the_date( 'c' ) ),
+			esc_html( get_the_date() ),
+			esc_attr( get_the_modified_date( 'c' ) ),
+			esc_html( get_the_modified_date() )
+		);
 
-    $posted_on = sprintf(
-        esc_html_x( 'Posted on %s', 'post date', 'flatsome' ),
-        '<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>'
-    );
-
-    $byline = sprintf(
-        esc_html_x( 'by %s', 'post author', 'flatsome' ),
-        '<span class="meta-author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
-    );
-
-    echo '<span class="posted-on">' . $posted_on . '</span><span class="byline"> ' . $byline . '</span>';
-
-}
+		echo sprintf(
+			/* translators: %1$s: post date, %2$s: post author */
+			wp_kses_post( _x( '<span class="posted-on">Posted on %1$s</span> <span class="byline">by %2$s</span>', 'post date by post author', 'flatsome' ) ),
+			'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>', // phpcs:ignore WordPress.Security.EscapeOutput
+			'<span class="meta-author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
+		);
+	}
 endif;
 
 function flatsome_featured_sticky_posts( $query ) {
@@ -304,8 +298,10 @@ if ( !function_exists( 'flatsome_posts_pagination' ) ) {
                 $paged = ( get_query_var('paged') == 0 ) ? 1 : get_query_var('paged');
                 echo '<ul class="page-numbers nav-pagination links text-center">';
                 foreach ( $pages as $page ) {
-                        $page = str_replace("page-numbers","page-number",$page);
-                        echo "<li>$page</li>";
+					$page = str_replace("page-numbers","page-number",$page);
+					$page = str_replace( '<a class="next page-number', '<a aria-label="' . esc_attr__( 'Next', 'flatsome' ) . '" class="next page-number', $page );
+					$page = str_replace( '<a class="prev page-number', '<a aria-label="' . esc_attr__( 'Previous', 'flatsome' ) . '" class="prev page-number', $page );
+					echo "<li>$page</li>";
                 }
                echo '</ul>';
             }

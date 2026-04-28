@@ -10,24 +10,19 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.6.0
+ * @see              https://woocommerce.com/document/template-structure/
+ * @package          WooCommerce\Templates
+ * @version          9.4.0
+ * @flatsome-version 3.19.7
  */
 
 defined( 'ABSPATH' ) || exit;
 
 global $product;
 
-// Ensure visibility.
-if ( fl_woocommerce_version_check( '4.4.0' ) ) {
-	if ( empty( $product ) || false === wc_get_loop_product_visibility( $product->get_id() ) || ! $product->is_visible() ) {
-		return;
-	}
-} else {
-	if ( empty( $product ) || ! $product->is_visible() ) {
-		return;
-	}
+// Check if the product is a valid WooCommerce product and ensure its visibility before proceeding.
+if ( ! is_a( $product, WC_Product::class ) || ! $product->is_visible() ) {
+	return;
 }
 
 // Check stock status.
@@ -41,15 +36,13 @@ $classes[] = 'has-hover';
 
 if ( $out_of_stock ) $classes[] = 'out-of-stock';
 
-?>
-
-<div <?php wc_product_class( $classes, $product ); ?>>
+?><div <?php wc_product_class( $classes, $product ); ?>>
 	<div class="col-inner">
 	<?php do_action( 'woocommerce_before_shop_loop_item' ); ?>
 	<div class="product-small box <?php echo flatsome_product_box_class(); ?>">
 		<div class="box-image">
 			<div class="<?php echo flatsome_product_box_image_class(); ?>">
-				<a href="<?php echo get_the_permalink(); ?>">
+				<a href="<?php echo get_the_permalink(); ?>" aria-label="<?php echo esc_attr( $product->get_title() ); ?>">
 					<?php
 						/**
 						 *
@@ -92,4 +85,4 @@ if ( $out_of_stock ) $classes[] = 'out-of-stock';
 	</div>
 	<?php do_action( 'woocommerce_after_shop_loop_item' ); ?>
 	</div>
-</div>
+</div><?php /* empty PHP to avoid whitespace */ ?>

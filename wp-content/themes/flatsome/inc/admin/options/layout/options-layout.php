@@ -56,7 +56,7 @@ Flatsome_Option::add_field( 'option', array(
 	),
 	'choices'     => [
 		'min'  => 560,
-		'max'  => 1600,
+		'max'  => 4000,
 		'step' => 10,
 	],
 ));
@@ -130,7 +130,7 @@ Flatsome_Option::add_field( 'option', array(
 	'default'     => '1080',
 	'choices'     => [
 		'min'  => 560,
-		'max'  => 1600,
+		'max'  => 4000,
 		'step' => 10,
 	],
 ) );

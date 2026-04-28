@@ -1,4 +1,12 @@
-<?php while ( have_posts() ) : the_post(); ?>
+<?php
+/**
+ * Post single featured.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.16.0
+ */
+
+while ( have_posts() ) : the_post(); ?>
   <div class="page-title blog-featured-title featured-title no-overflow">
 
   	<div class="page-title-bg fill">

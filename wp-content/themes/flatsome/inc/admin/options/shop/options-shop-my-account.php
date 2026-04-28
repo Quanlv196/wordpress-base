@@ -4,7 +4,8 @@ global $wc;
 
 Flatsome_Option::add_section( 'fl-my-account', array(
 	'title'       => __( 'My Account', 'flatsome-admin' ),
-	'panel' => 'woocommerce'
+	'description' => 'Note: Register form/link is only visible for non logged in users and the WooCommerce setting, "Allow customers to create an account on the "My account" page" is enabled.',
+	'panel'       => 'woocommerce',
 ) );
 
 Flatsome_Option::add_field( 'option', array(
@@ -66,19 +67,6 @@ Flatsome_Option::add_field( 'option',  array(
 
 Flatsome_Option::add_field( 'option',  array(
   'type'        => 'select',
-  'settings'     => 'account_login_style',
-  'label'       => __( 'Login Style', 'flatsome-admin' ),
-  'section'     => 'fl-my-account',
-  'transport' => $transport,
-  'default'     => 'lightbox',
-  'choices'     => array(
-    'link' => __( 'Link', 'flatsome-admin' ),
-    'lightbox' => __( 'Lightbox', 'flatsome-admin' ),
-  ),
-));
-
-Flatsome_Option::add_field( 'option',  array(
-  'type'        => 'select',
   'settings'     => 'social_login_pos',
   'label'       => __( 'Social Button', 'flatsome-admin' ),
   'description' => __( 'Change position of Social Login Buttons in lightbox.', 'flatsome-admin' ),
@@ -102,7 +90,7 @@ Flatsome_Option::add_field( 'option',  array(
 
 Flatsome_Option::add_field( '', array(
   'type'        => 'custom',
-  'settings' => 'custom_html_account_shortcut',
+  'settings' => 'custom_html_header_account_shortcut',
   'label'       => __( '', 'flatsome-admin' ),
   'section'     => 'fl-my-account',
   'default'     => '<button style="margin-top:30px; margin-bottom:15px" class="button button-primary" data-to-section="header_account">Header Element →</button>',

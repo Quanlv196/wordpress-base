@@ -54,7 +54,7 @@ class ArrayToString extends Transformer {
       if ( is_callable( $shortcode['template_shortcode'] ) ) {
         $template_shortcode = call_user_func_array(
           $shortcode['template_shortcode'],
-          array_values(compact( 'item', 'options', 'content', 'container' ))
+          array( $item, $options, $content, $container )
         );
       }
 

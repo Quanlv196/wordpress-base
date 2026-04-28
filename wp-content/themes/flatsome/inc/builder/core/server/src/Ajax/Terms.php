@@ -5,9 +5,9 @@ namespace UxBuilder\Ajax;
 class Terms {
 
   public function get_terms() {
-    $post_id = array_key_exists( 'id', $_GET ) ? $_GET['id'] : array();
-    $term_ids = array_key_exists( 'values', $_GET ) ? $_GET['values'] : array();
-    $option = array_key_exists( 'option', $_GET ) ? $_GET['option'] : array();
+    $post_id = array_key_exists( 'id', $_GET ) ? intval( $_GET['id'] ) : array();
+    $term_ids = array_key_exists( 'values', $_GET ) ? flatsome_clean( $_GET['values'] ) : array();
+    $option = array_key_exists( 'option', $_GET ) ? flatsome_clean( $_GET['option'] ) : array();
 
     // Return an error if nonce is invalid.
     check_ajax_referer( 'ux-builder-' . $post_id, 'security' );
@@ -44,8 +44,8 @@ class Terms {
   }
 
   public function search_terms() {
-    $query = array_key_exists( 'query', $_GET ) ? $_GET['query'] : array();
-    $option = array_key_exists( 'option', $_GET ) ? $_GET['option'] : array();
+    $query = array_key_exists( 'query', $_GET ) ? sanitize_text_field( $_GET['query'] ) : array();
+    $option = array_key_exists( 'option', $_GET ) ? flatsome_clean( $_GET['option'] ) : array();
 
     $terms = get_terms( $option['taxonomies'], array(
       'number' => 25,

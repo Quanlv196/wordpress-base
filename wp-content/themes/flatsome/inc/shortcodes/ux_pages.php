@@ -95,7 +95,7 @@ function ux_pages($atts) {
       }
 
       // Add Animations
-      if($animate) {$animate = 'data-animate="'.$animate.'"';}
+      if($animate) {$animate = 'data-animate="'.esc_attr($animate).'"';}
 
       // Set box style
       if($style) $classes_box[] = 'box-'.$style;
@@ -134,25 +134,26 @@ function ux_pages($atts) {
       );
 
       // Repeater options
-      $repater['id'] = $_id;
-      $repater['type'] = $type;
-      $repater['style'] = $style;
-      $repater['class'] = $class;
-      $repater['visibility'] = $visibility;
-      $repater['slider_style'] = $slider_nav_style;
-      $repater['slider_nav_color'] = $slider_nav_color;
-      $repater['slider_nav_position'] = $slider_nav_position;
-      $repater['slider_bullets'] = $slider_bullets;
-      $repater['auto_slide'] = $auto_slide;
-      $repater['row_spacing'] = $col_spacing;
-      $repater['row_width'] = $width;
-      $repater['columns'] = $columns;
-      $repater['columns__md'] = $columns__md;
-      $repater['columns__sm'] = $columns__sm;
-      $repater['depth'] = $depth;
-      $repater['depth_hover'] = $depth_hover;
+      $repeater['id'] = $_id;
+      $repeater['type'] = $type;
+      $repeater['style'] = $style;
+      $repeater['class'] = $class;
+      $repeater['visibility'] = $visibility;
+      $repeater['slider_style'] = $slider_nav_style;
+      $repeater['slider_nav_color'] = $slider_nav_color;
+      $repeater['slider_nav_position'] = $slider_nav_position;
+      $repeater['slider_bullets'] = $slider_bullets;
+      $repeater['auto_slide'] = $auto_slide;
+	  $repeater['infinitive'] = $infinitive;
+      $repeater['row_spacing'] = $col_spacing;
+      $repeater['row_width'] = $width;
+      $repeater['columns'] = $columns;
+      $repeater['columns__md'] = $columns__md;
+      $repeater['columns__sm'] = $columns__sm;
+      $repeater['depth'] = $depth;
+      $repeater['depth_hover'] = $depth_hover;
 
-      get_flatsome_repeater_start($repater);
+      get_flatsome_repeater_start($repeater);
 
       foreach (  $childpages as $page ) {
 
@@ -171,28 +172,26 @@ function ux_pages($atts) {
             if($grid[$current]['size'] == 'medium') $image_size = 'medium';
         }
 
-      ?>
-        <div class="<?php echo implode(' ', $classes_col); ?>" <?php echo $animate;?>>
+      ?><div class="<?php echo esc_attr(implode(' ', $classes_col)); ?>" <?php echo $animate;?>>
           <div class="col-inner" <?php echo get_shortcode_inline_css($css_col); ?>>
-          <a class="plain" href="<?php echo get_the_permalink($page->ID); ?>" title="<?php echo $page->post_title; ?>" target="<?php echo $target; ?>">
-            <div class="<?php echo implode(' ', $classes_box); ?>">
+          <a class="block plain" href="<?php echo esc_url( get_the_permalink($page->ID) ); ?>" title="<?php echo esc_attr( $page->post_title ); ?>" target="<?php echo esc_attr( $target ); ?>">
+            <div class="<?php echo esc_attr( implode(' ', $classes_box) ); ?>">
                   <div class="box-image" <?php echo get_shortcode_inline_css($css_args_img); ?>>
-                      <div class="<?php echo implode(' ', $classes_image); ?>" <?php echo get_shortcode_inline_css($css_image_height); ?>>
+                      <div class="<?php echo esc_attr( implode(' ', $classes_image) ); ?>" <?php echo get_shortcode_inline_css($css_image_height); ?>>
                       <?php $img_id = get_post_thumbnail_id($page->ID); echo wp_get_attachment_image($img_id, $image_size); ?>
                       </div>
-                      <?php if($image_overlay){ ?><div class="overlay" style="background-color: <?php echo $image_overlay;?>"></div><?php } ?>
+                      <?php if($image_overlay){ ?><div class="overlay" style="background-color: <?php echo esc_attr( $image_overlay );?>"></div><?php } ?>
                       <?php if($style == 'shade'){ ?><div class="shade"></div><?php } ?>
                   </div>
-                  <div class="<?php echo implode(' ', $classes_text); ?>" <?php echo get_shortcode_inline_css($css_args); ?>>
+                  <div class="<?php echo esc_attr( implode(' ', $classes_text) ); ?>" <?php echo get_shortcode_inline_css($css_args); ?>>
                         <div class="box-text-inner">
-                            <p><?php echo $page->post_title; ?></p>
+                            <p><?php echo wp_kses_post( $page->post_title ); ?></p>
                         </div>
                   </div>
               </div>
             </a>
             </div>
-          </div>
-         <?php
+          </div><?php
     } // Loop
     echo '</div>';
 

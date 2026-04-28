@@ -9,11 +9,11 @@
     array( 'attribute' => 'border-width', 'value' => $border ),
     array( 'attribute' => 'margin', 'value' => $border_margin ),
   );
- 
+
 ?>
 
 <?php if($border) { ?>
-	<div class="<?php echo implode(' ', $border_class); ?>"
+	<div class="<?php echo esc_attr( implode( ' ', $border_class ) ); ?>"
 		<?php echo get_shortcode_inline_css($border_style); ?>>
 	</div>
 <?php } ?>

@@ -1,7 +1,31 @@
+<?php
+/**
+ * Button 2 element.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.19.0
+ */
+
+?>
 <li class="html header-button-2">
 	<div class="header-button">
-	<?php 
-		echo do_shortcode('[button text="'.flatsome_option('header_button_2').'" link="'.flatsome_option('header_button_2_link').'" target="'.flatsome_option('header_button_2_link_target').'" rel="'.get_theme_mod('header_button_2_link_rel').'" radius="'.flatsome_option('header_button_2_radius').'" size="'.flatsome_option('header_button_2_size').'" color="'.flatsome_option('header_button_2_color').'" depth="'.flatsome_option('header_button_2_depth').'"  depth_hover="'.flatsome_option('header_button_2_depth_hover').'" style="'.flatsome_option('header_button_2_style').'"]');
-	?>
+		<?php
+		echo flatsome_apply_shortcode( 'button', array(
+			'text'        => get_theme_mod( 'header_button_2', 'Button 2' ),
+			'letter_case' => get_theme_mod( 'header_button_2_letter_case' ),
+			'link'        => get_theme_mod( 'header_button_2_link' ),
+			'target'      => get_theme_mod( 'header_button_2_link_target', '_self' ),
+			'rel'         => get_theme_mod( 'header_button_2_link_rel' ),
+			'radius'      => get_theme_mod( 'header_button_2_radius', '99px' ),
+			'size'        => get_theme_mod( 'header_button_2_size' ),
+			'color'       => get_theme_mod( 'header_button_2_color', 'primary' ),
+			'depth'       => get_theme_mod( 'header_button_2_depth', '0' ),
+			'depth_hover' => get_theme_mod( 'header_button_2_depth_hover', '0' ),
+			'style'       => get_theme_mod( 'header_button_2_style' ),
+			'icon'        => get_theme_mod( 'header_button_2_icon' ),
+			'icon_pos'    => get_theme_mod( 'header_button_2_icon_position' ),
+			'icon_reveal' => get_theme_mod( 'header_button_2_icon_visibility' ),
+		) );
+		?>
 	</div>
 </li>

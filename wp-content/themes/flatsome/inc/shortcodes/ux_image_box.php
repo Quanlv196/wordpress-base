@@ -49,7 +49,7 @@ function ux_image_box( $atts, $content = null ) {
 		'rel'    => array( $rel ),
 	);
 
-	$link_start = '<a href="' . $link . '"' . flatsome_parse_target_rel( $link_atts ) . '>';
+	$link_start = '<a href="' . esc_url( $link ) . '"' . flatsome_parse_target_rel( $link_atts ) . '>';
 	$link_end   = '</a>';
 
 	if ( $style ) $classes_box[] = 'box-' . $style;
@@ -69,7 +69,7 @@ function ux_image_box( $atts, $content = null ) {
 	if ( $text_size ) $classes_text[] = 'is-' . $text_size;
 	if ( $text_color == 'dark' ) $classes_text[] = 'dark';
 
-	if ( $animate ) $animate = 'data-animate="' . $animate . '"';
+	if ( $animate ) $animate = 'data-animate="' . esc_attr( $animate ) . '"';
 
 	$css_args = array(
 		array( 'attribute' => 'background-color', 'value' => $text_bg ),
@@ -86,21 +86,21 @@ function ux_image_box( $atts, $content = null ) {
 	);
 
 	?>
-	<div class="box has-hover <?php echo implode( ' ', $classes_box ); ?>" <?php echo $animate; ?>>
+	<div class="box has-hover <?php echo esc_attr( implode( ' ', $classes_box ) ); ?>" <?php echo $animate; ?>>
 
 		<div class="box-image" <?php echo get_shortcode_inline_css( $css_image ); ?>>
 			<?php if ( $link ) echo $link_start; ?>
-			<div class="<?php echo implode( ' ', $classes_image ); ?>" <?php echo get_shortcode_inline_css( $css_image_height ); ?>>
+			<div class="<?php echo esc_attr( implode( ' ', $classes_image ) ); ?>" <?php echo get_shortcode_inline_css( $css_image_height ); ?>>
 				<?php echo flatsome_get_image( $img, $image_size ); ?>
-				<?php if ( $image_overlay ) { ?><div class="overlay" style="background-color:<?php echo $image_overlay; ?>"></div><?php } ?>
+				<?php if ( $image_overlay ) { ?><div class="overlay" style="background-color:<?php echo esc_attr( $image_overlay ); ?>"></div><?php } ?>
 				<?php if ( $style == 'shade' ) { ?><div class="shade"></div><?php } ?>
 			</div>
 			<?php if ( $link ) echo $link_end; ?>
 		</div>
 
-		<div class="box-text <?php echo implode( ' ', $classes_text ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
+		<div class="box-text <?php echo esc_attr( implode( ' ', $classes_text ) ); ?>" <?php echo get_shortcode_inline_css( $css_args ); ?>>
 			<div class="box-text-inner">
-				<?php echo flatsome_contentfix( $content ); ?>
+				<?php echo do_shortcode( $content ); ?>
 			</div>
 		</div>
 	</div>

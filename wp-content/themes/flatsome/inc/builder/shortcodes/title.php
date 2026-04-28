@@ -1,5 +1,17 @@
 <?php
 
+$title_link_options            = require __DIR__ . '/commons/links.php';
+$title_link_options['options'] = array_merge(
+	array(
+		'link_text' => array(
+			'type'    => 'textfield',
+			'heading' => 'Text',
+			'default' => '',
+		),
+	),
+	$title_link_options['options']
+);
+
 add_ux_builder_shortcode( 'title', array(
 	'name'      => __( 'Title', 'ux-builder' ),
 	'category'  => __( 'Content' ),
@@ -7,9 +19,8 @@ add_ux_builder_shortcode( 'title', array(
 	'template'  => flatsome_ux_builder_template( 'title.html' ),
 	'info'      => '{{ text }}',
 	'wrap'      => false,
-
 	'options' => array(
-		'style' => array(
+		'style'            => array(
 			'type'    => 'select',
 			'heading' => 'Style',
 			'default' => 'normal',
@@ -20,13 +31,13 @@ add_ux_builder_shortcode( 'title', array(
 				'bold-center' => 'Center Bold',
 			),
 		),
-		'text' => array(
+		'text'             => array(
 			'type'       => 'textfield',
 			'heading'    => 'Title',
 			'default'    => 'Lorem ipsum dolor sit amet...',
 			'auto_focus' => true,
 		),
-		'tag_name' => array(
+		'tag_name'         => array(
 			'type'    => 'select',
 			'heading' => 'Tag',
 			'default' => 'h3',
@@ -37,19 +48,19 @@ add_ux_builder_shortcode( 'title', array(
 				'h4' => 'H4',
 			),
 		),
-		'color' => array(
+		'color'            => array(
 			'type'     => 'colorpicker',
 			'heading'  => __( 'Color' ),
 			'alpha'    => true,
 			'format'   => 'rgb',
 			'position' => 'bottom right',
 		),
-		'icon' => array(
+		'icon'             => array(
 			'type'    => 'select',
 			'heading' => 'Icon',
-			'options' => require( __DIR__ . '/values/icons.php' ),
+			'options' => require __DIR__ . '/values/icons.php',
 		),
-		'width' => array(
+		'width'            => array(
 			'type'    => 'scrubfield',
 			'heading' => __( 'Width' ),
 			'default' => '',
@@ -57,7 +68,7 @@ add_ux_builder_shortcode( 'title', array(
 			'max'     => 1200,
 			'step'    => 5,
 		),
-		'margin_top' => array(
+		'margin_top'       => array(
 			'type'        => 'scrubfield',
 			'heading'     => __( 'Margin Top' ),
 			'default'     => '',
@@ -66,7 +77,7 @@ add_ux_builder_shortcode( 'title', array(
 			'max'         => 300,
 			'step'        => 1,
 		),
-		'margin_bottom' => array(
+		'margin_bottom'    => array(
 			'type'        => 'scrubfield',
 			'heading'     => __( 'Margin Bottom' ),
 			'default'     => '',
@@ -75,7 +86,7 @@ add_ux_builder_shortcode( 'title', array(
 			'max'         => 300,
 			'step'        => 1,
 		),
-		'size' => array(
+		'size'             => array(
 			'type'    => 'slider',
 			'heading' => __( 'Size' ),
 			'default' => 100,
@@ -84,16 +95,7 @@ add_ux_builder_shortcode( 'title', array(
 			'max'     => 300,
 			'step'    => 1,
 		),
-		'link_text' => array(
-			'type'    => 'textfield',
-			'heading' => 'Link Text',
-			'default' => '',
-		),
-		'link' => array(
-			'type'    => 'textfield',
-			'heading' => 'Link',
-			'default' => '',
-		),
-		'advanced_options' => require( __DIR__ . '/commons/advanced.php'),
+		'link_options'     => $title_link_options,
+		'advanced_options' => require __DIR__ . '/commons/advanced.php',
 	),
 ) );

@@ -1,7 +1,15 @@
-<?php iframe_header(); ?>
+<?php
+/**
+ * Version info.
+ *
+ * @package          Flatsome\Templates
+ * @flatsome-version 3.18.0
+ */
 
+iframe_header();
+?>
 <div id="wpwrap" class="flatsome-panel" style="text-align:center;">
-	<a href="<?php echo esc_url( $url ); ?>#item-description__change-log" style="display:inline-block;" target="_blank" rel="noopener noreferrer">
+	<a href="https://themeforest.net/item/flatsome-multipurpose-responsive-woocommerce-theme/5484319#item-description__change-log" style="display:inline-block;" target="_blank" rel="noopener">
 		<div class="wp-badge fl-badge">
 			<?php /* translators: 1: Version. */ ?>
 			<?php echo sprintf( __( 'Version %s', 'flatsome' ), $version ); ?>

@@ -123,10 +123,7 @@
      * @private
      */
     _buildTooltipHtml: function (provinceName, partners) {
-      var html =
-        '<div class="vnm-tt-province">' +
-        VNM_DataBuilder._esc(provinceName) +
-        "</div>";
+      var html = "";
 
       if (!partners || partners.length === 0) {
         return html;
@@ -138,11 +135,14 @@
         html += '<span class="vnm-tt-num">' + (idx + 1) + ". </span>";
         html += "<strong>" + VNM_DataBuilder._esc(p.name) + "</strong>";
         if (p.address) {
-          html += "<br><small>" + VNM_DataBuilder._esc(p.address) + "</small>";
+          html +=
+            "<div><small>" + VNM_DataBuilder._esc(p.address) + "</small></div>";
         }
         if (p.phone) {
           html +=
-            "<br><small>Liên hệ: " + VNM_DataBuilder._esc(p.phone) + "</small>";
+            "<div><small>Liên hệ: " +
+            VNM_DataBuilder._esc(p.phone) +
+            "</small></div>";
         }
         html += "</div>";
       });
@@ -167,8 +167,20 @@
         !Array.isArray(provinceData.partners) ||
         provinceData.partners.length === 0
       ) {
+        var registerUrl =
+          window.VNM_CONFIG && window.VNM_CONFIG.register_url
+            ? window.VNM_CONFIG.register_url
+            : "#";
         container.innerHTML =
-          '<p class="vnm-no-partner">Tỉnh thành này chưa có đối tác được đăng ký.</p>';
+          '<div class="vnm-no-partner-box">' +
+          '<p class="vnm-no-partner-title">Tỉnh thành này hiện chưa có đối tác.</p>' +
+          '<p class="vnm-no-partner-row">Đối với khách hàng, vui lòng liên hệ 1C Việt Nam theo số:&nbsp;' +
+          '<a href="tel:+842471088887" class="vnm-contact-phone"><strong>(+84)247 108 8887</strong></a></p>' +
+          '<p class="vnm-no-partner-row">Đối với đối tác, để trở thành đại diện cho tỉnh thành này, ' +
+          'vui lòng đăng ký <a href="' +
+          VNM_DataBuilder._esc(registerUrl) +
+          '" class="vnm-register-link">tại đây</a></p>' +
+          "</div>";
         return;
       }
 
@@ -224,31 +236,38 @@
     },
 
     /**
-     * Populate dropdown select2 với danh sách các tỉnh có đối tác.
-     * Sắp xếp theo tên tỉnh (locale vi).
-     *
-     * @param {Object} wpData
+     * Populate dropdown select2 với TOÀN BỘ 63 tỉnh thành.
+     * Dữ liệu tỉnh lấy từ VNM_CONFIG.provinces (static JSON từ PHP).
+     * Gọi ngay khi DOM ready, không cần chờ AJAX.
      */
-    populateSelect: function (wpData) {
+    populateSelect: function () {
       var selectEl = document.getElementById("vn_map_province_select");
       if (!selectEl) {
         return;
       }
 
-      // Xây dựng mảng, lọc tỉnh có đối tác, sắp xếp A-Z
-      var provinces = Object.keys(wpData)
-        .filter(function (code) {
-          var d = wpData[code];
-          return d && Array.isArray(d.partners) && d.partners.length > 0;
-        })
-        .map(function (code) {
-          return { code: code, name: wpData[code].name || code };
-        })
-        .sort(function (a, b) {
-          return a.name.localeCompare(b.name, "vi", { sensitivity: "base" });
-        });
+      // Lấy danh sách tỉnh: ưu tiên inline script nhúng trong template,
+      // fallback sang VNM_CONFIG.provinces (wp_localize_script)
+      var allProvinces =
+        Array.isArray(window.VNM_PROVINCES) && window.VNM_PROVINCES.length > 0
+          ? window.VNM_PROVINCES
+          : window.VNM_CONFIG && Array.isArray(window.VNM_CONFIG.provinces)
+            ? window.VNM_CONFIG.provinces
+            : [];
 
-      provinces.forEach(function (p) {
+      if (allProvinces.length === 0) {
+        console.warn(
+          "[VNM] VNM_PROVINCES trống. Kiểm tra template map-shortcode.php.",
+        );
+        return;
+      }
+
+      // Sắp xếp A-Z theo tiếng Việt
+      var sorted = allProvinces.slice().sort(function (a, b) {
+        return a.name.localeCompare(b.name, "vi", { sensitivity: "base" });
+      });
+
+      sorted.forEach(function (p) {
         var opt = document.createElement("option");
         opt.value = p.code;
         opt.textContent = p.name;
